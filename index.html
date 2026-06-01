@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
   <title>Poultry Farm Dashboard | Live Monitoring</title>
+  <link rel="icon" type="image/png" href="Logo.png">
   
   <!-- Google Fonts: Georgia for headers, Libre Franklin for body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,34 +12,76 @@
   <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
   
   <!-- Chart.js 4.4.1 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js">
+  </script>
+  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* Brand Color Guide */
+    :root {
+      --brand-gold: #c9a94b;
+      --brand-gold-light: #e6c468;
+      --brand-gold-dark: #a68a2e;
+      --brand-navy: #0a1625;
+      --brand-dark-blue: #0f2136;
+      --brand-card-bg: #10273e;
+      --brand-accent: #1a3a54;
+      --text-primary: #f0f2f5;
+      --text-secondary: #b9c7dd;
+      --text-muted: #8896aa;
+      --border-subtle: rgba(201, 169, 75, 0.15);
+      --shadow-card: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    
     body {
-      background: linear-gradient(145deg, #0a1625 0%, #0f2136 100%);
+      background: linear-gradient(145deg, var(--brand-navy) 0%, var(--brand-dark-blue) 100%);
       font-family: 'Libre Franklin', 'Segoe UI', system-ui, -apple-system, sans-serif;
       padding: 1.5rem 1.5rem 3rem;
-      color: #f0f2f5;
+      color: var(--text-primary);
       line-height: 1.5;
       min-height: 100vh;
     }
     
-    /* Georgia for all headers */
-    h1, h2, h3, h4, h5, h6, 
-    .header h1, 
-    .section-title, 
-    .card-header,
-    .metric-card .label,
-    th,
-    .bar-label,
-    .bar-value,
-    .vc-pill,
-    .badge {
+    h1, h2, h3, h4, h5, h6, .header h1, .section-title, .card-header,
+    .metric-card .label, th, .bar-label, .bar-value {
       font-family: 'Georgia', serif;
     }
     
     .dashboard { max-width: 1400px; margin: 0 auto; }
-    .header { margin-bottom: 2rem; }
+    
+    /* Header with Logo */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .logo-container {
+      flex-shrink: 0;
+      width: 60px;
+      height: 60px;
+      background: rgba(201, 169, 75, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--brand-gold);
+      overflow: hidden;
+    }
+    
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .header-content {
+      flex: 1;
+    }
+    
     .header h1 {
       font-size: clamp(1.8rem, 4vw, 2.4rem);
       font-weight: 700;
@@ -49,56 +92,77 @@
       gap: 0.5rem;
       flex-wrap: wrap;
     }
-    .header h1 span {
-      background: #c9a94b;
-      color: #0b1a2b;
+    
+    .header h1 .live-badge {
+      background: var(--brand-gold);
+      color: var(--brand-navy);
       font-size: 0.9rem;
       padding: 0.2rem 1rem;
       border-radius: 30px;
       letter-spacing: 0.3px;
       font-weight: 600;
     }
+    
     .subtitle {
-      color: #b9c7dd;
+      color: var(--text-secondary);
       font-size: 1rem;
       margin-top: 0.3rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      flex-wrap: wrap;
     }
+    
+    .latest-update-badge {
+      background: rgba(201, 169, 75, 0.12);
+      border: 1px solid var(--brand-gold);
+      color: var(--brand-gold-light);
+      padding: 0.25rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
     .section-title {
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 2px;
       font-weight: 700;
-      color: #c9a94b;
+      color: var(--brand-gold);
       margin: 2rem 0 0.8rem;
       border-bottom: 2px solid rgba(201, 169, 75, 0.25);
       padding-bottom: 0.4rem;
       display: inline-block;
     }
+    
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1rem;
       margin-bottom: 0.5rem;
     }
+    
     .metric-card {
-      background: #10273e;
-      border: 1px solid rgba(201, 169, 75, 0.15);
+      background: var(--brand-card-bg);
+      border: 1px solid var(--border-subtle);
       border-radius: 16px;
       padding: 1.2rem 1rem;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow-card);
       transition: all 0.2s;
-      border-left: 4px solid #c9a94b;
+      border-left: 4px solid var(--brand-gold);
     }
+    
     .metric-card .label {
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #b9c7dd;
+      color: var(--text-secondary);
       font-weight: 600;
     }
+    
     .metric-card .value {
       font-size: 2rem;
       font-weight: 700;
@@ -106,19 +170,22 @@
       line-height: 1.2;
       margin: 0.2rem 0;
     }
+    
     .metric-card .context {
       font-size: 0.7rem;
-      color: #8b9bb5;
+      color: var(--text-muted);
     }
+    
     .card {
-      background: #10273e;
+      background: var(--brand-card-bg);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 18px;
       padding: 1.5rem;
       margin-top: 1rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      box-shadow: var(--shadow-card);
       backdrop-filter: blur(2px);
     }
+    
     .card-header {
       font-weight: 700;
       font-size: 1.1rem;
@@ -126,139 +193,78 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-left: 4px solid #c9a94b;
+      border-left: 4px solid var(--brand-gold);
       padding-left: 1rem;
       color: #ffffff;
     }
+    
     .two-column {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1rem;
       margin-top: 0.8rem;
     }
+    
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.8rem;
     }
+    
     th {
       text-align: left;
       padding: 0.7rem 0.5rem;
-      color: #c9a94b;
+      color: var(--brand-gold);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      border-bottom: 2px solid #c9a94b;
+      border-bottom: 2px solid var(--brand-gold);
       background: rgba(201, 169, 75, 0.08);
     }
+    
     td {
       padding: 0.6rem 0.5rem;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       color: #d3dce9;
     }
+    
     tr:hover td { background: rgba(255,255,255,0.03); }
+    
     .badge {
       background: rgba(201, 169, 75, 0.18);
-      color: #e6c468;
+      color: var(--brand-gold-light);
       padding: 0.2rem 0.7rem;
       border-radius: 20px;
       font-size: 0.7rem;
       font-weight: 700;
-      border: 1px solid #c9a94b;
+      border: 1px solid var(--brand-gold);
       display: inline-block;
     }
-    .badge-inactive {
-      background: rgba(255,255,255,0.05);
-      color: #8896aa;
-      border-color: #3a4a5c;
-    }
-    .bar-item {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      margin: 0.7rem 0;
-    }
-    .bar-label {
-      width: 120px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .bar-track {
-      flex: 1;
-      height: 8px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 10px;
-    }
-    .bar-fill {
-      height: 100%;
-      border-radius: 10px;
-      background: #c9a94b;
-      width: 0%;
-    }
-    .bar-value {
-      font-weight: 700;
-      font-size: 0.8rem;
-      min-width: 60px;
-      text-align: right;
-    }
-    .vc-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .vc-pill {
-      background: rgba(201, 169, 75, 0.12);
-      border: 1px solid #c9a94b;
-      color: #f0d78c;
-      padding: 0.3rem 1rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .legend {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-      font-size: 0.8rem;
-    }
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      display: inline-block;
-    }
-    .donut-container {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
+    
     .error-message {
       background: rgba(201, 169, 75, 0.1);
-      border: 1px solid #c9a94b;
+      border: 1px solid var(--brand-gold);
       padding: 0.8rem;
       border-radius: 10px;
-      color: #f0d78c;
+      color: var(--brand-gold-light);
       font-size: 0.8rem;
       margin: 0.5rem 0;
     }
+    
     .updated {
       text-align: right;
-      color: #6a7b94;
+      color: var(--text-muted);
       font-size: 0.7rem;
       margin-top: 2rem;
     }
+    
     .chart-container {
       position: relative;
-      height: 280px;
+      height: 300px;
       width: 100%;
       margin-top: 1rem;
     }
+    
     .temp-indicator {
       display: inline-flex;
       align-items: center;
@@ -268,27 +274,143 @@
       font-size: 0.75rem;
       font-weight: 600;
     }
-    .temp-optimal { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid #27ae60; }
-    .temp-warning { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid #d4ac0d; }
-    .temp-critical { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid #c0392b; }
+    
+    .temp-optimal { 
+      background: rgba(201, 169, 75, 0.15); 
+      color: var(--brand-gold-light); 
+      border: 1px solid var(--brand-gold); 
+    }
+    
+    .temp-warning { 
+      background: rgba(201, 169, 75, 0.08); 
+      color: var(--brand-gold); 
+      border: 1px solid var(--brand-gold-dark); 
+    }
+    
+    .temp-critical { 
+      background: rgba(180, 100, 40, 0.15); 
+      color: #c97a3b; 
+      border: 1px solid #b45c28; 
+    }
+    
+    /* Enhanced bar styles */
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin: 1rem 0;
+      padding: 0.5rem;
+      background: rgba(201, 169, 75, 0.03);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    
+    .bar-item:hover {
+      background: rgba(201, 169, 75, 0.08);
+      transform: translateX(4px);
+    }
+    
+    .bar-label {
+      width: 100px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-primary);
+    }
+    
+    .bar-track {
+      flex: 1;
+      height: 28px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .bar-fill {
+      height: 100%;
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold-light));
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.5rem;
+      min-width: 30px;
+    }
+    
+    .bar-value {
+      font-weight: 700;
+      font-size: 0.9rem;
+      min-width: 60px;
+      text-align: right;
+      color: var(--brand-gold);
+    }
+    
+    /* Timeline for duration */
+    .duration-card {
+      background: linear-gradient(135deg, var(--brand-card-bg), var(--brand-accent));
+      border: 2px solid var(--brand-gold);
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(201, 169, 75, 0.2);
+    }
+    
+    .duration-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--brand-gold-light);
+      font-family: 'Georgia', serif;
+    }
+    
+    .duration-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.3rem;
+    }
+    
+    .latest-timestamp {
+      background: rgba(201, 169, 75, 0.1);
+      border-left: 3px solid var(--brand-gold);
+      padding: 0.6rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      color: var(--brand-gold-light);
+    }
     
     @media (max-width: 600px) {
       body { padding: 0.8rem; }
       .bar-label { width: 80px; }
       .two-column { grid-template-columns: 1fr; }
-      .donut-container { flex-direction: column; text-align: center; }
+      .header { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
 <body>
 <div class="dashboard">
   <div class="header">
-    <h1>Poultry Farm Monitor <span>Live</span></h1>
-    <div class="subtitle"><span>🐔 Real-time flock analytics · synced with Google Sheets</span></div>
+    <div class="logo-container">
+      <img src="Logo.png" alt="Farm Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:1.5rem;>🐔</span>';">
+    </div>
+    <div class="header-content">
+      <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
+      <div class="subtitle">
+        <span>🐔 Real-time flock analytics · synced with Google Sheets</span>
+        <span id="latestUpdateBadge" class="latest-update-badge">📅 Loading...</span>
+      </div>
+    </div>
   </div>
 
   <div class="section-title">📌 Flock Overview</div>
   <div class="metrics-grid" id="topMetrics"></div>
+  
+  <div style="margin-top: 1.5rem;" id="durationDisplay"></div>
 
   <div class="section-title">📈 Growth & Performance</div>
   <div class="card">
@@ -308,7 +430,9 @@
     </div>
     <div class="card">
       <div class="card-header">Daily Mortality Trend</div>
-      <div id="mortalityBars"></div>
+      <div class="chart-container" style="height: 300px;">
+        <canvas id="mortalityTrendChart"></canvas>
+      </div>
     </div>
   </div>
 
@@ -317,14 +441,15 @@
     <div class="card">
       <div class="card-header">Temperature Monitoring</div>
       <div id="tempStatus"></div>
-      <div class="chart-container" style="height:200px;">
+      <div class="chart-container">
         <canvas id="tempChart"></canvas>
       </div>
     </div>
     <div class="card">
       <div class="card-header">Resource Consumption</div>
-      <div id="resourceBars"></div>
-      <p style="font-size:0.7rem; color:#8896aa; margin-top:0.7rem;" id="resourceNote"></p>
+      <div class="chart-container" style="height: 300px;">
+        <canvas id="resourceChart"></canvas>
+      </div>
     </div>
   </div>
 
@@ -339,11 +464,8 @@
 
 <script>
   (function() {
-    // 🔧 REPLACE WITH YOUR GOOGLE SHEET CSV URL
-    // Format: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/pub?gid=0&single=true&output=csv
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6R8ak4agVRhZscPDpAN5dR-udSwwysupTcP6itH3h6M5vIiqVz-QK0NN7KohtCBFudSCLyK68cIvJ/pub?gid=2018982467&single=true&output=csv";
 
-    // Fallback data matching your sample structure
     const FALLBACK_DATA = [
       { time:"16:00", date:"25 May 2026", birdsAlive:201, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"yes", avgWeight:null },
       { time:"10:00", date:"27 May 2026", birdsAlive:200, deaths:1, deathCause:"Squashed under tray", feed:3, water:20, temp:30, litter:"no", avgWeight:99 },
@@ -355,7 +477,6 @@
       { time:"8:00", date:"1 June 2026", birdsAlive:198, deaths:1, deathCause:"Low temperature", feed:3, water:20, temp:30, litter:"Yes", avgWeight:135 }
     ];
 
-    // Utility functions
     const toNum = (val) => {
       if (val === null || val === undefined || val === '') return 0;
       let num = Number(String(val).replace(/[^0-9.-]/g, ''));
@@ -367,10 +488,7 @@
       return decimals > 0 ? val.toFixed(decimals) : val.toLocaleString();
     };
     
-    const pct = (part, total) => total > 0 ? Math.round((part / total) * 100) : 0;
-    
     const parseDate = (dateStr) => {
-      // Handle "25 May 2026" format
       const months = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
       const parts = dateStr.trim().split(/\s+/);
       if (parts.length >= 3) {
@@ -382,7 +500,6 @@
       return new Date();
     };
 
-    // CSV parser (handles quotes and newlines)
     function parseCSV(text) {
       const rows = [];
       let row = [], field = '', inQuotes = false;
@@ -401,7 +518,6 @@
       return rows.filter(r => r.some(cell => cell !== ''));
     }
 
-    // Column mapping for poultry data
     function mapColumns(headers) {
       const lower = headers.map(h => h.toLowerCase().trim());
       return {
@@ -458,7 +574,6 @@
           });
         }
         
-        // Sort by date/time descending (newest first)
         data.sort((a, b) => b.dateObj - a.dateObj || (b.time || '').localeCompare(a.time || ''));
         
         return { data, success: true };
@@ -472,6 +587,18 @@
       }
     }
 
+    function getTempClass(temp) {
+      if (temp >= 26 && temp <= 32) return 'temp-optimal';
+      if (temp < 24 || temp > 34) return 'temp-critical';
+      return 'temp-warning';
+    }
+
+    function getTempIcon(temp) {
+      if (temp >= 26 && temp <= 32) return '✅';
+      if (temp < 26) return '🌡️↓';
+      return '🌡️↑';
+    }
+
     function render(data) {
       if (!data || data.length === 0) {
         document.getElementById('topMetrics').innerHTML = 
@@ -479,66 +606,68 @@
         return;
       }
 
-      // Calculate key metrics
-      const latest = data[0]; // Most recent entry
+      const latest = data[0];
       const oldest = data[data.length - 1];
       
       const totalDeaths = data.reduce((sum, r) => sum + r.deaths, 0);
       const startingBirds = oldest.birdsAlive + totalDeaths;
       const mortalityRate = startingBirds > 0 ? (totalDeaths / startingBirds * 100).toFixed(1) : 0;
       
-      const validWeights = data.filter(r => r.avgWeight !== null && r.avgWeight > 0);
-      const weightGain = validWeights.length >= 2 ? 
-        (validWeights[0].avgWeight - validWeights[validWeights.length-1].avgWeight) : 0;
-      
       const totalFeed = data.reduce((sum, r) => sum + r.feed, 0);
       const totalWater = data.reduce((sum, r) => sum + r.water, 0);
-      const feedEfficiency = totalFeed > 0 && validWeights.length > 0 ? 
-        ((validWeights[0].avgWeight - (validWeights[validWeights.length-1]?.avgWeight || 0)) / (totalFeed / data.length)).toFixed(1) : 0;
-      
       const avgTemp = data.length > 0 ? 
         (data.reduce((sum, r) => sum + r.temp, 0) / data.length).toFixed(1) : 0;
       
-      const litterStatus = latest.litter.includes('yes') ? 'Available' : 'Low';
+      const litterStatus = latest.litter && latest.litter.includes('yes') ? 'Available' : 'Low';
+      
+      // Calculate duration
+      const firstDate = oldest.dateObj;
+      const lastDate = latest.dateObj;
+      const daysDiff = Math.ceil((lastDate - firstDate) / (1000 * 60 * 60 * 24)) + 1;
+      
+      // Latest data timestamp
+      const latestTimestamp = `${latest.date} at ${latest.time || '—'}`;
+      document.getElementById('latestUpdateBadge').textContent = `📅 ${latestTimestamp}`;
+      document.getElementById('latestUpdateBadge').style.display = 'inline-flex';
+      
+      // Duration display
+      document.getElementById('durationDisplay').innerHTML = `
+        <div class="duration-card">
+          <div class="duration-value">${daysDiff} Days</div>
+          <div class="duration-label">Monitoring Period</div>
+          <div style="font-size:0.75rem; color: var(--text-muted); margin-top:0.3rem;">
+            ${firstDate.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})} — ${lastDate.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})}
+          </div>
+        </div>
+      `;
 
-      // Render top metrics
+      // Top metrics - Updated labels
       document.getElementById('topMetrics').innerHTML = [
         { label: 'Birds Alive', value: fmt(latest.birdsAlive), sub: `Started with ${fmt(startingBirds)}` },
         { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total losses` },
-        { label: 'Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: weightGain > 0 ? `+${fmt(weightGain,1)}g growth` : 'Monitoring' },
-        { label: 'Feed Efficiency', value: `${feedEfficiency}g/kg`, sub: `${fmt(totalFeed)}kg total feed` },
-        { label: 'Avg Temperature', value: `${avgTemp}°C`, sub: getTempStatus(avgTemp) },
+        { label: 'Last Recorded Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: 'Latest measurement' },
+        { label: 'Last Recorded Temperature', value: `${avgTemp}°C`, sub: getTempStatus(avgTemp) },
         { label: 'Litter Status', value: litterStatus, sub: `${fmt(totalWater)}L water used` }
       ].map(m => `<div class="metric-card"><div class="label">${m.label}</div><div class="value">${m.value}</div><div class="context">${m.sub}</div></div>`).join('');
 
-      // Weight progression chart
       renderWeightChart(data.filter(r => r.avgWeight !== null).reverse());
-      
-      // Death causes chart
       renderCauseChart(data);
-      
-      // Mortality bars
-      renderMortalityBars(data);
-      
-      // Temperature monitoring
+      renderMortalityTrendChart(data);
       renderTempChart(data);
+      
       document.getElementById('tempStatus').innerHTML = `
         <div style="margin-bottom:1rem;">
           <span class="temp-indicator ${getTempClass(avgTemp)}">
             ${getTempIcon(avgTemp)} Current: ${avgTemp}°C
           </span>
-          <span style="font-size:0.7rem;color:#8b9bb5;margin-left:0.5rem;">
+          <span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">
             Optimal: 26-32°C
           </span>
         </div>`;
       
-      // Resource consumption bars
-      renderResourceBars(data);
+      renderResourceChart(data);
+      renderDataTable(data.slice(0, 10));
       
-      // Data table
-      renderDataTable(data.slice(0, 10)); // Show last 10 entries
-      
-      // Update timestamp
       document.getElementById('updatedLine').textContent = 
         `Last updated: ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'})}`;
     }
@@ -547,18 +676,6 @@
       if (temp >= 26 && temp <= 32) return 'Optimal range';
       if (temp < 26) return 'Below optimal';
       return 'Above optimal';
-    }
-    
-    function getTempClass(temp) {
-      if (temp >= 26 && temp <= 32) return 'temp-optimal';
-      if (temp < 24 || temp > 34) return 'temp-critical';
-      return 'temp-warning';
-    }
-    
-    function getTempIcon(temp) {
-      if (temp >= 26 && temp <= 32) return '✅';
-      if (temp < 26) return '🌡️↓';
-      return '🌡️↑';
     }
 
     function renderWeightChart(data) {
@@ -579,12 +696,12 @@
             label: 'Avg Weight (g)',
             data: values,
             borderColor: '#c9a94b',
-            backgroundColor: 'rgba(201, 169, 75, 0.1)',
+            backgroundColor: 'rgba(201, 169, 75, 0.15)',
             borderWidth: 3,
             pointBackgroundColor: '#ffffff',
             pointBorderColor: '#c9a94b',
-            pointRadius: 4,
-            pointHoverRadius: 6,
+            pointRadius: 5,
+            pointHoverRadius: 7,
             fill: true,
             tension: 0.3
           }]
@@ -603,6 +720,12 @@
               callbacks: {
                 label: ctx => `Weight: ${ctx.parsed.y}g`
               }
+            },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              color: '#c9a94b',
+              font: { weight: 'bold', size: 10 }
             }
           },
           scales: {
@@ -616,7 +739,23 @@
               beginAtZero: false
             }
           }
-        }
+        },
+        plugins: [{
+          id: 'customDataLabels',
+          afterDatasetsDraw(chart) {
+            const ctx = chart.ctx;
+            chart.data.datasets.forEach((dataset, i) => {
+              const meta = chart.getDatasetMeta(i);
+              meta.data.forEach((point, index) => {
+                const value = dataset.data[index];
+                ctx.fillStyle = '#c9a94b';
+                ctx.font = 'bold 10px Georgia';
+                ctx.textAlign = 'center';
+                ctx.fillText(value + 'g', point.x, point.y - 12);
+              });
+            });
+          }
+        }]
       });
     }
     
@@ -624,7 +763,6 @@
       const ctx = document.getElementById('causeChart').getContext('2d');
       if (window.causeChartInstance) window.causeChartInstance.destroy();
       
-      // Aggregate death causes
       const causes = {};
       data.forEach(r => {
         if (r.deaths > 0 && r.deathCause) {
@@ -633,7 +771,6 @@
         }
       });
       
-      // Add "No recorded cause" if there are deaths without causes
       const deathsWithCause = Object.values(causes).reduce((a,b) => a+b, 0);
       const totalDeaths = data.reduce((sum, r) => sum + r.deaths, 0);
       if (totalDeaths > deathsWithCause) {
@@ -642,13 +779,13 @@
       
       if (Object.keys(causes).length === 0) {
         document.getElementById('causeChart').parentNode.innerHTML = 
-          '<p style="color:#8896aa;text-align:center;padding:2rem;">No mortality events recorded</p>';
+          '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No mortality events recorded</p>';
         return;
       }
       
       const labels = Object.keys(causes);
       const values = Object.values(causes);
-      const colors = ['#c9a94b', '#e74c3c', '#3498db', '#9b59b6', '#1abc9c', '#e67e22'];
+      const colors = ['#c9a94b', '#b45c28', '#8b6914', '#a68a2e', '#d4a843', '#e6c468'];
       
       window.causeChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -658,7 +795,7 @@
             data: values,
             backgroundColor: labels.map((_, i) => colors[i % colors.length]),
             borderColor: '#0f2136',
-            borderWidth: 2
+            borderWidth: 3
           }]
         },
         options: {
@@ -682,56 +819,110 @@
               }
             }
           },
-          cutout: '65%'
+          cutout: '60%'
         }
       });
     }
     
-    function renderMortalityBars(data) {
-      // Group by date and sum deaths
+    function renderMortalityTrendChart(data) {
+      const ctx = document.getElementById('mortalityTrendChart').getContext('2d');
+      if (window.mortalityTrendInstance) window.mortalityTrendInstance.destroy();
+      
       const byDate = {};
       data.forEach(r => {
         if (r.date) {
           const dateKey = r.date;
-          if (!byDate[dateKey]) byDate[dateKey] = 0;
-          byDate[dateKey] += r.deaths;
+          byDate[dateKey] = (byDate[dateKey] || 0) + r.deaths;
         }
       });
       
       let entries = Object.entries(byDate);
-      
-      // Fix: safely sort with error handling
       entries.sort((a, b) => {
         const dateA = parseDate(a[0]);
         const dateB = parseDate(b[0]);
-        // Handle invalid dates
         if (isNaN(dateA.getTime())) return 1;
         if (isNaN(dateB.getTime())) return -1;
         return dateB - dateA;
       });
+      entries = entries.slice(0, 10).reverse();
       
-      // Only slice if we have entries
-      entries = entries.slice(0, 7);
+      const labels = entries.map(([date]) => {
+        const parts = date.split(' ');
+        return parts[0] + ' ' + (parts[1] || '').slice(0,3);
+      });
+      const values = entries.map(([, deaths]) => deaths);
       
-      const maxDeaths = entries.length ? Math.max(...entries.map(e => e[1]), 1) : 1;
-      
-      document.getElementById('mortalityBars').innerHTML = entries.length ? 
-        entries.map(([date, deaths]) => `
-          <div class="bar-item">
-            <div class="bar-label">${date.split(' ')[0] || date} ${(date.split(' ')[1] || '').slice(0,3)}</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:${(deaths/maxDeaths)*100}%; background:#e74c3c;"></div>
-            </div>
-            <div class="bar-value">${deaths}</div>
-          </div>
-        `).join('') : '<p style="color:#8896aa;">No mortality data</p>';
+      window.mortalityTrendInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Daily Deaths',
+            data: values,
+            backgroundColor: values.map(v => v > 0 ? '#b45c28' : 'rgba(201, 169, 75, 0.3)'),
+            borderColor: values.map(v => v > 0 ? '#c97a3b' : '#c9a94b'),
+            borderWidth: 2,
+            borderRadius: 8,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0b1a2b',
+              titleColor: '#ffffff',
+              bodyColor: '#f0f2f5',
+              borderColor: '#c9a94b',
+              borderWidth: 1,
+              callbacks: {
+                label: ctx => `Deaths: ${ctx.parsed.y}`
+              }
+            }
+          },
+          scales: {
+            x: { 
+              ticks: { color: '#b9c7dd', font: { size: 10 } },
+              grid: { display: false }
+            },
+            y: { 
+              ticks: { 
+                color: '#b9c7dd', 
+                font: { size: 10 },
+                stepSize: 1
+              },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              beginAtZero: true
+            }
+          }
+        },
+        plugins: [{
+          id: 'mortalityDataLabels',
+          afterDatasetsDraw(chart) {
+            const ctx = chart.ctx;
+            chart.data.datasets.forEach((dataset, i) => {
+              const meta = chart.getDatasetMeta(i);
+              meta.data.forEach((bar, index) => {
+                const value = dataset.data[index];
+                if (value > 0) {
+                  ctx.fillStyle = '#ffffff';
+                  ctx.font = 'bold 11px Georgia';
+                  ctx.textAlign = 'center';
+                  ctx.fillText(value, bar.x, bar.y - 8);
+                }
+              });
+            });
+          }
+        }]
+      });
     }
     
     function renderTempChart(data) {
       const ctx = document.getElementById('tempChart').getContext('2d');
       if (window.tempChartInstance) window.tempChartInstance.destroy();
       
-      // Sample last 15 entries for temperature trend
       const recent = data.slice(0, 15).reverse();
       const labels = recent.map(r => {
         const d = r.dateObj;
@@ -746,28 +937,30 @@
           datasets: [{
             label: 'Temperature (°C)',
             data: temps,
-            borderColor: temps.some(t => t < 26 || t > 32) ? '#e74c3c' : '#2ecc71',
-            backgroundColor: 'rgba(46, 204, 113, 0.1)',
-            borderWidth: 2,
-            pointRadius: 3,
-            tension: 0.2,
+            borderColor: '#c9a94b',
+            backgroundColor: 'rgba(201, 169, 75, 0.1)',
+            borderWidth: 3,
+            pointRadius: 5,
+            pointBackgroundColor: '#ffffff',
+            pointBorderColor: '#c9a94b',
+            tension: 0.3,
             fill: true
           },
           {
             label: 'Optimal Min (26°C)',
             data: Array(temps.length).fill(26),
-            borderColor: 'rgba(201, 169, 75, 0.5)',
-            borderDash: [5, 5],
-            borderWidth: 1,
+            borderColor: 'rgba(201, 169, 75, 0.4)',
+            borderDash: [8, 4],
+            borderWidth: 1.5,
             pointRadius: 0,
             fill: false
           },
           {
             label: 'Optimal Max (32°C)',
             data: Array(temps.length).fill(32),
-            borderColor: 'rgba(201, 169, 75, 0.5)',
-            borderDash: [5, 5],
-            borderWidth: 1,
+            borderColor: 'rgba(201, 169, 75, 0.4)',
+            borderDash: [8, 4],
+            borderWidth: 1.5,
             pointRadius: 0,
             fill: false
           }]
@@ -777,7 +970,16 @@
           maintainAspectRatio: false,
           plugins: {
             legend: { display: false },
-            tooltip: { enabled: true }
+            tooltip: {
+              backgroundColor: '#0b1a2b',
+              titleColor: '#ffffff',
+              bodyColor: '#f0f2f5',
+              borderColor: '#c9a94b',
+              borderWidth: 1,
+              callbacks: {
+                label: ctx => `${ctx.parsed.y}°C`
+              }
+            }
           },
           scales: {
             x: { 
@@ -791,42 +993,103 @@
               max: 40
             }
           }
-        }
+        },
+        plugins: [{
+          id: 'tempDataLabels',
+          afterDatasetsDraw(chart) {
+            const ctx = chart.ctx;
+            const meta = chart.getDatasetMeta(0);
+            meta.data.forEach((point, index) => {
+              const value = chart.data.datasets[0].data[index];
+              ctx.fillStyle = '#c9a94b';
+              ctx.font = 'bold 9px Georgia';
+              ctx.textAlign = 'center';
+              ctx.fillText(value + '°', point.x, point.y - 12);
+            });
+          }
+        }]
       });
     }
     
-    function renderResourceBars(data) {
-      // Calculate averages
+    function renderResourceChart(data) {
+      const ctx = document.getElementById('resourceChart').getContext('2d');
+      if (window.resourceChartInstance) window.resourceChartInstance.destroy();
+      
       const avgFeed = data.reduce((sum, r) => sum + r.feed, 0) / data.length;
       const avgWater = data.reduce((sum, r) => sum + r.water, 0) / data.length;
-      
-      // Create bars for feed vs water (normalized to max)
-      const maxVal = Math.max(avgFeed * 10, avgWater); // Scale feed to comparable range
-      const feedWidth = Math.min(100, (avgFeed * 10 / maxVal) * 100);
-      const waterWidth = Math.min(100, (avgWater / maxVal) * 100);
-      
-      document.getElementById('resourceBars').innerHTML = `
-        <div class="bar-item">
-          <div class="bar-label">Feed (kg/day)</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:${feedWidth}%; background:#3498db;"></div>
-          </div>
-          <div class="bar-value">${fmt(avgFeed,1)}</div>
-        </div>
-        <div class="bar-item">
-          <div class="bar-label">Water (L/day)</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:${waterWidth}%; background:#1abc9c;"></div>
-          </div>
-          <div class="bar-value">${fmt(avgWater,1)}</div>
-        </div>
-      `;
-      
-      // Calculate feed per bird per day estimate
       const latestBirds = data[0]?.birdsAlive || 200;
-      const feedPerBird = avgFeed / latestBirds;
-      document.getElementById('resourceNote').textContent = 
-        `Estimated feed consumption: ${fmt(feedPerBird * 1000, 1)}g per bird per day`;
+      const feedPerBird = (avgFeed / latestBirds) * 1000;
+      
+      window.resourceChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Feed (kg/day)', 'Water (L/day)'],
+          datasets: [{
+            label: 'Daily Consumption',
+            data: [avgFeed, avgWater],
+            backgroundColor: ['rgba(201, 169, 75, 0.7)', 'rgba(166, 138, 46, 0.7)'],
+            borderColor: ['#c9a94b', '#a68a2e'],
+            borderWidth: 3,
+            borderRadius: 12,
+            borderSkipped: false,
+            barPercentage: 0.6,
+            categoryPercentage: 0.8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0b1a2b',
+              titleColor: '#ffffff',
+              bodyColor: '#f0f2f5',
+              borderColor: '#c9a94b',
+              borderWidth: 1,
+              callbacks: {
+                label: ctx => `${ctx.parsed.y.toFixed(1)} units`
+              }
+            },
+            subtitle: {
+              display: true,
+              text: `Feed per bird: ${feedPerBird.toFixed(1)}g/day`,
+              color: '#b9c7dd',
+              font: { size: 10, family: 'Libre Franklin' },
+              padding: { bottom: 15 }
+            }
+          },
+          scales: {
+            x: { 
+              ticks: { color: '#f0f2f5', font: { size: 12, weight: 'bold', family: 'Georgia' } },
+              grid: { display: false }
+            },
+            y: { 
+              ticks: { 
+                color: '#b9c7dd', 
+                font: { size: 10 },
+                callback: value => value.toFixed(1)
+              },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              beginAtZero: true
+            }
+          }
+        },
+        plugins: [{
+          id: 'resourceDataLabels',
+          afterDatasetsDraw(chart) {
+            const ctx = chart.ctx;
+            const meta = chart.getDatasetMeta(0);
+            meta.data.forEach((bar, index) => {
+              const value = chart.data.datasets[0].data[index];
+              ctx.fillStyle = '#ffffff';
+              ctx.font = 'bold 14px Georgia';
+              ctx.textAlign = 'center';
+              ctx.fillText(value.toFixed(1), bar.x, bar.y - 10);
+            });
+          }
+        }]
+      });
     }
     
     function renderDataTable(data) {
@@ -835,8 +1098,8 @@
       
       const tableRows = data.map(r => {
         const causeDisplay = r.deathCause ? 
-          `<span style="color:#e74c3c;font-size:0.75rem;">${r.deathCause}</span>` : 
-          (r.deaths > 0 ? '<span style="color:#f39c12;font-size:0.75rem;">Unrecorded</span>' : '—');
+          `<span style="color:#c97a3b;font-size:0.75rem;">${r.deathCause}</span>` : 
+          (r.deaths > 0 ? '<span style="color:#e6c468;font-size:0.75rem;">Unrecorded</span>' : '—');
         
         const weightDisplay = r.avgWeight ? `${fmt(r.avgWeight)}g` : '—';
         const tempClass = getTempClass(r.temp);
@@ -844,8 +1107,8 @@
         return `<tr>
           <td style="font-weight:600;color:white;">${r.date}</td>
           <td>${r.time}</td>
-          <td style="color:#2ecc71;font-weight:600;">${fmt(r.birdsAlive)}</td>
-          <td style="color:${r.deaths > 0 ? '#e74c3c' : '#b9c7dd'}">${r.deaths}</td>
+          <td style="color:#c9a94b;font-weight:600;">${fmt(r.birdsAlive)}</td>
+          <td style="color:${r.deaths > 0 ? '#c97a3b' : '#b9c7dd'}">${r.deaths}</td>
           <td>${causeDisplay}</td>
           <td>${fmt(r.feed,1)}</td>
           <td>${fmt(r.water,1)}</td>
@@ -857,7 +1120,6 @@
       document.getElementById('dataTable').innerHTML = `<thead><tr>${tableHead}</tr></thead><tbody>${tableRows}</tbody>`;
     }
 
-    // Initialize dashboard
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('topMetrics').innerHTML = 
         '<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
@@ -866,7 +1128,6 @@
         const { data, success } = await fetchData();
         render(data);
         
-        // Auto-refresh every 5 minutes if using live data
         if (success) {
           setInterval(async () => {
             const { data: freshData } = await fetchData();
