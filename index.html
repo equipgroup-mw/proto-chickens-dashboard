@@ -12,8 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
   
   <!-- Chart.js 4.4.1 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,7 +49,7 @@
     
     .dashboard { max-width: 1400px; margin: 0 auto; }
     
-    /* Header with Logo */
+    /* Header with Logo - 🔧 REMOVED GOLD OUTLINE */
     .header {
       display: flex;
       align-items: center;
@@ -68,7 +67,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid var(--brand-gold);
+      /* 🔧 REMOVED: border: 2px solid var(--brand-gold); */
       overflow: hidden;
     }
     
@@ -78,8 +77,30 @@
       object-fit: contain;
     }
     
+    /* 🔧 ENHANCED LOGO FALLBACK */
+    .logo-container .logo-fallback {
+      font-size: 1.8rem;
+      display: none;
+    }
+    .logo-container img:not([src]), 
+    .logo-container img[src=""],
+    .logo-container img.error {
+      display: none;
+    }
+    .logo-container:has(img:not([src])),
+    .logo-container:has(img[src=""]),
+    .logo-container:has(img.error) {
+      background: rgba(201, 169, 75, 0.2);
+    }
+    .logo-container:has(img:not([src])) .logo-fallback,
+    .logo-container:has(img[src=""]) .logo-fallback,
+    .logo-container:has(img.error) .logo-fallback {
+      display: block;
+    }
+    
     .header-content {
       flex: 1;
+      min-width: 200px;
     }
     
     .header h1 {
@@ -263,6 +284,9 @@
       height: 300px;
       width: 100%;
       margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* 🔧 CENTER CHARTS IN CARD */
     }
     
     .temp-indicator {
@@ -389,6 +413,7 @@
       .bar-label { width: 80px; }
       .two-column { grid-template-columns: 1fr; }
       .header { flex-direction: column; text-align: center; }
+      .chart-container { height: 250px; }
     }
   </style>
 </head>
@@ -396,7 +421,8 @@
 <div class="dashboard">
   <div class="header">
     <div class="logo-container">
-      <img src="Logo.png" alt="Farm Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:1.5rem;>🐔</span>';">
+      <img src="Logo.png" alt="Farm Logo" class="logo-img" onerror="this.classList.add('error');">
+      <span class="logo-fallback">🐔</span>
     </div>
     <div class="header-content">
       <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
@@ -430,7 +456,7 @@
     </div>
     <div class="card">
       <div class="card-header">Daily Mortality Trend</div>
-      <div class="chart-container" style="height: 300px;">
+      <div class="chart-container">
         <canvas id="mortalityTrendChart"></canvas>
       </div>
     </div>
@@ -446,8 +472,9 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-header">Resource Consumption</div>
-      <div class="chart-container" style="height: 300px;">
+      <!-- 🔧 CHANGED TITLE -->
+      <div class="card-header">Resources Currently in Use</div>
+      <div class="chart-container">
         <canvas id="resourceChart"></canvas>
       </div>
     </div>
@@ -488,14 +515,17 @@
       return decimals > 0 ? val.toFixed(decimals) : val.toLocaleString();
     };
     
+    // 🔧 CRITICAL FIX: Robust date parsing with base-10 and validation
     const parseDate = (dateStr) => {
       const months = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
       const parts = dateStr.trim().split(/\s+/);
       if (parts.length >= 3) {
-        const day = parseInt(parts[0]);
-        const month = months[parts[1].toLowerCase().slice(0,3)];
-        const year = parseInt(parts[2]);
-        return new Date(year, month, day);
+        const day = parseInt(parts[0], 10);
+        const monthKey = parts[1].toLowerCase().slice(0,3);
+        const month = months[monthKey] !== undefined ? months[monthKey] : 0;
+        const year = parseInt(parts[2], 10);
+        const d = new Date(year, month, day);
+        return isNaN(d.getTime()) ? new Date() : d;
       }
       return new Date();
     };
@@ -582,7 +612,7 @@
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `⚠️ Using sample data. Connect your Google Sheet: <code style="background:#0b1a2b;padding:2px 6px;border-radius:4px;">${CSV_URL}</code>`;
-        document.querySelector('.subtitle').after(errorDiv);
+        document.querySelector('.subtitle')?.after(errorDiv);
         return { data: FALLBACK_DATA, success: false };
       }
     }
@@ -610,11 +640,17 @@
       const oldest = data[data.length - 1];
       
       const totalDeaths = data.reduce((sum, r) => sum + r.deaths, 0);
-      const startingBirds = oldest.birdsAlive + totalDeaths;
+      
+      // 🔧 FIX: "Started with" = first recorded alive count (not + deaths)
+      const startingBirds = oldest.birdsAlive;
+      
       const mortalityRate = startingBirds > 0 ? (totalDeaths / startingBirds * 100).toFixed(1) : 0;
       
       const totalFeed = data.reduce((sum, r) => sum + r.feed, 0);
       const totalWater = data.reduce((sum, r) => sum + r.water, 0);
+      
+      // 🔧 FIX: Use latest temperature, not average
+      const latestTemp = latest.temp;
       const avgTemp = data.length > 0 ? 
         (data.reduce((sum, r) => sum + r.temp, 0) / data.length).toFixed(1) : 0;
       
@@ -623,7 +659,7 @@
       // Calculate duration
       const firstDate = oldest.dateObj;
       const lastDate = latest.dateObj;
-      const daysDiff = Math.ceil((lastDate - firstDate) / (1000 * 60 * 60 * 24)) + 1;
+      const daysDiff = Math.max(1, Math.ceil((lastDate - firstDate) / (1000 * 60 * 60 * 24)) + 1);
       
       // Latest data timestamp
       const latestTimestamp = `${latest.date} at ${latest.time || '—'}`;
@@ -641,13 +677,15 @@
         </div>
       `;
 
-      // Top metrics - Updated labels
+      // Top metrics - 🔧 FIXED LABELS & VALUES
       document.getElementById('topMetrics').innerHTML = [
         { label: 'Birds Alive', value: fmt(latest.birdsAlive), sub: `Started with ${fmt(startingBirds)}` },
         { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total losses` },
         { label: 'Last Recorded Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: 'Latest measurement' },
-        { label: 'Last Recorded Temperature', value: `${avgTemp}°C`, sub: getTempStatus(avgTemp) },
-        { label: 'Litter Status', value: litterStatus, sub: `${fmt(totalWater)}L water used` }
+        // 🔧 FIX: Show latest temp, not average
+        { label: 'Last Recorded Temperature', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp) },
+        // 🔧 FIX: Updated label text
+        { label: 'Litter - Last Check', value: litterStatus, sub: `${fmt(totalWater)}L water used` }
       ].map(m => `<div class="metric-card"><div class="label">${m.label}</div><div class="value">${m.value}</div><div class="context">${m.sub}</div></div>`).join('');
 
       renderWeightChart(data.filter(r => r.avgWeight !== null).reverse());
@@ -657,8 +695,8 @@
       
       document.getElementById('tempStatus').innerHTML = `
         <div style="margin-bottom:1rem;">
-          <span class="temp-indicator ${getTempClass(avgTemp)}">
-            ${getTempIcon(avgTemp)} Current: ${avgTemp}°C
+          <span class="temp-indicator ${getTempClass(latestTemp)}">
+            ${getTempIcon(latestTemp)} Current: ${fmt(latestTemp)}°C
           </span>
           <span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">
             Optimal: 26-32°C
@@ -681,6 +719,12 @@
     function renderWeightChart(data) {
       const ctx = document.getElementById('weightChart').getContext('2d');
       if (window.weightChartInstance) window.weightChartInstance.destroy();
+      
+      if (data.length === 0) {
+        document.getElementById('weightChart').parentNode.innerHTML = 
+          '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data available</p>';
+        return;
+      }
       
       const labels = data.map(r => {
         const d = r.dateObj;
@@ -720,12 +764,6 @@
               callbacks: {
                 label: ctx => `Weight: ${ctx.parsed.y}g`
               }
-            },
-            datalabels: {
-              anchor: 'end',
-              align: 'top',
-              color: '#c9a94b',
-              font: { weight: 'bold', size: 10 }
             }
           },
           scales: {
@@ -748,10 +786,12 @@
               const meta = chart.getDatasetMeta(i);
               meta.data.forEach((point, index) => {
                 const value = dataset.data[index];
-                ctx.fillStyle = '#c9a94b';
-                ctx.font = 'bold 10px Georgia';
-                ctx.textAlign = 'center';
-                ctx.fillText(value + 'g', point.x, point.y - 12);
+                if (value !== null) {
+                  ctx.fillStyle = '#c9a94b';
+                  ctx.font = 'bold 10px Georgia';
+                  ctx.textAlign = 'center';
+                  ctx.fillText(value + 'g', point.x, point.y - 12);
+                }
               });
             });
           }
@@ -785,7 +825,15 @@
       
       const labels = Object.keys(causes);
       const values = Object.values(causes);
-      const colors = ['#c9a94b', '#b45c28', '#8b6914', '#a68a2e', '#d4a843', '#e6c468'];
+      
+      // 🔧 USE BRAND COLORS ONLY
+      const brandColors = [
+        '#c9a94b', // primary gold
+        '#a68a2e', // dark gold
+        '#e6c468', // light gold
+        '#d4b87a', // muted gold
+        '#b89d3d'  // medium gold
+      ];
       
       window.causeChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -793,7 +841,7 @@
           labels: labels,
           datasets: [{
             data: values,
-            backgroundColor: labels.map((_, i) => colors[i % colors.length]),
+            backgroundColor: labels.map((_, i) => brandColors[i % brandColors.length]),
             borderColor: '#0f2136',
             borderWidth: 3
           }]
@@ -852,6 +900,9 @@
       });
       const values = entries.map(([, deaths]) => deaths);
       
+      // 🔧 CHANGED COLOR TO #a8935a
+      const barColor = '#a8935a';
+      
       window.mortalityTrendInstance = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -859,8 +910,8 @@
           datasets: [{
             label: 'Daily Deaths',
             data: values,
-            backgroundColor: values.map(v => v > 0 ? '#b45c28' : 'rgba(201, 169, 75, 0.3)'),
-            borderColor: values.map(v => v > 0 ? '#c97a3b' : '#c9a94b'),
+            backgroundColor: values.map(v => v > 0 ? barColor : 'rgba(168, 147, 90, 0.3)'),
+            borderColor: values.map(v => v > 0 ? '#9a844a' : barColor),
             borderWidth: 2,
             borderRadius: 8,
             borderSkipped: false,
@@ -1023,12 +1074,13 @@
       window.resourceChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Feed (kg/day)', 'Water (L/day)'],
+          labels: ['Feed', 'Water'],
           datasets: [{
             label: 'Daily Consumption',
             data: [avgFeed, avgWater],
-            backgroundColor: ['rgba(201, 169, 75, 0.7)', 'rgba(166, 138, 46, 0.7)'],
-            borderColor: ['#c9a94b', '#a68a2e'],
+            // 🔧 CHANGED FEED COLOR TO #8a949e
+            backgroundColor: ['#8a949e', 'rgba(201, 169, 75, 0.7)'],
+            borderColor: ['#7a848e', '#c9a94b'],
             borderWidth: 3,
             borderRadius: 12,
             borderSkipped: false,
@@ -1048,7 +1100,11 @@
               borderColor: '#c9a94b',
               borderWidth: 1,
               callbacks: {
-                label: ctx => `${ctx.parsed.y.toFixed(1)} units`
+                label: ctx => {
+                  // 🔧 ADD UNITS TO TOOLTIPS
+                  const unit = ctx.label === 'Feed' ? 'kg' : 'L';
+                  return `${ctx.parsed.y.toFixed(1)} ${unit}`;
+                }
               }
             },
             subtitle: {
@@ -1061,7 +1117,14 @@
           },
           scales: {
             x: { 
-              ticks: { color: '#f0f2f5', font: { size: 12, weight: 'bold', family: 'Georgia' } },
+              ticks: { 
+                color: '#f0f2f5', 
+                font: { size: 12, weight: 'bold', family: 'Georgia' },
+                // 🔧 ADD UNITS TO X-AXIS LABELS
+                callback: function(value, index) {
+                  return index === 0 ? 'Feed (kg)' : 'Water (L)';
+                }
+              },
               grid: { display: false }
             },
             y: { 
@@ -1082,10 +1145,12 @@
             const meta = chart.getDatasetMeta(0);
             meta.data.forEach((bar, index) => {
               const value = chart.data.datasets[0].data[index];
+              // 🔧 ADD UNITS TO DATA LABELS
+              const unit = index === 0 ? 'kg' : 'L';
               ctx.fillStyle = '#ffffff';
               ctx.font = 'bold 14px Georgia';
               ctx.textAlign = 'center';
-              ctx.fillText(value.toFixed(1), bar.x, bar.y - 10);
+              ctx.fillText(value.toFixed(1) + unit, bar.x, bar.y - 10);
             });
           }
         }]
