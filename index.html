@@ -691,21 +691,34 @@
       // Group by date and sum deaths
       const byDate = {};
       data.forEach(r => {
-        const dateKey = r.date;
-        if (!byDate[dateKey]) byDate[dateKey] = 0;
-        byDate[dateKey] += r.deaths;
+        if (r.date) {
+          const dateKey = r.date;
+          if (!byDate[dateKey]) byDate[dateKey] = 0;
+          byDate[dateKey] += r.deaths;
+        }
       });
       
-      const entries = Object.entries(byDate)
-        .sort((a,b) => parseDate(b[0]) - parseDate(a[0]))
-        .slice(0, 7); // Last 7 dates
+      let entries = Object.entries(byDate);
       
-      const maxDeaths = entries.length ? Math.max(...entries.map(e => e[1])) : 1;
+      // Fix: safely sort with error handling
+      entries.sort((a, b) => {
+        const dateA = parseDate(a[0]);
+        const dateB = parseDate(b[0]);
+        // Handle invalid dates
+        if (isNaN(dateA.getTime())) return 1;
+        if (isNaN(dateB.getTime())) return -1;
+        return dateB - dateA;
+      });
+      
+      // Only slice if we have entries
+      entries = entries.slice(0, 7);
+      
+      const maxDeaths = entries.length ? Math.max(...entries.map(e => e[1]), 1) : 1;
       
       document.getElementById('mortalityBars').innerHTML = entries.length ? 
         entries.map(([date, deaths]) => `
           <div class="bar-item">
-            <div class="bar-label">${date.split(' ')[0]} ${date.split(' ')[1].slice(0,3)}</div>
+            <div class="bar-label">${date.split(' ')[0] || date} ${(date.split(' ')[1] || '').slice(0,3)}</div>
             <div class="bar-track">
               <div class="bar-fill" style="width:${(deaths/maxDeaths)*100}%; background:#e74c3c;"></div>
             </div>
