@@ -161,7 +161,7 @@
       bottom: clamp(1rem, 3vw, 2rem);
       right: clamp(1rem, 3vw, 2rem);
       z-index: 1000;
-      display: none; /* Hidden by default, shown via JS */
+      display: none;
       background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-light));
       color: var(--brand-navy);
       border: none;
@@ -173,7 +173,6 @@
       box-shadow: 0 8px 25px rgba(201, 169, 75, 0.5), 0 4px 12px rgba(0,0,0,0.3);
       cursor: pointer;
       transition: var(--transition);
-      display: flex;
       align-items: center;
       gap: 0.5rem;
       animation: pulseInstall 2s infinite;
@@ -199,7 +198,6 @@
       line-height: 1;
     }
     
-    /* Hide on very small screens if needed */
     @media (max-width: 400px) {
       #installButton {
         padding: 0.7rem 1.2rem;
@@ -675,45 +673,76 @@
       catch(e) { btn.classList.remove('loading'); btn.querySelector('.refresh-text').textContent='Error'; setTimeout(()=>{btn.querySelector('.refresh-text').textContent='Refresh';},2000); }
     }
 
-    // 🔧 PWA INSTALL BUTTON LOGIC
+    // 🔧 PWA INSTALL BUTTON LOGIC (WITH 5-SECOND DELAY)
     let deferredPrompt;
+    let installButtonTimeout;
     const installButton = document.getElementById('installButton');
-    
-    // Show install button when browser fires beforeinstallprompt
+
+    // Check if app is already installed
+    function isAppInstalled() {
+      return window.matchMedia('(display-mode: standalone)').matches || 
+             window.navigator.standalone === true ||
+             document.referrer.includes('android-app://');
+    }
+
+    // Hide button if already installed on load
+    if (isAppInstalled()) {
+      installButton.style.display = 'none';
+      console.log('✅ App already installed - hiding install button');
+    }
+
+    // Show install button with 5-second delay
+    function showInstallButtonWithDelay() {
+      if (installButtonTimeout) clearTimeout(installButtonTimeout);
+      
+      if (!isAppInstalled() && deferredPrompt) {
+        installButtonTimeout = setTimeout(() => {
+          if (!isAppInstalled() && deferredPrompt) {
+            installButton.style.display = 'flex';
+            console.log('⏱️ Install button shown after 5s delay');
+          }
+        }, 5000); // 5 second delay
+      }
+    }
+
+    // Listen for beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installButton.style.display = 'flex';
-      console.log('💡 Install prompt available');
+      console.log('💡 Install prompt captured - waiting 5s before showing button');
+      showInstallButtonWithDelay();
     });
-    
+
     // Handle install button click
     installButton.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       
-      // Hide button during install
-      installButton.style.display = 'none';
+      if (installButtonTimeout) clearTimeout(installButtonTimeout);
       
-      // Show the install prompt
+      installButton.style.display = 'none';
       deferredPrompt.prompt();
       
-      // Wait for user choice
       const { outcome } = await deferredPrompt.userChoice;
       console.log(`📦 User response: ${outcome}`);
-      
-      // Clear the deferred prompt variable
       deferredPrompt = null;
     });
-    
-    // Hide button if app is already installed
+
+    // Hide button after successful install
     window.addEventListener('appinstalled', () => {
+      if (installButtonTimeout) clearTimeout(installButtonTimeout);
       installButton.style.display = 'none';
-      console.log('🎉 Proto Project installed!');
+      deferredPrompt = null;
+      console.log(' Proto Project installed!');
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (installButtonTimeout) clearTimeout(installButtonTimeout);
     });
 
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('refreshBtn')?.addEventListener('click', handleRefresh);
-      const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
+      const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;"> Loading flock data...</div>';
       try { const { data, success } = await fetchData(); if(data.length===0) throw new Error('No data records'); render(data); if(success) setInterval(async()=>{ render((await fetchData()).data); }, 300000); }
       catch(e) { const div=document.createElement('div'); div.className='error-message'; div.innerHTML=`<strong> Dashboard Error</strong><br>${e.message}`; document.querySelector('.dashboard')?.prepend(div); render(FALLBACK_DATA); }
     });
