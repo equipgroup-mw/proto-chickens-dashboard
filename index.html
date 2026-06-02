@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <!-- PWA Meta Tags -->
+  <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#c9a94b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon.png">
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Poultry Farm Dashboard | Live Monitoring</title>
@@ -154,7 +155,61 @@
     .error-message { background: rgba(231, 76, 60, 0.12); border: 1px solid var(--danger); padding: clamp(0.6rem, 2.5vw, 0.9rem); border-radius: 12px; color: #ffcccc; font-size: clamp(0.75rem, 2.5vw, 0.85rem); margin: clamp(0.4rem, 1.5vw, 0.6rem) 0; line-height: 1.4; }
     .error-message code { background: rgba(0,0,0,0.2); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; word-break: break-all; }
     
-    /* ========== MOBILE OPTIMIZATIONS (MATCHING REFERENCE IMAGE) ========== */
+    /* ========== FLOATING INSTALL BUTTON ========== */
+    #installButton {
+      position: fixed;
+      bottom: clamp(1rem, 3vw, 2rem);
+      right: clamp(1rem, 3vw, 2rem);
+      z-index: 1000;
+      display: none; /* Hidden by default, shown via JS */
+      background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-light));
+      color: var(--brand-navy);
+      border: none;
+      border-radius: 50px;
+      padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1.5rem, 3vw, 2.5rem);
+      font-family: 'Libre Franklin', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      box-shadow: 0 8px 25px rgba(201, 169, 75, 0.5), 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: pulseInstall 2s infinite;
+      max-width: 90vw;
+    }
+    
+    @keyframes pulseInstall {
+      0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(201, 169, 75, 0.5), 0 4px 12px rgba(0,0,0,0.3); }
+      50% { transform: scale(1.03); box-shadow: 0 12px 35px rgba(201, 169, 75, 0.7), 0 6px 18px rgba(0,0,0,0.4); }
+    }
+    
+    #installButton:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 35px rgba(201, 169, 75, 0.6), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    
+    #installButton:active {
+      transform: translateY(0) scale(0.98);
+    }
+    
+    #installButton .install-icon {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      line-height: 1;
+    }
+    
+    /* Hide on very small screens if needed */
+    @media (max-width: 400px) {
+      #installButton {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+        bottom: 1rem;
+        right: 1rem;
+      }
+    }
+    
+    /* ========== MOBILE OPTIMIZATIONS ========== */
     @media (max-width: 900px) {
       body { padding: 0.8rem; background: #0a1625; }
       
@@ -174,93 +229,44 @@
         border-radius: 12px;
         font-weight: 700;
         box-shadow: 0 4px 15px rgba(201, 169, 75, 0.4);
-        order: 3; /* Force below header content */
+        order: 3;
       }
       
       /* HERO CARD MOBILE REDESIGN */
       .hero-card {
-        flex-direction: row; /* Keep horizontal layout */
-        align-items: flex-start; /* Top align */
+        flex-direction: row;
+        align-items: flex-start;
         padding: 1.2rem;
         gap: 1rem;
         min-height: auto;
         border-radius: 16px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        background: #11263c; /* Slightly darker for contrast */
+        background: #11263c;
       }
       
-      /* Icon Area: Small and tight */
-      .hero-left {
-        width: 45px;
-        margin-top: 0.3rem;
-      }
-      .hero-icon-ring {
-        width: 45px;
-        box-shadow: none;
-        border-width: 1px;
-      }
+      .hero-left { width: 45px; margin-top: 0.3rem; }
+      .hero-icon-ring { width: 45px; box-shadow: none; border-width: 1px; }
       .hero-icon { font-size: 1.8rem; }
       
-      /* Content Area: Left aligned, dense */
-      .hero-center {
-        flex: 1;
-        min-width: 0;
-        align-items: flex-start;
-      }
-      .hero-title {
-        font-size: 0.7rem;
-        letter-spacing: 1.5px;
-        margin-bottom: 0.1rem;
-        color: var(--text-muted);
-      }
-      .hero-kpi {
-        font-size: 2.2rem; /* Big but fitting */
-        letter-spacing: -1px;
-        line-height: 1.1;
-        margin-bottom: 0.2rem;
-      }
-      .hero-started {
-        font-size: 0.8rem;
-        color: rgba(255,255,255,0.6);
-      }
+      .hero-center { flex: 1; min-width: 0; align-items: flex-start; }
+      .hero-title { font-size: 0.7rem; letter-spacing: 1.5px; margin-bottom: 0.1rem; color: var(--text-muted); }
+      .hero-kpi { font-size: 2.2rem; letter-spacing: -1px; line-height: 1.1; margin-bottom: 0.2rem; }
+      .hero-started { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
       .hero-started strong { color: rgba(255,255,255,0.9); }
       
-      /* Status Pill: Top Right */
-      .hero-right {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        align-items: flex-end;
-      }
-      .sync-pill {
-        padding: 0.25rem 0.6rem;
-        font-size: 0.7rem;
-        background: rgba(46, 204, 113, 0.15);
-        border-color: rgba(46, 204, 113, 0.3);
-        color: var(--success);
-      }
+      .hero-right { position: absolute; top: 1rem; right: 1rem; align-items: flex-end; }
+      .sync-pill { padding: 0.25rem 0.6rem; font-size: 0.7rem; background: rgba(46, 204, 113, 0.15); border-color: rgba(46, 204, 113, 0.3); color: var(--success); }
       .sync-dot { width: 6px; height: 6px; }
-      .hero-context-bottom { display: none; /* Hide auto-refresh text on mobile to save space */ }
+      .hero-context-bottom { display: none; }
       
-      /* Remove ambient light on mobile for cleaner look */
       .hero-ambient-light { display: none; }
       
-      /* SECONDARY METRICS: 2x2 GRID */
-      .metrics-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-      .metric-card {
-        padding: 0.8rem;
-        min-height: auto;
-        border-left: none; /* Cleaner look on mobile */
-        border-top: 3px solid var(--brand-gold); /* Accent on top */
-      }
+      .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .metric-card { padding: 0.8rem; min-height: auto; border-left: none; border-top: 3px solid var(--brand-gold); }
       .metric-card .label { font-size: 0.6rem; letter-spacing: 0.5px; }
       .metric-card .value { font-size: 1.2rem; }
       .metric-card .context { font-size: 0.6rem; }
       
-      /* OTHER MOBILE FIXES */
       .two-column { grid-template-columns: 1fr; }
       .card { padding: 1rem; border-radius: 12px; }
       .section-title { font-size: 0.7rem; }
@@ -269,7 +275,10 @@
       .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
     
-    @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    @media (prefers-reduced-motion: reduce) { 
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      #installButton { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -332,13 +341,11 @@
 
   <div class="section-title">️ Mortality Analysis</div>
   <div class="two-column">
-    <!-- 🔧 UPDATED: Now shows Daily Trend Line Graph -->
     <div class="card">
       <div class="card-header">Deaths by Cause</div>
       <div class="chart-container"><canvas id="causeChart"></canvas></div>
     </div>
     
-    <!-- 🔧 UPDATED: Shows only days with deaths + cause -->
     <div class="card" id="mortalityCard">
       <div class="card-header">
         <span>Daily Mortality Trend</span>
@@ -373,6 +380,12 @@
 
   <div class="updated" id="updatedLine"></div>
 </div>
+
+<!-- 🔧 FLOATING INSTALL BUTTON -->
+<button id="installButton" title="Install Proto Project">
+  <span class="install-icon">📲</span>
+  <span>Install App</span>
+</button>
 
 <script>
   (function() {
@@ -542,10 +555,8 @@
       updateSyncStatus(true);
     }
 
-    // 🔧 UPDATED: Shows only days with deaths
     function renderMortalityTimeline(data) {
       const c = document.getElementById('mortalityTimeline'); if (!c) return;
-      // Filter only rows where deaths > 0
       const deathRecords = data.filter(r => r.deaths > 0);
       
       if (deathRecords.length === 0) {
@@ -578,16 +589,12 @@
       window.weightChartInstance = new Chart(ctx, { type:'line', data:{ labels:data.map(r=>`${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`), datasets:[{ label:'Avg Weight (g)', data:data.map(r=>r.avgWeight), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.15)', borderWidth:3, pointBackgroundColor:'#fff', pointBorderColor:'#c9a94b', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`Weight: ${ctx.parsed.y}g`}} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.data.datasets.forEach((ds,i)=>{ chart.getDatasetMeta(i).data.forEach((p,idx)=>{ const v=ds.data[idx]; if(v!==null){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 9px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'g',p.x,p.y-10); } }); }); } }] });
     }
 
-    // 🔧 UPDATED: Line Graph for Daily Trend with Y-Axis Max 5
     function renderCauseChart(data) {
       const ctx = document.getElementById('causeChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.causeChartInstance) window.causeChartInstance.destroy();
       
-      // Aggregate deaths by date for line graph
       const dailyDeaths = {};
       data.forEach(r => { if (r.date) dailyDeaths[r.date] = (dailyDeaths[r.date] || 0) + r.deaths; });
-      
-      // Sort chronologically
       const sortedDates = Object.keys(dailyDeaths).sort((a, b) => parseDate(a) - parseDate(b));
       
       window.causeChartInstance = new Chart(ctx, { 
@@ -617,7 +624,7 @@
           scales:{ 
             x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, 
             y:{ 
-              max: 5, // 🔧 Y-axis fixed to 5
+              max: 5,
               ticks:{color:'#b9c7dd',font:{size:10},stepSize:1}, 
               grid:{color:'rgba(255,255,255,0.05)'}, 
               beginAtZero:true 
@@ -651,7 +658,7 @@
       if (window.resourceChartInstance) window.resourceChartInstance.destroy();
       const avgF=data.reduce((s,r)=>s+r.feed,0)/data.length, avgW=data.reduce((s,r)=>s+r.water,0)/data.length;
       window.resourceChartInstance = new Chart(ctx, { type:'bar', data:{ labels:['Feed','Water'], datasets:[{ label:'Daily', data:[avgF,avgW], backgroundColor:['#8a949e','rgba(201,169,75,0.7)'], borderColor:['#7a848e','#c9a94b'], borderWidth:3, borderRadius:12, borderSkipped:false, barPercentage:0.6, categoryPercentage:0.8 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(1)} ${ctx.label==='Feed'?'kg':'L'}`} } }, scales:{ x:{ ticks:{color:'#f0f2f5',font:{size:11,weight:'bold',family:'Georgia'}, callback:(_,i)=>i===0?'Feed (kg)':'Water (L)'}, grid:{display:false} }, y:{ 
-        max: 25, //  Y-axis max set to 25 to prevent label clipping
+        max: 25,
         ticks:{color:'#b9c7dd',font:{size:10},callback:v=>v.toFixed(1)}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 13px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v.toFixed(1)+(i===0?'kg':'L'),b.x,b.y-10); }); } }] });
     }
 
@@ -668,6 +675,42 @@
       catch(e) { btn.classList.remove('loading'); btn.querySelector('.refresh-text').textContent='Error'; setTimeout(()=>{btn.querySelector('.refresh-text').textContent='Refresh';},2000); }
     }
 
+    // 🔧 PWA INSTALL BUTTON LOGIC
+    let deferredPrompt;
+    const installButton = document.getElementById('installButton');
+    
+    // Show install button when browser fires beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installButton.style.display = 'flex';
+      console.log('💡 Install prompt available');
+    });
+    
+    // Handle install button click
+    installButton.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      
+      // Hide button during install
+      installButton.style.display = 'none';
+      
+      // Show the install prompt
+      deferredPrompt.prompt();
+      
+      // Wait for user choice
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`📦 User response: ${outcome}`);
+      
+      // Clear the deferred prompt variable
+      deferredPrompt = null;
+    });
+    
+    // Hide button if app is already installed
+    window.addEventListener('appinstalled', () => {
+      installButton.style.display = 'none';
+      console.log('🎉 Proto Project installed!');
+    });
+
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('refreshBtn')?.addEventListener('click', handleRefresh);
       const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
@@ -675,16 +718,15 @@
       catch(e) { const div=document.createElement('div'); div.className='error-message'; div.innerHTML=`<strong> Dashboard Error</strong><br>${e.message}`; document.querySelector('.dashboard')?.prepend(div); render(FALLBACK_DATA); }
     });
   })();
+  
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('Proto Project SW registered!', reg.scope))
+        .catch(err => console.log('SW registration failed', err));
+    });
+  }
 </script>
-  <script>
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Proto Project SW registered successfully!', reg.scope))
-          .catch(err => console.log('SW registration failed', err));
-      });
-    }
-  </script>
 </body>
 </html>
