@@ -128,14 +128,13 @@
     .chart-container { position: relative; height: clamp(220px, 45vw, 300px); width: 100%; margin-top: clamp(0.6rem, 2vw, 1rem); display: flex; align-items: center; justify-content: center; }
     .chart-container canvas { max-width: 100%; max-height: 100%; }
     .mortality-timeline { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
-    .mortality-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.8rem; background: rgba(168, 147, 90, 0.08); border-radius: 12px; border-left: 3px solid #a8935a; transition: var(--transition); }
-    .mortality-item:hover { background: rgba(168, 147, 90, 0.15); transform: translateX(4px); }
-    .mortality-dot { width: 12px; height: 12px; border-radius: 50%; background: #a8935a; flex-shrink: 0; border: 2px solid var(--brand-card-bg); box-shadow: 0 0 6px rgba(168, 147, 90, 0.4); }
-    .mortality-item.zero .mortality-dot { background: var(--brand-gold); box-shadow: none; }
+    .mortality-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.8rem; background: rgba(231, 76, 60, 0.08); border-radius: 12px; border-left: 3px solid #e74c3c; transition: var(--transition); }
+    .mortality-item:hover { background: rgba(231, 76, 60, 0.15); transform: translateX(4px); }
+    .mortality-dot { width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; flex-shrink: 0; box-shadow: 0 0 6px rgba(231, 76, 60, 0.4); }
     .mortality-content { flex: 1; min-width: 0; }
     .mortality-item .date { font-size: clamp(0.75rem, 2.5vw, 0.8rem); color: var(--text-secondary); margin-bottom: 0.15rem; }
     .mortality-item .count { font-size: clamp(0.85rem, 3vw, 0.95rem); font-weight: 600; color: var(--text-primary); }
-    .mortality-item .note { font-size: clamp(0.7rem, 2.3vw, 0.75rem); color: var(--text-muted); margin-top: 0.1rem; }
+    .mortality-item .note { font-size: clamp(0.7rem, 2.3vw, 0.75rem); color: var(--brand-gold-light); margin-top: 0.1rem; font-style: italic; }
     .kpi-total { background: linear-gradient(135deg, #1a3a54 0%, #0f2136 100%); border: 2px solid rgba(168, 147, 90, 0.4); border-radius: 20px; padding: clamp(1.5rem, 5vw, 2.5rem); text-align: center; box-shadow: 0 12px 40px rgba(168, 147, 90, 0.15); animation: kpiFadeIn 0.4s ease-out; }
     @keyframes kpiFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     .kpi-total .label { font-size: clamp(0.85rem, 2.8vw, 1rem); text-transform: uppercase; letter-spacing: 2px; color: var(--brand-gold-light); margin-bottom: 0.8rem; }
@@ -153,10 +152,10 @@
     @media (max-width: 900px) {
       body { padding: 0.8rem; background: #0a1625; }
       
-      .header { flex-direction: column; align-items: center; text-align: center; gap: 0.8rem; }
-      .header-left { justify-content: center; flex-wrap: wrap; }
-      .header-content { width: 100%; }
-      .subtitle { justify-content: center; }
+      /* 🔧 MOBILE HEADER FIX: Keep Logo Inline */
+      .header { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+      .header-left { justify-content: flex-start; flex-wrap: wrap; width: 100%; }
+      .header-content { width: auto; flex: 1; min-width: 200px; }
       
       /* Refresh Button Styling for Mobile */
       .refresh-btn { 
@@ -169,6 +168,7 @@
         border-radius: 12px;
         font-weight: 700;
         box-shadow: 0 4px 15px rgba(201, 169, 75, 0.4);
+        order: 3; /* Force below header content */
       }
       
       /* HERO CARD MOBILE REDESIGN */
@@ -277,7 +277,7 @@
       <div class="header-content">
         <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
         <div class="subtitle">
-          <span>🐔 Real-time flock analytics</span>
+          <span> Real-time flock analytics</span>
           <span id="latestUpdateBadge" class="latest-update-badge">📅 Loading...</span>
         </div>
       </div>
@@ -324,12 +324,15 @@
     <div class="chart-container"><canvas id="weightChart"></canvas></div>
   </div>
 
-  <div class="section-title">⚠️ Mortality Analysis</div>
+  <div class="section-title">️ Mortality Analysis</div>
   <div class="two-column">
+    <!-- 🔧 UPDATED: Now shows Daily Trend Line Graph -->
     <div class="card">
       <div class="card-header">Deaths by Cause</div>
       <div class="chart-container"><canvas id="causeChart"></canvas></div>
     </div>
+    
+    <!-- 🔧 UPDATED: Shows only days with deaths + cause -->
     <div class="card" id="mortalityCard">
       <div class="card-header">
         <span>Daily Mortality Trend</span>
@@ -502,7 +505,7 @@
       let lastUnavailable = 'N/A';
       for (let i = 0; i < data.length; i++) { if (!data[i].litter.includes('yes')) { lastUnavailable = `${data[i].date} ${data[i].time || ''}`.trim(); break; } }
       const daysDiff = Math.max(1, Math.ceil((latest.dateObj - oldest.dateObj) / 86400000) + 1);
-      document.getElementById('latestUpdateBadge').textContent = `📅 ${latest.date} at ${latest.time || '—'}`;
+      document.getElementById('latestUpdateBadge').textContent = ` ${latest.date} at ${latest.time || '—'}`;
       document.getElementById('durationDisplay').innerHTML = `<div style="text-align:center;padding:0.8rem 1.2rem;background:rgba(201,169,75,0.08);border-radius:14px;border:1px solid var(--border-subtle);"><span style="font-size:clamp(0.9rem,3vw,1.1rem);font-weight:700;color:var(--brand-gold-light);font-family:Georgia;">${daysDiff} Days</span><span style="font-size:clamp(0.7rem,2.5vw,0.8rem);color:var(--text-muted);margin-left:0.5rem;">Monitoring Period</span></div>`;
       
       document.getElementById('heroKPI').textContent = `${fmt(latest.birdsAlive)} Chickens`;
@@ -512,10 +515,10 @@
       const tempTrend = calculateTrend(latestTemp, previous?.temp, false);
       
       const metrics = [
-        { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total losses`, trend: { symbol: '—', class: 'neutral', text: 'Tracking' } },
+        { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total deaths`, trend: { symbol: '—', class: 'neutral', text: 'Tracking' } },
         { label: 'Last Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: 'Latest measurement', trend: weightTrend },
-        { label: 'Temperature', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp), trend: tempTrend },
-        { label: 'Litter Status', value: litterStatus, sub: `Last unavailable: ${lastUnavailable}`, trend: { symbol: '•', class: 'neutral', text: '—' } }
+        { label: 'Temperature - Last Checked', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp), trend: tempTrend },
+        { label: 'Litter Status - Last Checked', value: litterStatus, sub: `Last unavailable: ${lastUnavailable}`, trend: { symbol: '•', class: 'neutral', text: '—' } }
       ];
 
       document.getElementById('topMetrics').innerHTML = metrics.map(m => {
@@ -533,45 +536,119 @@
       updateSyncStatus(true);
     }
 
+    // 🔧 UPDATED: Shows only days with deaths
     function renderMortalityTimeline(data) {
       const c = document.getElementById('mortalityTimeline'); if (!c) return;
-      const byDate = {}; data.forEach(r => { if (r.date) byDate[r.date] = (byDate[r.date] || 0) + r.deaths; });
-      let entries = Object.entries(byDate).sort((a,b) => parseDate(b[0]) - parseDate(a[0])).slice(0,8);
-      c.innerHTML = entries.map(([date, deaths]) => `<div class="mortality-item ${deaths===0?'zero':''}"><div class="mortality-dot"></div><div class="mortality-content"><div class="date">${date}</div><div class="count">${deaths} death${deaths!==1?'s':''}</div><div class="note">${deaths>0?'⚠️ Loss recorded':'✅ No deaths'}</div></div></div>`).join('');
+      // Filter only rows where deaths > 0
+      const deathRecords = data.filter(r => r.deaths > 0);
+      
+      if (deathRecords.length === 0) {
+        c.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:1rem;">✅ No deaths recorded yet</div>';
+        return;
+      }
+
+      c.innerHTML = deathRecords.map(r => `
+        <div class="mortality-item">
+          <div class="mortality-dot"></div>
+          <div class="mortality-content">
+            <div class="date">${r.date} ${r.time || ''}</div>
+            <div class="count">${r.deaths} Death${r.deaths!==1?'s':''}</div>
+            <div class="note">Cause: ${r.deathCause || 'Unrecorded'}</div>
+          </div>
+        </div>`).join('');
     }
+
     function renderMortalityKPI(data) {
       const k = document.getElementById('mortalityKPI'); if (!k) return;
       const total = data.reduce((s,r)=>s+r.deaths,0), start = data[data.length-1].birdsAlive;
       const rate = start > 0 ? (total/start*100).toFixed(1) : 0, days = Math.max(1, Math.ceil((data[0].dateObj-data[data.length-1].dateObj)/86400000)+1);
       k.innerHTML = `<div class="label">Total Deaths</div><div class="value">${fmt(total)}</div><div class="subtitle">Over ${days} days · ${rate}% mortality · Started with ${fmt(start)} birds</div>`;
     }
+
     function renderWeightChart(data) {
       const ctx = document.getElementById('weightChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.weightChartInstance) window.weightChartInstance.destroy();
       if (data.length===0) { document.getElementById('weightChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data</p>'; return; }
       window.weightChartInstance = new Chart(ctx, { type:'line', data:{ labels:data.map(r=>`${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`), datasets:[{ label:'Avg Weight (g)', data:data.map(r=>r.avgWeight), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.15)', borderWidth:3, pointBackgroundColor:'#fff', pointBorderColor:'#c9a94b', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`Weight: ${ctx.parsed.y}g`}} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.data.datasets.forEach((ds,i)=>{ chart.getDatasetMeta(i).data.forEach((p,idx)=>{ const v=ds.data[idx]; if(v!==null){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 9px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'g',p.x,p.y-10); } }); }); } }] });
     }
+
+    // 🔧 UPDATED: Line Graph for Daily Trend with Y-Axis Max 5
     function renderCauseChart(data) {
       const ctx = document.getElementById('causeChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.causeChartInstance) window.causeChartInstance.destroy();
-      const causes={}; data.forEach(r=>{ if(r.deaths>0 && r.deathCause) causes[r.deathCause.trim()||'Unknown']=(causes[r.deathCause.trim()||'Unknown']||0)+r.deaths; });
-      const dc = Object.values(causes).reduce((a,b)=>a+b,0), td = data.reduce((s,r)=>s+r.deaths,0);
-      if(td>dc) causes['No recorded cause']=td-dc;
-      if(Object.keys(causes).length===0) { document.getElementById('causeChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No mortality events</p>'; return; }
-      window.causeChartInstance = new Chart(ctx, { type:'bar', data:{ labels:Object.keys(causes), datasets:[{ label:'Deaths', data:Object.values(causes), backgroundColor:'#a8935a', borderColor:'#9a844a', borderWidth:2, borderRadius:8, borderSkipped:false }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.y} death${ctx.parsed.y!==1?'s':''}`} } }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{display:false}, maxRotation:45 }, y:{ ticks:{color:'#b9c7dd',font:{size:10},stepSize:1}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; if(v>0){ chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 11px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v,b.x,b.y-8); } }); } }] });
+      
+      // Aggregate deaths by date for line graph
+      const dailyDeaths = {};
+      data.forEach(r => { if (r.date) dailyDeaths[r.date] = (dailyDeaths[r.date] || 0) + r.deaths; });
+      
+      // Sort chronologically
+      const sortedDates = Object.keys(dailyDeaths).sort((a, b) => parseDate(a) - parseDate(b));
+      
+      window.causeChartInstance = new Chart(ctx, { 
+        type:'line', 
+        data:{ 
+          labels: sortedDates.map(d => parseDate(d).toLocaleDateString('en-GB', {day:'numeric', month:'short'})), 
+          datasets:[{ 
+            label:'Daily Deaths', 
+            data: sortedDates.map(d => dailyDeaths[d]), 
+            borderColor:'#e74c3c', 
+            backgroundColor:'rgba(231,76,60,0.2)', 
+            borderWidth:2, 
+            pointBackgroundColor:'#e74c3c', 
+            pointBorderColor:'#fff', 
+            pointRadius:4, 
+            pointHoverRadius:6, 
+            fill:true, 
+            tension:0.3 
+          }] 
+        }, 
+        options:{ 
+          responsive:true, maintainAspectRatio:false, 
+          plugins:{ 
+            legend:{display:false}, 
+            tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`Deaths: ${ctx.parsed.y}`} } 
+          }, 
+          scales:{ 
+            x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, 
+            y:{ 
+              max: 5, // 🔧 Y-axis fixed to 5
+              ticks:{color:'#b9c7dd',font:{size:10},stepSize:1}, 
+              grid:{color:'rgba(255,255,255,0.05)'}, 
+              beginAtZero:true 
+            } 
+          } 
+        }, 
+        plugins:[{ 
+          id:'lbl', 
+          afterDatasetsDraw(chart){ 
+            chart.getDatasetMeta(0).data.forEach((p,i)=>{ 
+              const v=chart.data.datasets[0].data[i]; 
+              chart.ctx.fillStyle='#fff'; 
+              chart.ctx.font='bold 10px Georgia'; 
+              chart.ctx.textAlign='center'; 
+              chart.ctx.fillText(v,p.x,p.y-12); 
+            }); 
+          } 
+        }] 
+      });
     }
+
     function renderTempChart(data) {
       const ctx = document.getElementById('tempChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.tempChartInstance) window.tempChartInstance.destroy();
       const rec=data.slice(0,15).reverse(), temps=rec.map(r=>r.temp);
       window.tempChartInstance = new Chart(ctx, { type:'line', data:{ labels:rec.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), datasets:[ { label:'Temp (°C)', data:temps, borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.1)', borderWidth:3, pointRadius:4, pointBackgroundColor:'#fff', tension:0.3, fill:true }, { label:'Min (26°C)', data:Array(temps.length).fill(26), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }, { label:'Max (32°C)', data:Array(temps.length).fill(32), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false } ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{display:false} }, y:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'}, min:20, max:40 } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((p,i)=>{ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 8px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(chart.data.datasets[0].data[i]+'°',p.x,p.y-10); }); } }] });
     }
+
     function renderResourceChart(data) {
       const ctx = document.getElementById('resourceChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.resourceChartInstance) window.resourceChartInstance.destroy();
       const avgF=data.reduce((s,r)=>s+r.feed,0)/data.length, avgW=data.reduce((s,r)=>s+r.water,0)/data.length;
-      window.resourceChartInstance = new Chart(ctx, { type:'bar', data:{ labels:['Feed','Water'], datasets:[{ label:'Daily', data:[avgF,avgW], backgroundColor:['#8a949e','rgba(201,169,75,0.7)'], borderColor:['#7a848e','#c9a94b'], borderWidth:3, borderRadius:12, borderSkipped:false, barPercentage:0.6, categoryPercentage:0.8 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(1)} ${ctx.label==='Feed'?'kg':'L'}`} } }, scales:{ x:{ ticks:{color:'#f0f2f5',font:{size:11,weight:'bold',family:'Georgia'}, callback:(_,i)=>i===0?'Feed (kg)':'Water (L)'}, grid:{display:false} }, y:{ ticks:{color:'#b9c7dd',font:{size:10},callback:v=>v.toFixed(1)}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 13px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v.toFixed(1)+(i===0?'kg':'L'),b.x,b.y-10); }); } }] });
+      window.resourceChartInstance = new Chart(ctx, { type:'bar', data:{ labels:['Feed','Water'], datasets:[{ label:'Daily', data:[avgF,avgW], backgroundColor:['#8a949e','rgba(201,169,75,0.7)'], borderColor:['#7a848e','#c9a94b'], borderWidth:3, borderRadius:12, borderSkipped:false, barPercentage:0.6, categoryPercentage:0.8 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(1)} ${ctx.label==='Feed'?'kg':'L'}`} } }, scales:{ x:{ ticks:{color:'#f0f2f5',font:{size:11,weight:'bold',family:'Georgia'}, callback:(_,i)=>i===0?'Feed (kg)':'Water (L)'}, grid:{display:false} }, y:{ 
+        max: 25, //  Y-axis max set to 25 to prevent label clipping
+        ticks:{color:'#b9c7dd',font:{size:10},callback:v=>v.toFixed(1)}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 13px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v.toFixed(1)+(i===0?'kg':'L'),b.x,b.y-10); }); } }] });
     }
+
     function renderDataTable(data) {
       const h = `<thead><tr>${['Date','Time','Alive','Deaths','Cause','Feed(kg)','Water(L)','Temp(°C)','Weight(g)'].map(x=>`<th>${x}</th>`).join('')}</tr></thead>`;
       const b = `<tbody>${data.map(r=>`<tr><td style="font-weight:600;color:white;">${r.date}</td><td>${r.time||'—'}</td><td style="color:#c9a94b;font-weight:600;">${fmt(r.birdsAlive)}</td><td style="color:${r.deaths>0?'#c97a3b':'#b9c7dd'}">${r.deaths}</td><td>${r.deathCause&&r.deathCause.trim()?`<span style="color:#c97a3b;font-size:0.75rem;">${r.deathCause.trim()}</span>`:(r.deaths>0?'<span style="color:#e6c468;font-size:0.75rem;">Unrecorded</span>':'—')}</td><td>${fmt(r.feed,1)}</td><td>${fmt(r.water,1)}</td><td><span class="temp-indicator ${getTempClass(r.temp)}" style="padding:0.15rem 0.5rem;font-size:0.7rem;">${r.temp}°C</span></td><td>${(r.avgWeight!=null&&r.avgWeight>0)?`${fmt(r.avgWeight)}g`:'—'}</td></tr>`).join('')}</tbody>`;
@@ -589,7 +666,7 @@
       document.getElementById('refreshBtn')?.addEventListener('click', handleRefresh);
       const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
       try { const { data, success } = await fetchData(); if(data.length===0) throw new Error('No data records'); render(data); if(success) setInterval(async()=>{ render((await fetchData()).data); }, 300000); }
-      catch(e) { const div=document.createElement('div'); div.className='error-message'; div.innerHTML=`<strong>❌ Dashboard Error</strong><br>${e.message}`; document.querySelector('.dashboard')?.prepend(div); render(FALLBACK_DATA); }
+      catch(e) { const div=document.createElement('div'); div.className='error-message'; div.innerHTML=`<strong> Dashboard Error</strong><br>${e.message}`; document.querySelector('.dashboard')?.prepend(div); render(FALLBACK_DATA); }
     });
   })();
 </script>
