@@ -5,43 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Poultry Farm Dashboard | Live Monitoring</title>
   <link rel="icon" type="image/png" href="Logo.png">
-  
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800&family=Georgia:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Chart.js (clean, no invalid integrity hash) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous"></script>
   
   <style>
     :root {
       --brand-gold: #c9a94b;
       --brand-gold-light: #e6c468;
-      --brand-gold-dark: #a68a2e;
       --brand-navy: #0a1625;
       --brand-dark-blue: #0f2136;
       --brand-card-bg: #10273e;
-      --brand-accent: #1a3a54;
-      --brand-hero-bg: linear-gradient(160deg, #1e3a5f 0%, #142d4a 50%, #0d1f36 100%);
       --text-primary: #f0f2f5;
       --text-secondary: #b9c7dd;
       --text-muted: #8896aa;
       --success: #2ecc71;
-      --warning: #f39c12;
       --danger: #e74c3c;
-      --info: #3498db;
       --border-subtle: rgba(201, 169, 75, 0.2);
       --shadow-card: 0 8px 32px rgba(0,0,0,0.4);
-      --shadow-elevated: 0 16px 48px rgba(0,0,0,0.55);
-      --shadow-hero: 0 20px 60px rgba(201, 169, 75, 0.25), 0 8px 32px rgba(0,0,0,0.5);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       --radius-card: 20px;
       --radius-pill: 30px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
     body {
       background: linear-gradient(145deg, var(--brand-navy) 0%, var(--brand-dark-blue) 100%);
       font-family: 'Libre Franklin', system-ui, -apple-system, sans-serif;
@@ -51,680 +39,231 @@
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
+    h1, h2, h3, h4, h5, h6, .header h1, .section-title, .card-header,
+    .metric-card .label, th, .bar-label, .bar-value,
+    .trend-label, .mortality-item .date, .kpi-total .label,
+    .hero-title { font-family: 'Georgia', serif; font-weight: 700; }
     
-    h1, h2, h3, h4, h5, h6, 
-    .header h1, .section-title, .card-header,
-    .metric-card .label, .hero-metric .label,
-    th, .bar-label, .bar-value,
-    .trend-label, .mortality-item .date,
-    .kpi-total .label {
-      font-family: 'Georgia', serif;
-      font-weight: 700;
-    }
-
     .dashboard { max-width: 1400px; margin: 0 auto; width: 100%; }
-
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      padding: 0.5rem 0;
-    }
-    
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .logo-container {
-      flex-shrink: 0;
-      width: clamp(48px, 8vw, 60px);
-      height: clamp(48px, 8vw, 60px);
-      background: rgba(201, 169, 75, 0.1);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    
-    .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    
-    .logo-container .logo-fallback {
-      font-size: clamp(1.2rem, 4vw, 1.8rem);
-      display: none;
-    }
-    
-    .logo-container img:not([src]), 
-    .logo-container img[src=""],
-    .logo-container img.error {
-      display: none;
-    }
-    
-    .logo-container:has(img:not([src])) .logo-fallback,
-    .logo-container:has(img[src=""]) .logo-fallback,
-    .logo-container:has(img.error) .logo-fallback {
-      display: block;
-    }
-    
+    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding: 0.5rem 0; }
+    .header-left { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; }
+    .logo-container { flex-shrink: 0; width: clamp(48px, 8vw, 60px); height: clamp(48px, 8vw, 60px); background: rgba(201, 169, 75, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .logo-container img { width: 100%; height: 100%; object-fit: contain; }
+    .logo-container .logo-fallback { font-size: clamp(1.2rem, 4vw, 1.8rem); display: none; }
+    .logo-container img:not([src]), .logo-container img[src=""], .logo-container img.error { display: none; }
+    .logo-container:has(img:not([src])) .logo-fallback, .logo-container:has(img[src=""]) .logo-fallback, .logo-container:has(img.error) .logo-fallback { display: block; }
     .header-content { min-width: 0; }
-    
-    .header h1 {
-      font-size: clamp(1.4rem, 5vw, 2.2rem);
-      letter-spacing: -0.3px;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      line-height: 1.2;
-    }
-    
-    .header h1 .live-badge {
-      background: var(--brand-gold);
-      color: var(--brand-navy);
-      font-size: clamp(0.7rem, 2.5vw, 0.9rem);
-      padding: 0.2rem 0.8rem;
-      border-radius: var(--radius-pill);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    
-    .subtitle {
-      color: var(--text-secondary);
-      font-size: clamp(0.85rem, 2.8vw, 1rem);
-      margin-top: 0.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    
-    .latest-update-badge {
-      background: rgba(201, 169, 75, 0.12);
-      border: 1px solid var(--brand-gold);
-      color: var(--brand-gold-light);
-      padding: 0.2rem 0.7rem;
-      border-radius: var(--radius-pill);
-      font-size: clamp(0.7rem, 2.5vw, 0.75rem);
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      white-space: nowrap;
-    }
-    
-    .refresh-btn {
-      background: var(--brand-gold);
-      color: var(--brand-navy);
-      border: none;
-      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(0.8rem, 3vw, 1.2rem);
-      border-radius: var(--radius-pill);
-      font-weight: 600;
-      font-size: clamp(0.8rem, 2.8vw, 0.9rem);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: var(--transition);
-      box-shadow: 0 4px 12px rgba(201, 169, 75, 0.3);
-      font-family: 'Libre Franklin', sans-serif;
-      flex-shrink: 0;
-    }
-    
-    .refresh-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(201, 169, 75, 0.45);
-      background: var(--brand-gold-light);
-    }
-    
+    .header h1 { font-size: clamp(1.4rem, 5vw, 2.2rem); letter-spacing: -0.3px; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; line-height: 1.2; }
+    .header h1 .live-badge { background: var(--brand-gold); color: var(--brand-navy); font-size: clamp(0.7rem, 2.5vw, 0.9rem); padding: 0.2rem 0.8rem; border-radius: var(--radius-pill); font-weight: 600; white-space: nowrap; }
+    .subtitle { color: var(--text-secondary); font-size: clamp(0.85rem, 2.8vw, 1rem); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .latest-update-badge { background: rgba(201, 169, 75, 0.12); border: 1px solid var(--brand-gold); color: var(--brand-gold-light); padding: 0.2rem 0.7rem; border-radius: var(--radius-pill); font-size: clamp(0.7rem, 2.5vw, 0.75rem); font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+    .refresh-btn { background: var(--brand-gold); color: var(--brand-navy); border: none; padding: clamp(0.5rem, 2vw, 0.7rem) clamp(0.8rem, 3vw, 1.2rem); border-radius: var(--radius-pill); font-weight: 600; font-size: clamp(0.8rem, 2.8vw, 0.9rem); cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: var(--transition); box-shadow: 0 4px 12px rgba(201, 169, 75, 0.3); font-family: 'Libre Franklin', sans-serif; flex-shrink: 0; }
+    .refresh-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201, 169, 75, 0.45); background: var(--brand-gold-light); }
     .refresh-btn:active { transform: translateY(0); }
     .refresh-btn.loading { opacity: 0.7; cursor: wait; }
     .refresh-btn.loading .refresh-icon { animation: spin 1s linear infinite; }
-    
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ========== PREMIUM HERO CARD (DESKTOP PERFECT) ========== */
     .hero-section { margin-bottom: 1.5rem; perspective: 800px; }
-    
-    .hero-metric {
-      background: var(--brand-hero-bg);
-      border: 2px solid rgba(201, 169, 75, 0.6);
+    .hero-card {
+      background: linear-gradient(160deg, #1e3a5f, #142d4a, #0d1f36);
+      border: 2px solid rgba(201,169,75,0.6);
       border-radius: 28px;
-      padding: clamp(1.5rem, 5vw, 2.5rem);
-      box-shadow: var(--shadow-hero);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: clamp(1rem, 4vw, 2rem);
+      padding: clamp(1.2rem, 3vw, 1.8rem);
+      min-height: 200px;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 20px 60px rgba(201, 169, 75, 0.15), 0 12px 40px rgba(0,0,0,0.5);
+      gap: clamp(1.5rem, 4vw, 3rem);
       animation: heroFadeIn 0.8s ease-out;
     }
+    @keyframes heroFadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
     
-    @keyframes heroFadeIn {
-      from { opacity: 0; transform: translateY(15px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    
-    .hero-metric::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold-light), var(--brand-gold));
-      box-shadow: 0 0 20px rgba(201, 169, 75, 0.5);
-    }
-    
-    .hero-metric::after {
-      content: '';
-      position: absolute;
-      top: -50%; right: -10%;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(201, 169, 75, 0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    
-    .hero-content { min-width: 0; position: relative; z-index: 1; }
-    
-    .hero-metric .label {
-      font-size: clamp(0.9rem, 2.8vw, 1.1rem);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--brand-gold-light);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .hero-value {
-      font-size: clamp(3.5rem, 12vw, 6rem);
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 0.95;
-      margin: 0.3rem 0;
-      letter-spacing: -2px;
-      text-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 30px rgba(201, 169, 75, 0.3);
-      font-family: 'Georgia', serif;
-      background: linear-gradient(135deg, #ffffff 0%, #e6c468 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .hero-context {
-      font-size: clamp(0.9rem, 3vw, 1.1rem);
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: clamp(0.8rem, 3vw, 1.2rem);
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
-    }
-    
-    .hero-trend {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: clamp(0.8rem, 2.8vw, 0.95rem);
-      background: rgba(46, 204, 113, 0.15);
-      color: var(--success);
-      border: 1px solid rgba(46, 204, 113, 0.3);
-      backdrop-filter: blur(4px);
-    }
-    
-    .hero-trend.negative {
-      background: rgba(231, 76, 60, 0.15);
-      color: var(--danger);
-      border-color: rgba(231, 76, 60, 0.3);
-    }
-    
-    .hero-trend.neutral {
-      background: rgba(201, 169, 75, 0.15);
-      color: var(--brand-gold-light);
-      border-color: rgba(201, 169, 75, 0.3);
-    }
-    
-    .hero-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.8rem;
-      min-width: 130px;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .sync-status {
-      font-size: clamp(0.7rem, 2.3vw, 0.8rem);
-      color: var(--text-secondary);
-      text-align: right;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(255,255,255,0.05);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .sync-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--success);
-      display: inline-block;
-      animation: pulse 2s infinite;
-      box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
-    }
-    
-    .sync-dot.offline {
-      background: var(--warning);
-      animation: none;
-      box-shadow: none;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px rgba(46, 204, 113, 0.5); }
-      50% { opacity: 0.6; transform: scale(0.9); box-shadow: 0 0 4px rgba(46, 204, 113, 0.3); }
-    }
+    .hero-top-line { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, rgba(201,169,75,0), #e6c468, rgba(201,169,75,0)); box-shadow: 0 0 15px rgba(201,169,75,0.5); z-index: 2; }
+    .hero-ambient-light { position: absolute; top: -40%; right: -10%; width: 450px; height: 450px; background: radial-gradient(circle, rgba(201,169,75,0.1) 0%, transparent 70%); pointer-events: none; z-index: 1; }
 
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 30vw, 180px), 1fr));
-      gap: clamp(0.6rem, 2vw, 1rem);
-      margin-bottom: 0.5rem;
-    }
-    
-    .metric-card {
-      background: var(--brand-card-bg);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: clamp(0.9rem, 3vw, 1.2rem);
-      box-shadow: var(--shadow-card);
-      transition: var(--transition);
-      border-left: 4px solid var(--brand-gold);
-      display: flex;
-      flex-direction: column;
-      min-height: 110px;
-    }
-    
-    .metric-card:hover {
-      transform: translateY(-3px);
-      border-left-color: var(--brand-gold-light);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
-    }
-    
-    .metric-card .label {
-      font-size: clamp(0.65rem, 2.2vw, 0.75rem);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-secondary);
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 0.4rem;
-    }
-    
-    .trend-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.2rem;
-      font-size: clamp(0.65rem, 2vw, 0.7rem);
-      font-weight: 600;
-      padding: 0.1rem 0.4rem;
-      border-radius: 12px;
-      white-space: nowrap;
-    }
-    
+    .hero-left { flex: 0 0 auto; width: clamp(60px, 12vw, 90px); display: flex; align-items: center; justify-content: center; z-index: 2; }
+    .hero-icon-ring { width: 100%; aspect-ratio: 1; border-radius: 50%; background: rgba(201,169,75,0.08); border: 2px solid rgba(201,169,75,0.3); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(201,169,75,0.25), inset 0 0 15px rgba(201,169,75,0.1); }
+    .hero-icon { font-size: clamp(2rem, 4vw, 3rem); line-height: 1; }
+
+    .hero-center { flex: 1; min-width: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; }
+    .hero-title { font-family: 'Georgia', serif; font-size: clamp(0.75rem, 1.5vw, 0.85rem); text-transform: uppercase; letter-spacing: 3px; color: var(--brand-gold-light); margin-bottom: 0.1rem; font-weight: 700; }
+    .hero-kpi { font-family: 'Libre Franklin', sans-serif; font-size: clamp(4.5rem, 10vw, 7rem); font-weight: 800; letter-spacing: -3px; color: #ffffff; line-height: 0.9; white-space: nowrap; margin-bottom: 0.15rem; }
+    .hero-started { font-size: clamp(0.95rem, 2vw, 1.1rem); color: rgba(255,255,255,0.85); font-weight: 500; letter-spacing: 0.3px; }
+    .hero-started strong { color: #ffffff; font-weight: 700; font-size: 1.05em; }
+
+    .hero-right { flex: 0 0 auto; width: clamp(140px, 22vw, 170px); display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 0.6rem; z-index: 2; }
+    .sync-pill { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.06); padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); }
+    .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px rgba(46,204,113,0.6); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px rgba(46,204,113,0.6); } 50% { opacity: 0.6; transform: scale(0.9); box-shadow: 0 0 4px rgba(46,204,113,0.3); } }
+    .hero-context-bottom { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-align: right; }
+
+    /* ========== SECONDARY METRICS ========== */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 30vw, 180px), 1fr)); gap: clamp(0.6rem, 2vw, 1rem); margin-bottom: 0.5rem; }
+    .metric-card { background: var(--brand-card-bg); border: 1px solid var(--border-subtle); border-radius: 16px; padding: clamp(0.9rem, 3vw, 1.2rem); box-shadow: var(--shadow-card); transition: var(--transition); border-left: 4px solid var(--brand-gold); display: flex; flex-direction: column; min-height: 110px; }
+    .metric-card:hover { transform: translateY(-3px); border-left-color: var(--brand-gold-light); box-shadow: 0 12px 40px rgba(0,0,0,0.45); }
+    .metric-card .label { font-size: clamp(0.65rem, 2.2vw, 0.75rem); text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.3rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.4rem; }
+    .trend-indicator { display: inline-flex; align-items: center; gap: 0.2rem; font-size: clamp(0.65rem, 2vw, 0.7rem); font-weight: 600; padding: 0.1rem 0.4rem; border-radius: 12px; white-space: nowrap; }
     .trend-up { color: var(--success); background: rgba(46, 204, 113, 0.12); }
     .trend-down { color: var(--danger); background: rgba(231, 76, 60, 0.12); }
-    .trend-neutral { color: var(--brand-gold-light); background: rgba(201, 169, 75, 0.12); }
-    
-    .metric-card .value {
-      font-size: clamp(1.4rem, 5vw, 2rem);
-      font-weight: 700;
-      color: white;
-      line-height: 1.1;
-      margin: 0.1rem 0;
-      letter-spacing: -0.5px;
-    }
-    
-    .metric-card .context {
-      font-size: clamp(0.65rem, 2.2vw, 0.7rem);
-      color: var(--text-muted);
-      margin-top: auto;
-      padding-top: 0.4rem;
-      border-top: 1px dashed rgba(255,255,255,0.08);
-    }
+    .metric-card .value { font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 700; color: white; line-height: 1.1; margin: 0.1rem 0; letter-spacing: -0.5px; }
+    .metric-card .context { font-size: clamp(0.65rem, 2.2vw, 0.7rem); color: var(--text-muted); margin-top: auto; padding-top: 0.4rem; border-top: 1px dashed rgba(255,255,255,0.08); }
 
-    .section-title {
-      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 700;
-      color: var(--brand-gold);
-      margin: clamp(1.2rem, 4vw, 2rem) 0 clamp(0.5rem, 2vw, 0.8rem);
-      padding-bottom: clamp(0.3rem, 1.5vw, 0.4rem);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      position: relative;
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; width: 100%; height: 2px;
-      background: linear-gradient(90deg, var(--brand-gold), transparent);
-      border-radius: 2px;
-    }
-
-    .card {
-      background: var(--brand-card-bg);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: var(--radius-card);
-      padding: clamp(1rem, 4vw, 1.5rem);
-      margin-top: clamp(0.6rem, 2vw, 1rem);
-      box-shadow: var(--shadow-card);
-      backdrop-filter: blur(2px);
-    }
-    
-    .card-header {
-      font-size: clamp(1rem, 3.5vw, 1.15rem);
-      font-weight: 700;
-      margin-bottom: clamp(0.8rem, 3vw, 1.2rem);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      border-left: 4px solid var(--brand-gold);
-      padding-left: clamp(0.6rem, 2.5vw, 1rem);
-      color: #ffffff;
-      line-height: 1.3;
-      flex-wrap: wrap;
-    }
-    
-    .card-header-action {
-      background: rgba(201, 169, 75, 0.15);
-      color: var(--brand-gold-light);
-      border: 1px solid var(--brand-gold);
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: clamp(0.7rem, 2.5vw, 0.8rem);
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Libre Franklin', sans-serif;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    
-    .card-header-action:hover {
-      background: var(--brand-gold);
-      color: var(--brand-navy);
-    }
-
-    .two-column {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 45vw, 320px), 1fr));
-      gap: clamp(0.8rem, 2.5vw, 1rem);
-      margin-top: clamp(0.5rem, 2vw, 0.8rem);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
-      min-width: 500px;
-    }
-    
-    th {
-      text-align: left;
-      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(0.4rem, 1.5vw, 0.5rem);
-      color: var(--brand-gold);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 2px solid var(--brand-gold);
-      background: rgba(201, 169, 75, 0.08);
-      font-size: clamp(0.7rem, 2.3vw, 0.75rem);
-      white-space: nowrap;
-    }
-    
-    td {
-      padding: clamp(0.45rem, 1.8vw, 0.6rem) clamp(0.4rem, 1.5vw, 0.5rem);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      color: #d3dce9;
-      font-size: clamp(0.75rem, 2.5vw, 0.8rem);
-    }
-    
+    .section-title { font-size: clamp(0.75rem, 2.5vw, 0.85rem); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: var(--brand-gold); margin: clamp(1.2rem, 4vw, 2rem) 0 clamp(0.5rem, 2vw, 0.8rem); padding-bottom: clamp(0.3rem, 1.5vw, 0.4rem); display: inline-flex; align-items: center; gap: 0.5rem; position: relative; }
+    .section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, var(--brand-gold), transparent); border-radius: 2px; }
+    .card { background: var(--brand-card-bg); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-card); padding: clamp(1rem, 4vw, 1.5rem); margin-top: clamp(0.6rem, 2vw, 1rem); box-shadow: var(--shadow-card); backdrop-filter: blur(2px); }
+    .card-header { font-size: clamp(1rem, 3.5vw, 1.15rem); font-weight: 700; margin-bottom: clamp(0.8rem, 3vw, 1.2rem); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; border-left: 4px solid var(--brand-gold); padding-left: clamp(0.6rem, 2.5vw, 1rem); color: #ffffff; line-height: 1.3; flex-wrap: wrap; }
+    .card-header-action { background: rgba(201, 169, 75, 0.15); color: var(--brand-gold-light); border: 1px solid var(--brand-gold); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: clamp(0.7rem, 2.5vw, 0.8rem); font-weight: 600; cursor: pointer; font-family: 'Libre Franklin', sans-serif; transition: var(--transition); display: inline-flex; align-items: center; gap: 0.3rem; }
+    .card-header-action:hover { background: var(--brand-gold); color: var(--brand-navy); }
+    .two-column { display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 45vw, 320px), 1fr)); gap: clamp(0.8rem, 2.5vw, 1rem); margin-top: clamp(0.5rem, 2vw, 0.8rem); }
+    table { width: 100%; border-collapse: collapse; font-size: clamp(0.75rem, 2.5vw, 0.85rem); min-width: 500px; }
+    th { text-align: left; padding: clamp(0.5rem, 2vw, 0.7rem) clamp(0.4rem, 1.5vw, 0.5rem); color: var(--brand-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--brand-gold); background: rgba(201, 169, 75, 0.08); font-size: clamp(0.7rem, 2.3vw, 0.75rem); white-space: nowrap; }
+    td { padding: clamp(0.45rem, 1.8vw, 0.6rem) clamp(0.4rem, 1.5vw, 0.5rem); border-bottom: 1px solid rgba(255,255,255,0.05); color: #d3dce9; font-size: clamp(0.75rem, 2.5vw, 0.8rem); }
     tr:hover td { background: rgba(255,255,255,0.04); }
-    
-    .table-scroll {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 12px;
-      margin: 0 -0.5rem;
-      padding: 0 0.5rem;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .chart-container {
-      position: relative;
-      height: clamp(220px, 45vw, 300px);
-      width: 100%;
-      margin-top: clamp(0.6rem, 2vw, 1rem);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .chart-container canvas {
-      max-width: 100%;
-      max-height: 100%;
-    }
-
-    .mortality-timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      margin-top: 0.5rem;
-    }
-    
-    .mortality-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 0.6rem 0.8rem;
-      background: rgba(168, 147, 90, 0.08);
-      border-radius: 12px;
-      border-left: 3px solid #a8935a;
-      transition: var(--transition);
-    }
-    
-    .mortality-item:hover {
-      background: rgba(168, 147, 90, 0.15);
-      transform: translateX(4px);
-    }
-    
-    .mortality-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-      background: #a8935a;
-      flex-shrink: 0;
-      border: 2px solid var(--brand-card-bg);
-      box-shadow: 0 0 6px rgba(168, 147, 90, 0.4);
-    }
-    
-    .mortality-item.zero .mortality-dot {
-      background: var(--brand-gold);
-      box-shadow: none;
-    }
-    
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; margin: 0 -0.5rem; padding: 0 0.5rem; max-height: 400px; overflow-y: auto; }
+    .chart-container { position: relative; height: clamp(220px, 45vw, 300px); width: 100%; margin-top: clamp(0.6rem, 2vw, 1rem); display: flex; align-items: center; justify-content: center; }
+    .chart-container canvas { max-width: 100%; max-height: 100%; }
+    .mortality-timeline { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
+    .mortality-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.8rem; background: rgba(168, 147, 90, 0.08); border-radius: 12px; border-left: 3px solid #a8935a; transition: var(--transition); }
+    .mortality-item:hover { background: rgba(168, 147, 90, 0.15); transform: translateX(4px); }
+    .mortality-dot { width: 12px; height: 12px; border-radius: 50%; background: #a8935a; flex-shrink: 0; border: 2px solid var(--brand-card-bg); box-shadow: 0 0 6px rgba(168, 147, 90, 0.4); }
+    .mortality-item.zero .mortality-dot { background: var(--brand-gold); box-shadow: none; }
     .mortality-content { flex: 1; min-width: 0; }
+    .mortality-item .date { font-size: clamp(0.75rem, 2.5vw, 0.8rem); color: var(--text-secondary); margin-bottom: 0.15rem; }
+    .mortality-item .count { font-size: clamp(0.85rem, 3vw, 0.95rem); font-weight: 600; color: var(--text-primary); }
+    .mortality-item .note { font-size: clamp(0.7rem, 2.3vw, 0.75rem); color: var(--text-muted); margin-top: 0.1rem; }
+    .kpi-total { background: linear-gradient(135deg, #1a3a54 0%, #0f2136 100%); border: 2px solid rgba(168, 147, 90, 0.4); border-radius: 20px; padding: clamp(1.5rem, 5vw, 2.5rem); text-align: center; box-shadow: 0 12px 40px rgba(168, 147, 90, 0.15); animation: kpiFadeIn 0.4s ease-out; }
+    @keyframes kpiFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .kpi-total .label { font-size: clamp(0.85rem, 2.8vw, 1rem); text-transform: uppercase; letter-spacing: 2px; color: var(--brand-gold-light); margin-bottom: 0.8rem; }
+    .kpi-total .value { font-size: clamp(3.5rem, 10vw, 5rem); font-weight: 700; color: #ffffff; line-height: 1; text-shadow: 0 4px 8px rgba(0,0,0,0.4); font-family: 'Georgia', serif; }
+    .kpi-total .subtitle { font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--text-muted); margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); }
+    .temp-indicator { display: inline-flex; align-items: center; gap: 0.4rem; padding: clamp(0.25rem, 1.5vw, 0.35rem) clamp(0.6rem, 2.5vw, 0.9rem); border-radius: var(--radius-pill); font-size: clamp(0.7rem, 2.4vw, 0.8rem); font-weight: 600; margin-bottom: clamp(0.5rem, 2vw, 1rem); }
+    .temp-optimal { background: rgba(201, 169, 75, 0.15); color: var(--brand-gold-light); border: 1px solid var(--brand-gold); }
+    .temp-warning { background: rgba(241, 196, 15, 0.12); color: #f1c40f; border: 1px solid #d4ac0d; }
+    .temp-critical { background: rgba(231, 76, 60, 0.12); color: #e74c3c; border: 1px solid #c0392b; }
+    .updated { text-align: right; color: var(--text-muted); font-size: clamp(0.65rem, 2.2vw, 0.7rem); margin-top: clamp(1.2rem, 4vw, 2rem); padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    .error-message { background: rgba(231, 76, 60, 0.12); border: 1px solid var(--danger); padding: clamp(0.6rem, 2.5vw, 0.9rem); border-radius: 12px; color: #ffcccc; font-size: clamp(0.75rem, 2.5vw, 0.85rem); margin: clamp(0.4rem, 1.5vw, 0.6rem) 0; line-height: 1.4; }
+    .error-message code { background: rgba(0,0,0,0.2); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; word-break: break-all; }
     
-    .mortality-item .date {
-      font-size: clamp(0.75rem, 2.5vw, 0.8rem);
-      color: var(--text-secondary);
-      margin-bottom: 0.15rem;
-    }
-    
-    .mortality-item .count {
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    
-    .mortality-item .note {
-      font-size: clamp(0.7rem, 2.3vw, 0.75rem);
-      color: var(--text-muted);
-      margin-top: 0.1rem;
-    }
-
-    .kpi-total {
-      background: linear-gradient(135deg, #1a3a54 0%, #0f2136 100%);
-      border: 2px solid rgba(168, 147, 90, 0.4);
-      border-radius: 20px;
-      padding: clamp(1.5rem, 5vw, 2.5rem);
-      text-align: center;
-      box-shadow: 0 12px 40px rgba(168, 147, 90, 0.15);
-      animation: kpiFadeIn 0.4s ease-out;
-    }
-    
-    @keyframes kpiFadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    
-    .kpi-total .label {
-      font-size: clamp(0.85rem, 2.8vw, 1rem);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--brand-gold-light);
-      margin-bottom: 0.8rem;
-    }
-    
-    .kpi-total .value {
-      font-size: clamp(3.5rem, 10vw, 5rem);
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1;
-      text-shadow: 0 4px 8px rgba(0,0,0,0.4);
-      font-family: 'Georgia', serif;
-    }
-    
-    .kpi-total .subtitle {
-      font-size: clamp(0.75rem, 2.5vw, 0.9rem);
-      color: var(--text-muted);
-      margin-top: 0.8rem;
-      padding-top: 0.8rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .temp-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: clamp(0.25rem, 1.5vw, 0.35rem) clamp(0.6rem, 2.5vw, 0.9rem);
-      border-radius: var(--radius-pill);
-      font-size: clamp(0.7rem, 2.4vw, 0.8rem);
-      font-weight: 600;
-      margin-bottom: clamp(0.5rem, 2vw, 1rem);
-    }
-    
-    .temp-optimal { 
-      background: rgba(201, 169, 75, 0.15); 
-      color: var(--brand-gold-light); 
-      border: 1px solid var(--brand-gold); 
-    }
-    .temp-warning { 
-      background: rgba(241, 196, 15, 0.12); 
-      color: #f1c40f; 
-      border: 1px solid #d4ac0d; 
-    }
-    .temp-critical { 
-      background: rgba(231, 76, 60, 0.12); 
-      color: #e74c3c; 
-      border: 1px solid #c0392b; 
-    }
-
-    .updated {
-      text-align: right;
-      color: var(--text-muted);
-      font-size: clamp(0.65rem, 2.2vw, 0.7rem);
-      margin-top: clamp(1.2rem, 4vw, 2rem);
-      padding-top: 0.8rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .error-message {
-      background: rgba(231, 76, 60, 0.12);
-      border: 1px solid var(--danger);
-      padding: clamp(0.6rem, 2.5vw, 0.9rem);
-      border-radius: 12px;
-      color: #ffcccc;
-      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
-      margin: clamp(0.4rem, 1.5vw, 0.6rem) 0;
-      line-height: 1.4;
-    }
-    
-    .error-message code {
-      background: rgba(0,0,0,0.2);
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.9em;
-      word-break: break-all;
-    }
-
-    @media (max-width: 768px) {
-      body { padding: 0.8rem; }
-      .header { flex-direction: column; align-items: stretch; text-align: center; gap: 0.8rem; }
+    /* ========== MOBILE OPTIMIZATIONS (MATCHING REFERENCE IMAGE) ========== */
+    @media (max-width: 900px) {
+      body { padding: 0.8rem; background: #0a1625; }
+      
+      .header { flex-direction: column; align-items: center; text-align: center; gap: 0.8rem; }
       .header-left { justify-content: center; flex-wrap: wrap; }
       .header-content { width: 100%; }
-      .hero-metric { grid-template-columns: 1fr; text-align: center; padding: clamp(1.2rem, 4vw, 1.8rem); }
-      .hero-actions { align-items: center; width: 100%; flex-direction: row; justify-content: center; gap: 0.6rem; }
-      .sync-status { text-align: center; justify-content: center; }
-      .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; }
-      .metric-card { min-height: 100px; padding: 0.9rem; }
+      .subtitle { justify-content: center; }
+      
+      /* Refresh Button Styling for Mobile */
+      .refresh-btn { 
+        width: 100%; 
+        justify-content: center; 
+        padding: 0.8rem; 
+        font-size: 1rem; 
+        background: var(--brand-gold);
+        color: #0a1625;
+        border-radius: 12px;
+        font-weight: 700;
+        box-shadow: 0 4px 15px rgba(201, 169, 75, 0.4);
+      }
+      
+      /* HERO CARD MOBILE REDESIGN */
+      .hero-card {
+        flex-direction: row; /* Keep horizontal layout */
+        align-items: flex-start; /* Top align */
+        padding: 1.2rem;
+        gap: 1rem;
+        min-height: auto;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        background: #11263c; /* Slightly darker for contrast */
+      }
+      
+      /* Icon Area: Small and tight */
+      .hero-left {
+        width: 45px;
+        margin-top: 0.3rem;
+      }
+      .hero-icon-ring {
+        width: 45px;
+        box-shadow: none;
+        border-width: 1px;
+      }
+      .hero-icon { font-size: 1.8rem; }
+      
+      /* Content Area: Left aligned, dense */
+      .hero-center {
+        flex: 1;
+        min-width: 0;
+        align-items: flex-start;
+      }
+      .hero-title {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.1rem;
+        color: var(--text-muted);
+      }
+      .hero-kpi {
+        font-size: 2.2rem; /* Big but fitting */
+        letter-spacing: -1px;
+        line-height: 1.1;
+        margin-bottom: 0.2rem;
+      }
+      .hero-started {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.6);
+      }
+      .hero-started strong { color: rgba(255,255,255,0.9); }
+      
+      /* Status Pill: Top Right */
+      .hero-right {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        align-items: flex-end;
+      }
+      .sync-pill {
+        padding: 0.25rem 0.6rem;
+        font-size: 0.7rem;
+        background: rgba(46, 204, 113, 0.15);
+        border-color: rgba(46, 204, 113, 0.3);
+        color: var(--success);
+      }
+      .sync-dot { width: 6px; height: 6px; }
+      .hero-context-bottom { display: none; /* Hide auto-refresh text on mobile to save space */ }
+      
+      /* Remove ambient light on mobile for cleaner look */
+      .hero-ambient-light { display: none; }
+      
+      /* SECONDARY METRICS: 2x2 GRID */
+      .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .metric-card {
+        padding: 0.8rem;
+        min-height: auto;
+        border-left: none; /* Cleaner look on mobile */
+        border-top: 3px solid var(--brand-gold); /* Accent on top */
+      }
+      .metric-card .label { font-size: 0.6rem; letter-spacing: 0.5px; }
+      .metric-card .value { font-size: 1.2rem; }
+      .metric-card .context { font-size: 0.6rem; }
+      
+      /* OTHER MOBILE FIXES */
       .two-column { grid-template-columns: 1fr; }
-      .card { padding: 1rem; }
-      .section-title { width: 100%; justify-content: center; }
-      .chart-container { height: 200px; }
-      .refresh-btn { width: 100%; justify-content: center; padding: 0.8rem; font-size: 0.95rem; }
+      .card { padding: 1rem; border-radius: 12px; }
+      .section-title { font-size: 0.7rem; }
+      .chart-container { height: 220px; }
       .table-scroll { margin: 0 -1rem; padding: 0 1rem; max-height: 300px; }
-      table { font-size: 0.75rem; }
-      th, td { padding: 0.5rem 0.4rem; }
       .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
     
-    @media (max-width: 480px) {
-      .hero-value { font-size: 3.5rem; }
-      .hero-context { flex-direction: column; align-items: center; gap: 0.4rem; }
-      .mortality-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; padding: 0.7rem; }
-      .bar-label { width: 70px; font-size: 0.75rem; }
-      .bar-value { min-width: 45px; font-size: 0.8rem; }
-    }
-    
-    @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-    }
+    @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
   </style>
 </head>
 <body>
@@ -745,28 +284,33 @@
     </div>
     <button id="refreshBtn" class="refresh-btn" title="Refresh data from Google Sheets">
       <span class="refresh-icon">↻</span>
-      <span class="refresh-text">Refresh</span>
+      <span class="refresh-text">Refresh Data</span>
     </button>
   </div>
 
   <div class="hero-section">
-    <div class="hero-metric">
-      <div class="hero-content">
-        <div class="label">🐔 Birds Alive</div>
-        <div class="value" id="heroValue">—</div>
-        <div class="hero-context">
-          <span>Started with <strong id="heroStarted">—</strong></span>
-          <span class="hero-trend" id="heroTrend">—</span>
+    <div class="hero-card">
+      <div class="hero-top-line"></div>
+      <div class="hero-ambient-light"></div>
+      
+      <div class="hero-left">
+        <div class="hero-icon-ring">
+          <span class="hero-icon">🐔</span>
         </div>
       </div>
-      <div class="hero-actions">
-        <div class="sync-status">
+      
+      <div class="hero-center">
+        <div class="hero-title">BIRDS ALIVE</div>
+        <div class="hero-kpi" id="heroKPI">198 Chickens</div>
+        <div class="hero-started">Started with <strong id="heroStarted">201</strong></div>
+      </div>
+      
+      <div class="hero-right">
+        <div class="sync-pill">
           <span class="sync-dot" id="syncDot"></span>
-          <span id="syncText">Synced</span>
+          <span id="syncStatusText">Synced</span>
         </div>
-        <div style="font-size:0.7rem;color:var(--text-muted);text-align:right;">
-          Auto-refresh: 5 min
-        </div>
+        <div class="hero-context-bottom">Auto-refresh: 5 min</div>
       </div>
     </div>
   </div>
@@ -777,25 +321,19 @@
   <div class="section-title">📈 Growth & Performance</div>
   <div class="card">
     <div class="card-header">Average Weight Progression</div>
-    <div class="chart-container">
-      <canvas id="weightChart"></canvas>
-    </div>
+    <div class="chart-container"><canvas id="weightChart"></canvas></div>
   </div>
 
   <div class="section-title">⚠️ Mortality Analysis</div>
   <div class="two-column">
     <div class="card">
       <div class="card-header">Deaths by Cause</div>
-      <div class="chart-container">
-        <canvas id="causeChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="causeChart"></canvas></div>
     </div>
     <div class="card" id="mortalityCard">
       <div class="card-header">
         <span>Daily Mortality Trend</span>
-        <button class="card-header-action" id="toggleMortalityBtn" title="Show total deaths">
-          📊 Show Total
-        </button>
+        <button class="card-header-action" id="toggleMortalityBtn" title="Show total deaths">📊 Show Total</button>
       </div>
       <div id="mortalityTimeline" class="mortality-timeline"></div>
       <div id="mortalityKPI" class="kpi-total" style="display: none;"></div>
@@ -807,15 +345,11 @@
     <div class="card">
       <div class="card-header">Temperature Monitoring</div>
       <div id="tempStatus"></div>
-      <div class="chart-container">
-        <canvas id="tempChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="tempChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-header">Resources Currently in Use</div>
-      <div class="chart-container">
-        <canvas id="resourceChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="resourceChart"></canvas></div>
     </div>
   </div>
 
@@ -825,9 +359,7 @@
       <span>Complete flock history</span>
       <span id="recordCount" style="font-size:0.8rem;color:var(--text-muted);font-weight:400;font-family:'Libre Franklin';"></span>
     </div>
-    <div class="table-scroll">
-      <table id="dataTable"></table>
-    </div>
+    <div class="table-scroll"><table id="dataTable"></table></div>
   </div>
 
   <div class="updated" id="updatedLine"></div>
@@ -838,65 +370,47 @@
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6R8ak4agVRhZscPDpAN5dR-udSwwysupTcP6itH3h6M5vIiqVz-QK0NN7KohtCBFudSCLyK68cIvJ/pub?gid=2018982467&single=true&output=csv";
 
     const FALLBACK_DATA = [
-      { time:"16:00", date:"25 May 2026", birdsAlive:201, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"yes", avgWeight:null },
-      { time:"10:00", date:"27 May 2026", birdsAlive:200, deaths:1, deathCause:"Squashed under tray", feed:3, water:20, temp:30, litter:"no", avgWeight:99 },
-      { time:"10:00", date:"29 May 2026", birdsAlive:199, deaths:1, deathCause:"Stepped on", feed:3, water:20, temp:30, litter:"no", avgWeight:99 },
-      { time:"8:30", date:"30 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:28, litter:"no", avgWeight:112 },
-      { time:"12:00", date:"30 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:28, litter:"no", avgWeight:120 },
-      { time:"17:00", date:"30 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"no", avgWeight:125 },
-      { time:"8:00", date:"31 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"Yes", avgWeight:129 },
-      { time:"8:00", date:"1 June 2026", birdsAlive:198, deaths:1, deathCause:"Low temperature", feed:3, water:20, temp:30, litter:"Yes", avgWeight:135 }
+      { time:"16:00", date:"25 May 2026", birdsAlive:201, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"yes", avgWeight:null, timeMinutes:960 },
+      { time:"10:00", date:"27 May 2026", birdsAlive:200, deaths:1, deathCause:"Squashed under tray", feed:3, water:20, temp:30, litter:"no", avgWeight:99, timeMinutes:600 },
+      { time:"10:00", date:"29 May 2026", birdsAlive:199, deaths:1, deathCause:"Stepped on", feed:3, water:20, temp:30, litter:"no", avgWeight:99, timeMinutes:600 },
+      { time:"8:30", date:"30 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:28, litter:"no", avgWeight:112, timeMinutes:510 },
+      { time:"12:00", date:"30 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:28, litter:"no", avgWeight:120, timeMinutes:720 },
+      { time:"17:00", date:"30 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"no", avgWeight:125, timeMinutes:1020 },
+      { time:"8:00", date:"31 May 2026", birdsAlive:199, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"Yes", avgWeight:129, timeMinutes:480 },
+      { time:"8:00", date:"1 June 2026", birdsAlive:198, deaths:1, deathCause:"Low temperature", feed:3, water:20, temp:30, litter:"Yes", avgWeight:135, timeMinutes:480 },
+      { time:"17:30", date:"1 June 2026", birdsAlive:198, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"Yes", avgWeight:147, timeMinutes:1050 }
     ];
 
-    const toNum = (val) => {
-      if (val === null || val === undefined || val === '') return 0;
-      let num = Number(String(val).replace(/[^0-9.-]/g, ''));
-      return isNaN(num) ? 0 : num;
-    };
-    
-    const fmt = (val, decimals = 0) => {
-      if (typeof val !== 'number') return val || '—';
-      return decimals > 0 ? val.toFixed(decimals) : val.toLocaleString();
-    };
-    
+    const toNum = (val) => { if (val === null || val === undefined || val === '') return 0; let num = Number(String(val).replace(/[^0-9.-]/g, '')); return isNaN(num) ? 0 : num; };
+    const fmt = (val, decimals = 0) => { if (typeof val !== 'number') return val || '—'; return decimals > 0 ? val.toFixed(decimals) : val.toLocaleString(); };
     const parseDate = (dateStr) => {
       const months = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
       const parts = dateStr.trim().split(/\s+/);
       if (parts.length >= 3) {
-        const day = parseInt(parts[0], 10);
-        const monthKey = parts[1].toLowerCase().slice(0,3);
-        const month = months[monthKey] !== undefined ? months[monthKey] : 0;
-        const year = parseInt(parts[2], 10);
-        const d = new Date(year, month, day);
-        return isNaN(d.getTime()) ? new Date() : d;
-      }
-      return new Date();
+        const day = parseInt(parts[0], 10), monthKey = parts[1].toLowerCase().slice(0,3), month = months[monthKey] !== undefined ? months[monthKey] : 0, year = parseInt(parts[2], 10);
+        const d = new Date(year, month, day); return isNaN(d.getTime()) ? new Date() : d;
+      } return new Date();
     };
 
     function parseCSV(text) {
-      const rows = [];
-      let row = [], field = '', inQuotes = false;
+      const rows = []; let row = [], field = '', inQuotes = false;
       for (let i = 0; i < text.length; i++) {
         const ch = text[i], next = text[i+1];
-        if (ch === '"' && !inQuotes) { inQuotes = true; }
+        if (ch === '"' && !inQuotes) inQuotes = true;
         else if (ch === '"' && inQuotes && next === '"') { field += '"'; i++; }
-        else if (ch === '"' && inQuotes) { inQuotes = false; }
+        else if (ch === '"' && inQuotes) inQuotes = false;
         else if (ch === ',' && !inQuotes) { row.push(field.trim()); field = ''; }
-        else if ((ch === '\n' || ch === '\r') && !inQuotes) {
-          if (field || row.length) { row.push(field.trim()); rows.push(row); row = []; field = ''; }
-          if (ch === '\r' && next === '\n') i++;
-        } else { field += ch; }
+        else if ((ch === '\n' || ch === '\r') && !inQuotes) { if (field || row.length) { row.push(field.trim()); rows.push(row); row = []; field = ''; } if (ch === '\r' && next === '\n') i++; }
+        else field += ch;
       }
       if (field || row.length) { row.push(field.trim()); rows.push(row); }
-      // 🔧 FILTER OUT EMPTY/BLANK ROWS (Google Sheets often adds these)
-      return rows.filter(r => r.some(cell => cell && cell.trim() !== ''));
+      return rows.filter(r => r[1] && r[1].trim() !== '');
     }
 
     function mapColumns(headers) {
       const lower = headers.map(h => h.toLowerCase().trim().replace(/\s+/g, ' '));
       return {
-        time: lower.findIndex(h => /time/i.test(h)),
-        date: lower.findIndex(h => /date/i.test(h)),
+        time: lower.findIndex(h => /^time$/i.test(h)), date: lower.findIndex(h => /^date$/i.test(h)),
         birdsAlive: lower.findIndex(h => /bird.*alive|alive|stock|count/i.test(h)),
         deaths: lower.findIndex(h => /death|dead|mortality/i.test(h) && !/cause/i.test(h)),
         deathCause: lower.findIndex(h => /death.*cause|cause.*death|cause/i.test(h)),
@@ -914,559 +428,168 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const csvText = await response.text();
         if (!csvText.trim()) throw new Error('Empty CSV');
-        
         const rows = parseCSV(csvText);
         if (rows.length < 2) throw new Error('No data rows');
-
-        const headers = rows[0];
-        const col = mapColumns(headers);
-        if (col.birdsAlive === -1) throw new Error('Birds Alive column missing');
-
+        const headers = rows[0], col = mapColumns(headers);
+        if (col.birdsAlive === -1 || col.date === -1) throw new Error('Missing critical columns');
         const data = [];
         for (let i = 1; i < rows.length; i++) {
-          const row = rows[i];
-          // 🔧 SKIP ROWS THAT DON'T HAVE A DATE (blank/empty rows)
-          if (row.length === 0) continue;
-          const dateVal = col.date >= 0 ? (row[col.date] || '').trim() : '';
-          if (!dateVal) continue;
-          
+          const row = rows[i]; if (row.length === 0) continue;
+          const dateVal = (row[col.date] || '').trim(); if (!dateVal) continue;
+          const timeStr = col.time >= 0 ? (row[col.time] || '').trim() : '';
+          const tParts = timeStr.split(':');
+          const timeMinutes = (tParts.length === 2) ? (parseInt(tParts[0], 10) * 60) + parseInt(tParts[1], 10) : 0;
           const weightVal = col.avgWeight >= 0 ? (row[col.avgWeight] || '').trim() : '';
-          data.push({
-            time: col.time >= 0 ? (row[col.time] || '').trim() : '',
-            date: dateVal,
-            dateObj: parseDate(dateVal),
+          data.push({ time: timeStr, timeMinutes, date: dateVal, dateObj: parseDate(dateVal),
             birdsAlive: col.birdsAlive >= 0 ? toNum(row[col.birdsAlive]) : 0,
             deaths: col.deaths >= 0 ? toNum(row[col.deaths]) : 0,
             deathCause: col.deathCause >= 0 ? (row[col.deathCause] || '').trim() : '',
-            feed: col.feed >= 0 ? toNum(row[col.feed]) : 0,
-            water: col.water >= 0 ? toNum(row[col.water]) : 0,
+            feed: col.feed >= 0 ? toNum(row[col.feed]) : 0, water: col.water >= 0 ? toNum(row[col.water]) : 0,
             temp: col.temp >= 0 ? toNum(row[col.temp]) : 0,
             litter: col.litter >= 0 ? (row[col.litter] || '').trim().toLowerCase() : '',
-            avgWeight: weightVal ? toNum(weightVal) : null
-          });
+            avgWeight: weightVal ? toNum(weightVal) : null });
         }
-        // 🔧 SORT BY DATE DESCENDING (newest first) FOR PROPER DISPLAY
-        data.sort((a, b) => b.dateObj - a.dateObj || (b.time || '').localeCompare(a.time || ''));
+        data.sort((a, b) => { const d = b.dateObj - a.dateObj; return d !== 0 ? d : (b.timeMinutes - a.timeMinutes); });
         return { data, success: true };
       } catch (err) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = `⚠️ Using sample data. Error: <code>${err.message}</code>`;
-        document.querySelector('.subtitle')?.after(errorDiv);
-        updateSyncStatus(false);
+        const div = document.createElement('div'); div.className = 'error-message';
+        div.innerHTML = `⚠️ Using sample data. Error: <code>${err.message}</code>`;
+        document.querySelector('.subtitle')?.after(div); updateSyncStatus(false);
         return { data: FALLBACK_DATA, success: false };
       }
     }
 
     function calculateTrend(current, previous, isHigherBetter = true) {
-      if (previous === null || previous === undefined || current === null) {
-        return { symbol: '—', class: 'neutral', text: 'No comparison' };
-      }
-      const diff = current - previous;
-      const absDiff = Math.abs(diff);
-      const pct = previous !== 0 ? Math.round((diff / Math.abs(previous)) * 100) : 0;
+      if (previous === null || previous === undefined || current === null) return { symbol: '—', class: 'neutral', text: 'No comparison' };
+      const diff = current - previous, absDiff = Math.abs(diff), pct = previous !== 0 ? Math.round((diff / Math.abs(previous)) * 100) : 0;
       if (absDiff < 0.5) return { symbol: '→', class: 'neutral', text: 'Stable' };
-      const isPositive = diff > 0;
-      const isGood = isHigherBetter ? isPositive : !isPositive;
-      return {
-        symbol: isPositive ? '↑' : '↓',
-        class: isGood ? 'up' : 'down',
-        text: `${isPositive ? '+' : ''}${fmt(diff, 1)} ${pct !== 0 ? `(${pct}%)` : ''}`
-      };
+      const isPositive = diff > 0, isGood = isHigherBetter ? isPositive : !isPositive;
+      return { symbol: isPositive ? '↑' : '↓', class: isGood ? 'up' : 'down', text: `${isPositive ? '+' : ''}${fmt(diff, 1)} ${pct !== 0 ? `(${pct}%)` : ''}` };
     }
 
-    function getTempClass(temp) {
-      if (temp >= 26 && temp <= 32) return 'temp-optimal';
-      if (temp < 24 || temp > 34) return 'temp-critical';
-      return 'temp-warning';
-    }
-
-    function getTempIcon(temp) {
-      if (temp >= 26 && temp <= 32) return '✅';
-      if (temp < 26) return '🌡️↓';
-      return '🌡️↑';
-    }
-
-    function getTempStatus(temp) {
-      if (temp >= 26 && temp <= 32) return 'Optimal range';
-      if (temp < 26) return 'Below optimal';
-      return 'Above optimal';
-    }
-
+    function getTempClass(temp) { return temp >= 26 && temp <= 32 ? 'temp-optimal' : (temp < 24 || temp > 34 ? 'temp-critical' : 'temp-warning'); }
+    function getTempIcon(temp) { return temp >= 26 && temp <= 32 ? '✅' : (temp < 26 ? '🌡️↓' : '🌡️↑'); }
+    function getTempStatus(temp) { return temp >= 26 && temp <= 32 ? 'Optimal range' : (temp < 26 ? 'Below optimal' : 'Above optimal'); }
+    
     function updateSyncStatus(online) {
       const dot = document.getElementById('syncDot');
-      const text = document.getElementById('syncText');
-      if (dot && text) {
-        dot.classList.toggle('offline', !online);
-        text.textContent = online ? 'Synced' : 'Offline';
-      }
+      const text = document.getElementById('syncStatusText');
+      if (dot) dot.classList.toggle('offline', !online);
+      if (text) text.textContent = online ? 'Synced' : 'Offline';
     }
 
     let mortalityViewMode = 'timeline';
     document.addEventListener('DOMContentLoaded', () => {
       const btn = document.getElementById('toggleMortalityBtn');
-      if (btn) {
-        btn.addEventListener('click', () => {
-          mortalityViewMode = mortalityViewMode === 'timeline' ? 'total' : 'timeline';
-          updateMortalityDisplay();
-          btn.innerHTML = mortalityViewMode === 'total' ? '📋 Show Daily' : '📊 Show Total';
-        });
-      }
+      if (btn) btn.addEventListener('click', () => {
+        mortalityViewMode = mortalityViewMode === 'timeline' ? 'total' : 'timeline';
+        updateMortalityDisplay(); btn.innerHTML = mortalityViewMode === 'total' ? '📋 Show Daily' : '📊 Show Total';
+      });
     });
-
     function updateMortalityDisplay() {
-      const timeline = document.getElementById('mortalityTimeline');
-      const kpi = document.getElementById('mortalityKPI');
-      if (mortalityViewMode === 'total') {
-        timeline.style.display = 'none';
-        kpi.style.display = 'block';
-      } else {
-        timeline.style.display = 'flex';
-        kpi.style.display = 'none';
-      }
+      document.getElementById('mortalityTimeline').style.display = mortalityViewMode === 'total' ? 'none' : 'flex';
+      document.getElementById('mortalityKPI').style.display = mortalityViewMode === 'total' ? 'block' : 'none';
     }
 
     function render(data) {
-      if (!data || data.length === 0) {
-        document.getElementById('topMetrics').innerHTML = 
-          '<div class="metric-card" style="grid-column:span 6;text-align:center;">❌ No data available</div>';
-        return;
-      }
-
-      const latest = data[0];
-      const previous = data[1];
-      const oldest = data[data.length - 1];
-      
-      const totalDeaths = data.reduce((sum, r) => sum + r.deaths, 0);
+      if (!data || data.length === 0) { document.getElementById('topMetrics').innerHTML = '<div class="metric-card" style="grid-column:span 6;text-align:center;">❌ No data</div>'; return; }
+      const latest = data[0], previous = data[1], oldest = data[data.length - 1];
+      const totalDeaths = data.reduce((s, r) => s + r.deaths, 0);
       const startingBirds = oldest.birdsAlive;
       const mortalityRate = startingBirds > 0 ? (totalDeaths / startingBirds * 100).toFixed(1) : 0;
-      const totalWater = data.reduce((sum, r) => sum + r.water, 0);
       const latestTemp = latest.temp;
       const litterStatus = latest.litter && latest.litter.includes('yes') ? 'Available' : 'Low';
-      
       let lastUnavailable = 'N/A';
-      for (let i = 0; i < data.length; i++) {
-        if (!data[i].litter.includes('yes')) {
-          lastUnavailable = `${data[i].date} ${data[i].time || ''}`.trim();
-          break;
-        }
-      }
+      for (let i = 0; i < data.length; i++) { if (!data[i].litter.includes('yes')) { lastUnavailable = `${data[i].date} ${data[i].time || ''}`.trim(); break; } }
+      const daysDiff = Math.max(1, Math.ceil((latest.dateObj - oldest.dateObj) / 86400000) + 1);
+      document.getElementById('latestUpdateBadge').textContent = `📅 ${latest.date} at ${latest.time || '—'}`;
+      document.getElementById('durationDisplay').innerHTML = `<div style="text-align:center;padding:0.8rem 1.2rem;background:rgba(201,169,75,0.08);border-radius:14px;border:1px solid var(--border-subtle);"><span style="font-size:clamp(0.9rem,3vw,1.1rem);font-weight:700;color:var(--brand-gold-light);font-family:Georgia;">${daysDiff} Days</span><span style="font-size:clamp(0.7rem,2.5vw,0.8rem);color:var(--text-muted);margin-left:0.5rem;">Monitoring Period</span></div>`;
       
-      const firstDate = oldest.dateObj;
-      const lastDate = latest.dateObj;
-      const daysDiff = Math.max(1, Math.ceil((lastDate - firstDate) / (1000 * 60 * 60 * 24)) + 1);
-      
-      const latestTimestamp = `${latest.date} at ${latest.time || '—'}`;
-      document.getElementById('latestUpdateBadge').textContent = `📅 ${latestTimestamp}`;
-      
-      document.getElementById('durationDisplay').innerHTML = `
-        <div style="text-align:center;padding:0.8rem 1.2rem;background:rgba(201,169,75,0.08);border-radius:14px;border:1px solid var(--border-subtle);">
-          <span style="font-size:clamp(0.9rem,3vw,1.1rem);font-weight:700;color:var(--brand-gold-light);font-family:Georgia;">
-            ${daysDiff} Days
-          </span>
-          <span style="font-size:clamp(0.7rem,2.5vw,0.8rem);color:var(--text-muted);margin-left:0.5rem;">
-            Monitoring Period
-          </span>
-        </div>
-      `;
-
-      const birdsTrend = calculateTrend(latest.birdsAlive, previous?.birdsAlive, true);
-      document.getElementById('heroValue').textContent = fmt(latest.birdsAlive);
+      document.getElementById('heroKPI').textContent = `${fmt(latest.birdsAlive)} Chickens`;
       document.getElementById('heroStarted').textContent = fmt(startingBirds);
-      const heroTrendEl = document.getElementById('heroTrend');
-      heroTrendEl.className = `hero-trend ${birdsTrend.class}`;
-      heroTrendEl.innerHTML = `${birdsTrend.symbol} ${birdsTrend.text}`;
 
-      const weightTrend = latest.avgWeight && previous?.avgWeight 
-        ? calculateTrend(latest.avgWeight, previous.avgWeight, true)
-        : { symbol: '—', class: 'neutral', text: 'Pending' };
+      const weightTrend = latest.avgWeight && previous?.avgWeight ? calculateTrend(latest.avgWeight, previous.avgWeight, true) : { symbol: '—', class: 'neutral', text: 'Pending' };
       const tempTrend = calculateTrend(latestTemp, previous?.temp, false);
       
-      document.getElementById('topMetrics').innerHTML = [
+      const metrics = [
         { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total losses`, trend: { symbol: '—', class: 'neutral', text: 'Tracking' } },
         { label: 'Last Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: 'Latest measurement', trend: weightTrend },
-        { label: 'Temperature - Last Check', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp), trend: tempTrend },
-        { label: 'Litter - Last Check', value: litterStatus, sub: `Last unavailable: ${lastUnavailable}`, trend: { symbol: '•', class: 'neutral', text: '—' } }
-      ].map(m => `
-        <div class="metric-card">
-          <div class="label">
-            ${m.label}
-            <span class="trend-indicator trend-${m.trend.class}">${m.trend.symbol} ${m.trend.text}</span>
-          </div>
-          <div class="value">${m.value}</div>
-          <div class="context">${m.sub}</div>
-        </div>
-      `).join('');
+        { label: 'Temperature', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp), trend: tempTrend },
+        { label: 'Litter Status', value: litterStatus, sub: `Last unavailable: ${lastUnavailable}`, trend: { symbol: '•', class: 'neutral', text: '—' } }
+      ];
+
+      document.getElementById('topMetrics').innerHTML = metrics.map(m => {
+        const showTrend = m.trend.class === 'up' || m.trend.class === 'down';
+        const trendHTML = showTrend ? `<span class="trend-indicator trend-${m.trend.class}">${m.trend.symbol} ${m.trend.text}</span>` : '';
+        return `<div class="metric-card"><div class="label">${m.label} ${trendHTML}</div><div class="value">${m.value}</div><div class="context">${m.sub}</div></div>`;
+      }).join('');
 
       renderWeightChart(data.filter(r => r.avgWeight !== null).reverse());
-      renderCauseChart(data);
-      renderMortalityTimeline(data);
-      renderMortalityKPI(data);
-      updateMortalityDisplay();
-      renderTempChart(data);
-      
-      document.getElementById('tempStatus').innerHTML = `
-        <div>
-          <span class="temp-indicator ${getTempClass(latestTemp)}">
-            ${getTempIcon(latestTemp)} Current: ${fmt(latestTemp)}°C
-          </span>
-          <span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">
-            Optimal: 26-32°C
-          </span>
-        </div>`;
-      
-      renderResourceChart(data);
-      // 🔧 RENDER ALL ROWS (no slice limit) + SHOW RECORD COUNT
-      renderDataTable(data);
+      renderCauseChart(data); renderMortalityTimeline(data); renderMortalityKPI(data); updateMortalityDisplay(); renderTempChart(data);
+      document.getElementById('tempStatus').innerHTML = `<div><span class="temp-indicator ${getTempClass(latestTemp)}">${getTempIcon(latestTemp)} Current: ${fmt(latestTemp)}°C</span><span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">Optimal: 26-32°C</span></div>`;
+      renderResourceChart(data); renderDataTable(data);
       document.getElementById('recordCount').textContent = `(${data.length} records)`;
-      
-      document.getElementById('updatedLine').textContent = 
-        `Last updated: ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'})}`;
-      
+      document.getElementById('updatedLine').textContent = `Last updated: ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'})}`;
       updateSyncStatus(true);
     }
 
     function renderMortalityTimeline(data) {
-      const container = document.getElementById('mortalityTimeline');
-      if (!container) return;
-      const byDate = {};
-      data.forEach(r => { if (r.date) byDate[r.date] = (byDate[r.date] || 0) + r.deaths; });
-      let entries = Object.entries(byDate);
-      entries.sort((a, b) => parseDate(b[0]) - parseDate(a[0]));
-      entries = entries.slice(0, 8);
-      container.innerHTML = entries.map(([date, deaths]) => {
-        const note = deaths > 0 ? '⚠️ Loss recorded' : '✅ No deaths';
-        return `
-          <div class="mortality-item ${deaths === 0 ? 'zero' : ''}">
-            <div class="mortality-dot"></div>
-            <div class="mortality-content">
-              <div class="date">${date}</div>
-              <div class="count">${deaths} death${deaths !== 1 ? 's' : ''}</div>
-              <div class="note">${note}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      const c = document.getElementById('mortalityTimeline'); if (!c) return;
+      const byDate = {}; data.forEach(r => { if (r.date) byDate[r.date] = (byDate[r.date] || 0) + r.deaths; });
+      let entries = Object.entries(byDate).sort((a,b) => parseDate(b[0]) - parseDate(a[0])).slice(0,8);
+      c.innerHTML = entries.map(([date, deaths]) => `<div class="mortality-item ${deaths===0?'zero':''}"><div class="mortality-dot"></div><div class="mortality-content"><div class="date">${date}</div><div class="count">${deaths} death${deaths!==1?'s':''}</div><div class="note">${deaths>0?'⚠️ Loss recorded':'✅ No deaths'}</div></div></div>`).join('');
     }
-
     function renderMortalityKPI(data) {
-      const kpi = document.getElementById('mortalityKPI');
-      if (!kpi) return;
-      const totalDeaths = data.reduce((sum, r) => sum + r.deaths, 0);
-      const latest = data[0];
-      const oldest = data[data.length - 1];
-      const startingBirds = oldest.birdsAlive;
-      const mortalityRate = startingBirds > 0 ? (totalDeaths / startingBirds * 100).toFixed(1) : 0;
-      const firstDate = oldest.dateObj;
-      const lastDate = latest.dateObj;
-      const daysDiff = Math.max(1, Math.ceil((lastDate - firstDate) / (1000 * 60 * 60 * 24)) + 1);
-      kpi.innerHTML = `
-        <div class="label">Total Deaths</div>
-        <div class="value">${fmt(totalDeaths)}</div>
-        <div class="subtitle">
-          Over ${daysDiff} days · ${mortalityRate}% mortality rate · Started with ${fmt(startingBirds)} birds
-        </div>
-      `;
+      const k = document.getElementById('mortalityKPI'); if (!k) return;
+      const total = data.reduce((s,r)=>s+r.deaths,0), start = data[data.length-1].birdsAlive;
+      const rate = start > 0 ? (total/start*100).toFixed(1) : 0, days = Math.max(1, Math.ceil((data[0].dateObj-data[data.length-1].dateObj)/86400000)+1);
+      k.innerHTML = `<div class="label">Total Deaths</div><div class="value">${fmt(total)}</div><div class="subtitle">Over ${days} days · ${rate}% mortality · Started with ${fmt(start)} birds</div>`;
     }
-
     function renderWeightChart(data) {
-      const ctx = document.getElementById('weightChart')?.getContext('2d');
-      if (!ctx || typeof Chart === 'undefined') return;
+      const ctx = document.getElementById('weightChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.weightChartInstance) window.weightChartInstance.destroy();
-      if (data.length === 0) {
-        document.getElementById('weightChart').parentNode.innerHTML = 
-          '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data available</p>';
-        return;
-      }
-      const labels = data.map(r => { const d = r.dateObj; return `${d.getDate()} ${d.toLocaleString('en-GB',{month:'short'})}`; });
-      const values = data.map(r => r.avgWeight);
-      window.weightChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Avg Weight (g)', data: values,
-            borderColor: '#c9a94b', backgroundColor: 'rgba(201, 169, 75, 0.15)',
-            borderWidth: 3, pointBackgroundColor: '#ffffff', pointBorderColor: '#c9a94b',
-            pointRadius: 4, pointHoverRadius: 6, fill: true, tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#0b1a2b', titleColor: '#ffffff', bodyColor: '#f0f2f5',
-              borderColor: '#c9a94b', borderWidth: 1,
-              callbacks: { label: ctx => `Weight: ${ctx.parsed.y}g` }
-            }
-          },
-          scales: {
-            x: { ticks: { color: '#b9c7dd', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            y: { ticks: { color: '#b9c7dd', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: false }
-          }
-        },
-        plugins: [{
-          id: 'customDataLabels',
-          afterDatasetsDraw(chart) {
-            const ctx = chart.ctx;
-            chart.data.datasets.forEach((dataset, i) => {
-              const meta = chart.getDatasetMeta(i);
-              meta.data.forEach((point, index) => {
-                const value = dataset.data[index];
-                if (value !== null) {
-                  ctx.fillStyle = '#c9a94b';
-                  ctx.font = 'bold 9px Georgia';
-                  ctx.textAlign = 'center';
-                  ctx.fillText(value + 'g', point.x, point.y - 10);
-                }
-              });
-            });
-          }
-        }]
-      });
+      if (data.length===0) { document.getElementById('weightChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data</p>'; return; }
+      window.weightChartInstance = new Chart(ctx, { type:'line', data:{ labels:data.map(r=>`${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`), datasets:[{ label:'Avg Weight (g)', data:data.map(r=>r.avgWeight), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.15)', borderWidth:3, pointBackgroundColor:'#fff', pointBorderColor:'#c9a94b', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`Weight: ${ctx.parsed.y}g`}} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.data.datasets.forEach((ds,i)=>{ chart.getDatasetMeta(i).data.forEach((p,idx)=>{ const v=ds.data[idx]; if(v!==null){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 9px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'g',p.x,p.y-10); } }); }); } }] });
     }
-    
     function renderCauseChart(data) {
-      const ctx = document.getElementById('causeChart')?.getContext('2d');
-      if (!ctx || typeof Chart === 'undefined') return;
+      const ctx = document.getElementById('causeChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.causeChartInstance) window.causeChartInstance.destroy();
-      const causes = {};
-      data.forEach(r => {
-        if (r.deaths > 0 && r.deathCause) {
-          const cause = r.deathCause.trim() || 'Unknown';
-          causes[cause] = (causes[cause] || 0) + r.deaths;
-        }
-      });
-      const deathsWithCause = Object.values(causes).reduce((a,b) => a+b, 0);
-      const totalDeaths = data.reduce((sum, r) => sum + r.deaths, 0);
-      if (totalDeaths > deathsWithCause) causes['No recorded cause'] = totalDeaths - deathsWithCause;
-      if (Object.keys(causes).length === 0) {
-        document.getElementById('causeChart').parentNode.innerHTML = 
-          '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No mortality events recorded</p>';
-        return;
-      }
-      const labels = Object.keys(causes);
-      const values = Object.values(causes);
-      window.causeChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Deaths', data: values,
-            backgroundColor: '#a8935a', borderColor: '#9a844a',
-            borderWidth: 2, borderRadius: 8, borderSkipped: false
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#0b1a2b',
-              callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed.y} death${ctx.parsed.y !== 1 ? 's' : ''}` }
-            }
-          },
-          scales: {
-            x: { ticks: { color: '#b9c7dd', font: { size: 10 } }, grid: { display: false }, maxRotation: 45, minRotation: 0 },
-            y: { ticks: { color: '#b9c7dd', font: { size: 10 }, stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
-          }
-        },
-        plugins: [{
-          id: 'causeDataLabels',
-          afterDatasetsDraw(chart) {
-            const ctx = chart.ctx;
-            const meta = chart.getDatasetMeta(0);
-            meta.data.forEach((bar, index) => {
-              const value = chart.data.datasets[0].data[index];
-              if (value > 0) {
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 11px Georgia';
-                ctx.textAlign = 'center';
-                ctx.fillText(value, bar.x, bar.y - 8);
-              }
-            });
-          }
-        }]
-      });
+      const causes={}; data.forEach(r=>{ if(r.deaths>0 && r.deathCause) causes[r.deathCause.trim()||'Unknown']=(causes[r.deathCause.trim()||'Unknown']||0)+r.deaths; });
+      const dc = Object.values(causes).reduce((a,b)=>a+b,0), td = data.reduce((s,r)=>s+r.deaths,0);
+      if(td>dc) causes['No recorded cause']=td-dc;
+      if(Object.keys(causes).length===0) { document.getElementById('causeChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No mortality events</p>'; return; }
+      window.causeChartInstance = new Chart(ctx, { type:'bar', data:{ labels:Object.keys(causes), datasets:[{ label:'Deaths', data:Object.values(causes), backgroundColor:'#a8935a', borderColor:'#9a844a', borderWidth:2, borderRadius:8, borderSkipped:false }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.y} death${ctx.parsed.y!==1?'s':''}`} } }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{display:false}, maxRotation:45 }, y:{ ticks:{color:'#b9c7dd',font:{size:10},stepSize:1}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; if(v>0){ chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 11px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v,b.x,b.y-8); } }); } }] });
     }
-    
     function renderTempChart(data) {
-      const ctx = document.getElementById('tempChart')?.getContext('2d');
-      if (!ctx || typeof Chart === 'undefined') return;
+      const ctx = document.getElementById('tempChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.tempChartInstance) window.tempChartInstance.destroy();
-      const recent = data.slice(0, 15).reverse();
-      const labels = recent.map(r => { const d = r.dateObj; return `${d.getDate()}/${d.getMonth()+1}`; });
-      const temps = recent.map(r => r.temp);
-      window.tempChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Temperature (°C)', data: temps,
-            borderColor: '#c9a94b', backgroundColor: 'rgba(201, 169, 75, 0.1)',
-            borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#ffffff', tension: 0.3, fill: true
-          },
-          { label: 'Optimal Min (26°C)', data: Array(temps.length).fill(26), borderColor: 'rgba(201, 169, 75, 0.4)', borderDash: [8, 4], borderWidth: 1.5, pointRadius: 0, fill: false },
-          { label: 'Optimal Max (32°C)', data: Array(temps.length).fill(32), borderColor: 'rgba(201, 169, 75, 0.4)', borderDash: [8, 4], borderWidth: 1.5, pointRadius: 0, fill: false }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { ticks: { color: '#b9c7dd', font: { size: 9 } }, grid: { display: false } },
-            y: { ticks: { color: '#b9c7dd', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.05)' }, min: 20, max: 40 }
-          }
-        },
-        plugins: [{
-          id: 'tempDataLabels',
-          afterDatasetsDraw(chart) {
-            const ctx = chart.ctx;
-            const meta = chart.getDatasetMeta(0);
-            meta.data.forEach((point, index) => {
-              const value = chart.data.datasets[0].data[index];
-              ctx.fillStyle = '#c9a94b';
-              ctx.font = 'bold 8px Georgia';
-              ctx.textAlign = 'center';
-              ctx.fillText(value + '°', point.x, point.y - 10);
-            });
-          }
-        }]
-      });
+      const rec=data.slice(0,15).reverse(), temps=rec.map(r=>r.temp);
+      window.tempChartInstance = new Chart(ctx, { type:'line', data:{ labels:rec.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), datasets:[ { label:'Temp (°C)', data:temps, borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.1)', borderWidth:3, pointRadius:4, pointBackgroundColor:'#fff', tension:0.3, fill:true }, { label:'Min (26°C)', data:Array(temps.length).fill(26), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }, { label:'Max (32°C)', data:Array(temps.length).fill(32), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false } ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{display:false} }, y:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'}, min:20, max:40 } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((p,i)=>{ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 8px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(chart.data.datasets[0].data[i]+'°',p.x,p.y-10); }); } }] });
     }
-    
     function renderResourceChart(data) {
-      const ctx = document.getElementById('resourceChart')?.getContext('2d');
-      if (!ctx || typeof Chart === 'undefined') return;
+      const ctx = document.getElementById('resourceChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.resourceChartInstance) window.resourceChartInstance.destroy();
-      const avgFeed = data.reduce((sum, r) => sum + r.feed, 0) / data.length;
-      const avgWater = data.reduce((sum, r) => sum + r.water, 0) / data.length;
-      window.resourceChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Feed', 'Water'],
-          datasets: [{
-            label: 'Daily Consumption', data: [avgFeed, avgWater],
-            backgroundColor: ['#8a949e', 'rgba(201, 169, 75, 0.7)'],
-            borderColor: ['#7a848e', '#c9a94b'],
-            borderWidth: 3, borderRadius: 12, borderSkipped: false,
-            barPercentage: 0.6, categoryPercentage: 0.8
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#0b1a2b',
-              callbacks: {
-                label: ctx => {
-                  const unit = ctx.label === 'Feed' ? 'kg' : 'L';
-                  return `${ctx.parsed.y.toFixed(1)} ${unit}`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: { 
-              ticks: { color: '#f0f2f5', font: { size: 11, weight: 'bold', family: 'Georgia' },
-                callback: function(value, index) { return index === 0 ? 'Feed (kg)' : 'Water (L)'; }
-              },
-              grid: { display: false }
-            },
-            y: { ticks: { color: '#b9c7dd', font: { size: 10 }, callback: value => value.toFixed(1) },
-              grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
-          }
-        },
-        plugins: [{
-          id: 'resourceDataLabels',
-          afterDatasetsDraw(chart) {
-            const ctx = chart.ctx;
-            const meta = chart.getDatasetMeta(0);
-            meta.data.forEach((bar, index) => {
-              const value = chart.data.datasets[0].data[index];
-              const unit = index === 0 ? 'kg' : 'L';
-              ctx.fillStyle = '#ffffff';
-              ctx.font = 'bold 13px Georgia';
-              ctx.textAlign = 'center';
-              ctx.fillText(value.toFixed(1) + unit, bar.x, bar.y - 10);
-            });
-          }
-        }]
-      });
+      const avgF=data.reduce((s,r)=>s+r.feed,0)/data.length, avgW=data.reduce((s,r)=>s+r.water,0)/data.length;
+      window.resourceChartInstance = new Chart(ctx, { type:'bar', data:{ labels:['Feed','Water'], datasets:[{ label:'Daily', data:[avgF,avgW], backgroundColor:['#8a949e','rgba(201,169,75,0.7)'], borderColor:['#7a848e','#c9a94b'], borderWidth:3, borderRadius:12, borderSkipped:false, barPercentage:0.6, categoryPercentage:0.8 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(1)} ${ctx.label==='Feed'?'kg':'L'}`} } }, scales:{ x:{ ticks:{color:'#f0f2f5',font:{size:11,weight:'bold',family:'Georgia'}, callback:(_,i)=>i===0?'Feed (kg)':'Water (L)'}, grid:{display:false} }, y:{ ticks:{color:'#b9c7dd',font:{size:10},callback:v=>v.toFixed(1)}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 13px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v.toFixed(1)+(i===0?'kg':'L'),b.x,b.y-10); }); } }] });
     }
-    
-    // 🔧 RENDER ALL ROWS (NO LIMIT) + BETTER EMPTY CELL HANDLING
     function renderDataTable(data) {
-      const headers = ['Date', 'Time', 'Alive', 'Deaths', 'Cause', 'Feed(kg)', 'Water(L)', 'Temp(°C)', 'Weight(g)'];
-      const tableHead = headers.map(h => `<th>${h}</th>`).join('');
-      const tableRows = data.map(r => {
-        const causeDisplay = r.deathCause && r.deathCause.trim() ? 
-          `<span style="color:#c97a3b;font-size:0.75rem;">${r.deathCause.trim()}</span>` : 
-          (r.deaths > 0 ? '<span style="color:#e6c468;font-size:0.75rem;">Unrecorded</span>' : '—');
-        const weightDisplay = r.avgWeight != null && r.avgWeight > 0 ? `${fmt(r.avgWeight)}g` : '—';
-        const tempClass = getTempClass(r.temp);
-        return `<tr>
-          <td style="font-weight:600;color:white;">${r.date}</td>
-          <td>${r.time || '—'}</td>
-          <td style="color:#c9a94b;font-weight:600;">${fmt(r.birdsAlive)}</td>
-          <td style="color:${r.deaths > 0 ? '#c97a3b' : '#b9c7dd'}">${r.deaths}</td>
-          <td>${causeDisplay}</td>
-          <td>${fmt(r.feed,1)}</td>
-          <td>${fmt(r.water,1)}</td>
-          <td><span class="temp-indicator ${tempClass}" style="padding:0.15rem 0.5rem;font-size:0.7rem;">${r.temp}°C</span></td>
-          <td>${weightDisplay}</td>
-        </tr>`;
-      }).join('');
-      document.getElementById('dataTable').innerHTML = `<thead><tr>${tableHead}</tr></thead><tbody>${tableRows}</tbody>`;
+      const h = `<thead><tr>${['Date','Time','Alive','Deaths','Cause','Feed(kg)','Water(L)','Temp(°C)','Weight(g)'].map(x=>`<th>${x}</th>`).join('')}</tr></thead>`;
+      const b = `<tbody>${data.map(r=>`<tr><td style="font-weight:600;color:white;">${r.date}</td><td>${r.time||'—'}</td><td style="color:#c9a94b;font-weight:600;">${fmt(r.birdsAlive)}</td><td style="color:${r.deaths>0?'#c97a3b':'#b9c7dd'}">${r.deaths}</td><td>${r.deathCause&&r.deathCause.trim()?`<span style="color:#c97a3b;font-size:0.75rem;">${r.deathCause.trim()}</span>`:(r.deaths>0?'<span style="color:#e6c468;font-size:0.75rem;">Unrecorded</span>':'—')}</td><td>${fmt(r.feed,1)}</td><td>${fmt(r.water,1)}</td><td><span class="temp-indicator ${getTempClass(r.temp)}" style="padding:0.15rem 0.5rem;font-size:0.7rem;">${r.temp}°C</span></td><td>${(r.avgWeight!=null&&r.avgWeight>0)?`${fmt(r.avgWeight)}g`:'—'}</td></tr>`).join('')}</tbody>`;
+      document.getElementById('dataTable').innerHTML = h + b;
     }
 
     async function handleRefresh() {
-      const btn = document.getElementById('refreshBtn');
-      if (!btn) return;
-      btn.classList.add('loading');
-      btn.querySelector('.refresh-text').textContent = 'Refreshing...';
-      try {
-        const { data, success } = await fetchData();
-        render(data);
-        btn.style.background = 'var(--success)';
-        setTimeout(() => {
-          btn.style.background = '';
-          btn.classList.remove('loading');
-          btn.querySelector('.refresh-text').textContent = 'Refresh';
-        }, 800);
-      } catch (e) {
-        console.error(e);
-        btn.classList.remove('loading');
-        btn.querySelector('.refresh-text').textContent = 'Error';
-        setTimeout(() => { btn.querySelector('.refresh-text').textContent = 'Refresh'; }, 2000);
-      }
+      const btn = document.getElementById('refreshBtn'); if (!btn) return;
+      btn.classList.add('loading'); btn.querySelector('.refresh-text').textContent = 'Refreshing...';
+      try { const { data } = await fetchData(); render(data); btn.style.background='var(--success)'; setTimeout(()=>{btn.style.background='';btn.classList.remove('loading');btn.querySelector('.refresh-text').textContent='Refresh';},800); } 
+      catch(e) { btn.classList.remove('loading'); btn.querySelector('.refresh-text').textContent='Error'; setTimeout(()=>{btn.querySelector('.refresh-text').textContent='Refresh';},2000); }
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('refreshBtn')?.addEventListener('click', handleRefresh);
-      const metricsEl = document.getElementById('topMetrics');
-      if (metricsEl) {
-        metricsEl.innerHTML = '<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
-      }
-      try {
-        const { data, success } = await fetchData();
-        if (data.length === 0) throw new Error('No data records to render');
-        render(data);
-        // 🔧 AUTO-REFRESH EVERY 5 MINUTES TO PICK UP NEW ROWS
-        if (success) {
-          setInterval(async () => {
-            const { data: freshData } = await fetchData();
-            render(freshData);
-          }, 300000);
-        }
-      } catch (e) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = `<strong>❌ Dashboard Error</strong><br>${e.message}<br><small>Check console for details</small>`;
-        document.querySelector('.dashboard')?.prepend(errorDiv);
-        render(FALLBACK_DATA);
-      }
+      const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
+      try { const { data, success } = await fetchData(); if(data.length===0) throw new Error('No data records'); render(data); if(success) setInterval(async()=>{ render((await fetchData()).data); }, 300000); }
+      catch(e) { const div=document.createElement('div'); div.className='error-message'; div.innerHTML=`<strong>❌ Dashboard Error</strong><br>${e.message}`; document.querySelector('.dashboard')?.prepend(div); render(FALLBACK_DATA); }
     });
   })();
 </script>
