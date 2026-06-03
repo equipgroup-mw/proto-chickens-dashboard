@@ -11,7 +11,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Poultry Farm Dashboard | Live Monitoring</title>
-  <link rel="icon" type="image/png" href="Logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700;800&family=Georgia:wght@400;700&display=swap" rel="stylesheet">
@@ -52,24 +51,101 @@
     .hero-title { font-family: 'Georgia', serif; font-weight: 700; }
     
     .dashboard { max-width: 1400px; margin: 0 auto; width: 100%; }
-    .header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding: 0.5rem 0; }
-    .header-left { display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 0; }
-    .logo-container { flex-shrink: 0; width: clamp(48px, 8vw, 60px); height: clamp(48px, 8vw, 60px); background: rgba(201, 169, 75, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .logo-container img { width: 100%; height: 100%; object-fit: contain; }
-    .logo-container .logo-fallback { font-size: clamp(1.2rem, 4vw, 1.8rem); display: none; }
-    .logo-container img:not([src]), .logo-container img[src=""], .logo-container img.error { display: none; }
-    .logo-container:has(img:not([src])) .logo-fallback, .logo-container:has(img[src=""]) .logo-fallback, .logo-container:has(img.error) .logo-fallback { display: block; }
-    .header-content { min-width: 0; }
-    .header h1 { font-size: clamp(1.4rem, 5vw, 2.2rem); letter-spacing: -0.3px; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; line-height: 1.2; }
-    .header h1 .live-badge { background: var(--brand-gold); color: var(--brand-navy); font-size: clamp(0.7rem, 2.5vw, 0.9rem); padding: 0.2rem 0.8rem; border-radius: var(--radius-pill); font-weight: 600; white-space: nowrap; }
-    .subtitle { color: var(--text-secondary); font-size: clamp(0.85rem, 2.8vw, 1rem); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-    .latest-update-badge { background: rgba(201, 169, 75, 0.12); border: 1px solid var(--brand-gold); color: var(--brand-gold-light); padding: 0.2rem 0.7rem; border-radius: var(--radius-pill); font-size: clamp(0.7rem, 2.5vw, 0.75rem); font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
-    .refresh-btn { background: var(--brand-gold); color: var(--brand-navy); border: none; padding: clamp(0.5rem, 2vw, 0.7rem) clamp(0.8rem, 3vw, 1.2rem); border-radius: var(--radius-pill); font-weight: 600; font-size: clamp(0.8rem, 2.8vw, 0.9rem); cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: var(--transition); box-shadow: 0 4px 12px rgba(201, 169, 75, 0.3); font-family: 'Libre Franklin', sans-serif; flex-shrink: 0; }
-    .refresh-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201, 169, 75, 0.45); background: var(--brand-gold-light); }
-    .refresh-btn:active { transform: translateY(0); }
-    .refresh-btn.loading { opacity: 0.7; cursor: wait; }
-    .refresh-btn.loading .refresh-icon { animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* ========== DESKTOP HEADER (Original Side-by-Side Layout) ========== */
+    .header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      gap: 2rem; 
+      margin-bottom: 1.5rem; 
+      padding: 0.5rem 0; 
+    }
+    
+    .header-content { 
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .header h1 { 
+      font-size: clamp(1.4rem, 5vw, 2.2rem); 
+      letter-spacing: -0.3px; 
+      color: #ffffff; 
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
+    
+    .header h1 .live-badge { 
+      background: var(--brand-gold); 
+      color: var(--brand-navy); 
+      font-size: clamp(0.7rem, 2.5vw, 0.9rem); 
+      padding: 0.2rem 0.8rem; 
+      border-radius: var(--radius-pill); 
+      font-weight: 600; 
+      white-space: nowrap; 
+    }
+    
+    .subtitle { 
+      color: var(--text-secondary); 
+      font-size: clamp(0.85rem, 2.8vw, 1rem); 
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      flex-wrap: wrap; 
+    }
+    
+    .latest-update-badge { 
+      background: rgba(201, 169, 75, 0.12); 
+      border: 1px solid var(--brand-gold); 
+      color: var(--brand-gold-light); 
+      padding: 0.2rem 0.7rem; 
+      border-radius: var(--radius-pill); 
+      font-size: clamp(0.7rem, 2.5vw, 0.75rem); 
+      font-weight: 500; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 0.3rem; 
+      white-space: nowrap; 
+    }
+    
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2rem);
+      flex-shrink: 0;
+    }
+    
+    .logo-item {
+      height: clamp(60px, 12vw, 80px);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid var(--brand-gold);
+      box-shadow: 0 4px 15px rgba(201, 169, 75, 0.4);
+      transition: var(--transition);
+      background: rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    
+    .logo-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(201, 169, 75, 0.6);
+    }
+    
+    .logo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Hide mobile-specific elements on desktop */
+    .header-title-row { display: none; }
+    .header-meta-row { display: none; }
+    .refresh-btn { display: none; }
+    .location-text { display: none; }
 
     /* ========== PREMIUM HERO CARD (DESKTOP PERFECT) ========== */
     .hero-section { margin-bottom: 1.5rem; perspective: 800px; }
@@ -211,26 +287,94 @@
     @media (max-width: 900px) {
       body { padding: 0.8rem; background: #0a1625; }
       
-      /* 🔧 MOBILE HEADER FIX: Keep Logo Inline */
-      .header { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-      .header-left { justify-content: flex-start; flex-wrap: wrap; width: 100%; }
-      .header-content { width: auto; flex: 1; min-width: 200px; }
-      
-      /* Refresh Button Styling for Mobile */
-      .refresh-btn { 
-        width: 100%; 
-        justify-content: center; 
-        padding: 0.8rem; 
-        font-size: 1rem; 
-        background: var(--brand-gold);
-        color: #0a1625;
-        border-radius: 12px;
-        font-weight: 700;
-        box-shadow: 0 4px 15px rgba(201, 169, 75, 0.4);
-        order: 3;
+      /* Switch to mobile column layout */
+      .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.7rem;
+        padding: 0.2rem 0 1rem;
       }
       
-      /* HERO CARD MOBILE REDESIGN */
+      /* Hide desktop elements */
+      .header-content { display: none; }
+      .subtitle { display: none; }
+      
+      /* Show mobile-specific elements */
+      .header-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+      }
+      
+      .header-title-row h1 {
+        font-size: clamp(1.2rem, 5.5vw, 1.6rem);
+        letter-spacing: -0.3px;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        line-height: 1.2;
+      }
+      
+      .header-title-row h1 .live-badge { display: none; }
+      
+      .header-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      
+      .location-text {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+      }
+      
+      .refresh-btn {
+        display: inline-flex;
+        background: var(--brand-gold);
+        color: var(--brand-navy);
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0.4rem 0.9rem;
+        font-family: 'Libre Franklin', sans-serif;
+        font-weight: 700;
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: var(--transition);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      
+      .refresh-btn:hover {
+        background: var(--brand-gold-light);
+        transform: translateY(-1px);
+      }
+      
+      /* Logo row full width on mobile */
+      .logo-row {
+        order: -1;
+        width: 100%;
+        justify-content: space-between;
+        gap: clamp(0.2rem, 1.5vw, 0.5rem);
+      }
+      
+      .logo-item {
+        flex: 1;
+        height: clamp(45px, 11vw, 65px);
+        border-width: 2px;
+      }
+      
+      #latestUpdateBadge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+        margin-left: auto;
+      }
+      
       .hero-card {
         flex-direction: row;
         align-items: flex-start;
@@ -282,23 +426,38 @@
 <body>
 <div class="dashboard">
   <div class="header">
-    <div class="header-left">
-      <div class="logo-container">
-        <img src="Logo.png" alt="Farm Logo" class="logo-img" onerror="this.classList.add('error');">
-        <span class="logo-fallback">🐔</span>
-      </div>
-      <div class="header-content">
-        <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
-        <div class="subtitle">
-          <span> Real-time flock analytics</span>
-          <span id="latestUpdateBadge" class="latest-update-badge">📅 Loading...</span>
-        </div>
+    <!-- DESKTOP LAYOUT: Title + subtitle left, logos right -->
+    <div class="header-content">
+      <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
+      <div class="subtitle">
+        <span> Real-time flock analytics</span>
+        <span id="latestUpdateBadge" class="latest-update-badge">⏱ Loading...</span>
       </div>
     </div>
-    <button id="refreshBtn" class="refresh-btn" title="Refresh data from Google Sheets">
-      <span class="refresh-icon">↻</span>
-      <span class="refresh-text">Refresh Data</span>
-    </button>
+    
+    <!-- MOBILE LAYOUT: Title row (shown only on mobile) -->
+    <div class="header-title-row">
+      <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
+      <button class="refresh-btn" id="refreshBtn">↻ Refresh Data</button>
+    </div>
+    
+    <!-- MOBILE LAYOUT: Meta row (shown only on mobile) -->
+    <div class="header-meta-row">
+      <span class="location-text"> Real-time flock analytics</span>
+      <span id="latestUpdateBadgeMobile" class="latest-update-badge">⏱ Loading...</span>
+    </div>
+    
+    <div class="logo-row">
+      <div class="logo-item">
+        <img src="EquipLogo.png" alt="Equip" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EE%3C/text%3E%3C/svg%3E'">
+      </div>
+      <div class="logo-item">
+        <img src="Proto.png" alt="Proto" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EP%3C/text%3E%3C/svg%3E'">
+      </div>
+      <div class="logo-item">
+        <img src="HC.png" alt="Hail &amp; Cotton" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EHC%3C/text%3E%3C/svg%3E'">
+      </div>
+    </div>
   </div>
 
   <div class="hero-section">
@@ -472,9 +631,7 @@
         data.sort((a, b) => { const d = b.dateObj - a.dateObj; return d !== 0 ? d : (b.timeMinutes - a.timeMinutes); });
         return { data, success: true };
       } catch (err) {
-        const div = document.createElement('div'); div.className = 'error-message';
-        div.innerHTML = `⚠️ Using sample data. Error: <code>${err.message}</code>`;
-        document.querySelector('.subtitle')?.after(div); updateSyncStatus(false);
+        updateSyncStatus(false);
         return { data: FALLBACK_DATA, success: false };
       }
     }
@@ -488,7 +645,7 @@
     }
 
     function getTempClass(temp) { return temp >= 26 && temp <= 32 ? 'temp-optimal' : (temp < 24 || temp > 34 ? 'temp-critical' : 'temp-warning'); }
-    function getTempIcon(temp) { return temp >= 26 && temp <= 32 ? '✅' : (temp < 26 ? '🌡️↓' : '🌡️↑'); }
+    function getTempIcon(temp) { return temp >= 26 && temp <= 32 ? '✅' : (temp < 26 ? '️↓' : '🌡️↑'); }
     function getTempStatus(temp) { return temp >= 26 && temp <= 32 ? 'Optimal range' : (temp < 26 ? 'Below optimal' : 'Above optimal'); }
     
     function updateSyncStatus(online) {
@@ -503,12 +660,47 @@
       const btn = document.getElementById('toggleMortalityBtn');
       if (btn) btn.addEventListener('click', () => {
         mortalityViewMode = mortalityViewMode === 'timeline' ? 'total' : 'timeline';
-        updateMortalityDisplay(); btn.innerHTML = mortalityViewMode === 'total' ? '📋 Show Daily' : '📊 Show Total';
+        updateMortalityDisplay(); btn.innerHTML = mortalityViewMode === 'total' ? ' Show Daily' : '📊 Show Total';
       });
+      
+      // Add refresh button handler
+      const refreshBtn = document.getElementById('refreshBtn');
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', async () => {
+          refreshBtn.textContent = '↻ Refreshing...';
+          refreshBtn.disabled = true;
+          try {
+            const { data } = await fetchData();
+            render(data);
+            refreshBtn.textContent = '✓ Updated!';
+            setTimeout(() => {
+              refreshBtn.textContent = '↻ Refresh Data';
+              refreshBtn.disabled = false;
+            }, 1500);
+          } catch(e) {
+            refreshBtn.textContent = '✗ Error';
+            setTimeout(() => {
+              refreshBtn.textContent = '↻ Refresh Data';
+              refreshBtn.disabled = false;
+            }, 2000);
+          }
+        });
+      }
     });
+    
     function updateMortalityDisplay() {
-      document.getElementById('mortalityTimeline').style.display = mortalityViewMode === 'total' ? 'none' : 'flex';
-      document.getElementById('mortalityKPI').style.display = mortalityViewMode === 'total' ? 'block' : 'none';
+      const timeline = document.getElementById('mortalityTimeline');
+      const kpi = document.getElementById('mortalityKPI');
+      if (timeline) timeline.style.display = mortalityViewMode === 'total' ? 'none' : 'flex';
+      if (kpi) kpi.style.display = mortalityViewMode === 'total' ? 'block' : 'none';
+    }
+
+    function updateBadge(date, time) {
+      const badge = document.getElementById('latestUpdateBadge');
+      const badgeMobile = document.getElementById('latestUpdateBadgeMobile');
+      const text = `⏱ ${date} at ${time || '—'}`;
+      if (badge) badge.textContent = text;
+      if (badgeMobile) badgeMobile.textContent = text;
     }
 
     function render(data) {
@@ -522,7 +714,7 @@
       let lastUnavailable = 'N/A';
       for (let i = 0; i < data.length; i++) { if (!data[i].litter.includes('yes')) { lastUnavailable = `${data[i].date} ${data[i].time || ''}`.trim(); break; } }
       const daysDiff = Math.max(1, Math.ceil((latest.dateObj - oldest.dateObj) / 86400000) + 1);
-      document.getElementById('latestUpdateBadge').textContent = ` ${latest.date} at ${latest.time || '—'}`;
+      updateBadge(latest.date, latest.time);
       document.getElementById('durationDisplay').innerHTML = `<div style="text-align:center;padding:0.8rem 1.2rem;background:rgba(201,169,75,0.08);border-radius:14px;border:1px solid var(--border-subtle);"><span style="font-size:clamp(0.9rem,3vw,1.1rem);font-weight:700;color:var(--brand-gold-light);font-family:Georgia;">${daysDiff} Days</span><span style="font-size:clamp(0.7rem,2.5vw,0.8rem);color:var(--text-muted);margin-left:0.5rem;">Monitoring Period</span></div>`;
       
       document.getElementById('heroKPI').textContent = `${fmt(latest.birdsAlive)} Chickens`;
@@ -666,32 +858,21 @@
       document.getElementById('dataTable').innerHTML = h + b;
     }
 
-    async function handleRefresh() {
-      const btn = document.getElementById('refreshBtn'); if (!btn) return;
-      btn.classList.add('loading'); btn.querySelector('.refresh-text').textContent = 'Refreshing...';
-      try { const { data } = await fetchData(); render(data); btn.style.background='var(--success)'; setTimeout(()=>{btn.style.background='';btn.classList.remove('loading');btn.querySelector('.refresh-text').textContent='Refresh';},800); } 
-      catch(e) { btn.classList.remove('loading'); btn.querySelector('.refresh-text').textContent='Error'; setTimeout(()=>{btn.querySelector('.refresh-text').textContent='Refresh';},2000); }
-    }
-
     // 🔧 PWA INSTALL BUTTON LOGIC (WITH 5-SECOND DELAY)
     let deferredPrompt;
     let installButtonTimeout;
     const installButton = document.getElementById('installButton');
 
-    // Check if app is already installed
     function isAppInstalled() {
       return window.matchMedia('(display-mode: standalone)').matches || 
              window.navigator.standalone === true ||
              document.referrer.includes('android-app://');
     }
 
-    // Hide button if already installed on load
     if (isAppInstalled()) {
       installButton.style.display = 'none';
-      console.log('✅ App already installed - hiding install button');
     }
 
-    // Show install button with 5-second delay
     function showInstallButtonWithDelay() {
       if (installButtonTimeout) clearTimeout(installButtonTimeout);
       
@@ -699,21 +880,17 @@
         installButtonTimeout = setTimeout(() => {
           if (!isAppInstalled() && deferredPrompt) {
             installButton.style.display = 'flex';
-            console.log('⏱️ Install button shown after 5s delay');
           }
-        }, 5000); // 5 second delay
+        }, 5000);
       }
     }
 
-    // Listen for beforeinstallprompt event
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      console.log('💡 Install prompt captured - waiting 5s before showing button');
       showInstallButtonWithDelay();
     });
 
-    // Handle install button click
     installButton.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       
@@ -723,28 +900,23 @@
       deferredPrompt.prompt();
       
       const { outcome } = await deferredPrompt.userChoice;
-      console.log(`📦 User response: ${outcome}`);
       deferredPrompt = null;
     });
 
-    // Hide button after successful install
     window.addEventListener('appinstalled', () => {
       if (installButtonTimeout) clearTimeout(installButtonTimeout);
       installButton.style.display = 'none';
       deferredPrompt = null;
-      console.log(' Proto Project installed!');
     });
 
-    // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
       if (installButtonTimeout) clearTimeout(installButtonTimeout);
     });
 
     window.addEventListener('DOMContentLoaded', async () => {
-      document.getElementById('refreshBtn')?.addEventListener('click', handleRefresh);
-      const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;"> Loading flock data...</div>';
+      const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
       try { const { data, success } = await fetchData(); if(data.length===0) throw new Error('No data records'); render(data); if(success) setInterval(async()=>{ render((await fetchData()).data); }, 300000); }
-      catch(e) { const div=document.createElement('div'); div.className='error-message'; div.innerHTML=`<strong> Dashboard Error</strong><br>${e.message}`; document.querySelector('.dashboard')?.prepend(div); render(FALLBACK_DATA); }
+      catch(e) { render(FALLBACK_DATA); }
     });
   })();
   
