@@ -118,6 +118,22 @@
       flex-shrink: 0;
     }
     
+    /* Updated: Logo link styling */
+    .logo-link {
+      display: block;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .logo-link:hover {
+      transform: translateY(-3px);
+    }
+    
+    .logo-link:hover .logo-item {
+      box-shadow: 0 8px 25px rgba(201, 169, 75, 0.6);
+      border-color: var(--brand-gold-light);
+    }
+    
     .logo-item {
       height: clamp(60px, 12vw, 80px);
       border-radius: 16px;
@@ -127,11 +143,6 @@
       transition: var(--transition);
       background: rgba(255,255,255,0.05);
       flex-shrink: 0;
-    }
-    
-    .logo-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(201, 169, 75, 0.6);
     }
     
     .logo-item img {
@@ -363,10 +374,14 @@
         gap: clamp(0.2rem, 1.5vw, 0.5rem);
       }
       
-      .logo-item {
+      .logo-link {
         flex: 1;
+      }
+      
+      .logo-item {
         height: clamp(45px, 11vw, 65px);
         border-width: 2px;
+        width: 100%;
       }
       
       #latestUpdateBadge {
@@ -447,16 +462,23 @@
       <span id="latestUpdateBadgeMobile" class="latest-update-badge">⏱ Loading...</span>
     </div>
     
+    <!-- UPDATED: Logo row with clickable links -->
     <div class="logo-row">
-      <div class="logo-item">
-        <img src="EquipLogo.png" alt="Equip" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EE%3C/text%3E%3C/svg%3E'">
-      </div>
-      <div class="logo-item">
-        <img src="Proto.png" alt="Proto" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EP%3C/text%3E%3C/svg%3E'">
-      </div>
-      <div class="logo-item">
-        <img src="HC.png" alt="Hail &amp; Cotton" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EHC%3C/text%3E%3C/svg%3E'">
-      </div>
+      <a href="https://www.equipgroup.co" target="_blank" rel="noopener noreferrer" class="logo-link" title="Visit Equip">
+        <div class="logo-item">
+          <img src="EquipLogo.png" alt="Equip" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EE%3C/text%3E%3C/svg%3E'">
+        </div>
+      </a>
+      <a href="https://kelfoods.net/proto-chicks/" target="_blank" rel="noopener noreferrer" class="logo-link" title="Visit Proto">
+        <div class="logo-item">
+          <img src="Proto.png" alt="Proto" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EP%3C/text%3E%3C/svg%3E'">
+        </div>
+      </a>
+      <a href="https://hailcotton.com/products-and-places/" target="_blank" rel="noopener noreferrer" class="logo-link" title="Visit Hail &amp; Cotton">
+        <div class="logo-item">
+          <img src="HC.png" alt="Hail &amp; Cotton" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23c9a94b%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%230a1625%22 font-size=%2240%22%3EHC%3C/text%3E%3C/svg%3E'">
+        </div>
+      </a>
     </div>
   </div>
 
