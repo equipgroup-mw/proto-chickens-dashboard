@@ -1029,19 +1029,30 @@
         document.getElementById('monitoringRange').textContent = 'No data';
         return; 
       }
-      const latest = data[0], oldest = data[data.length - 1];
+      
+      // Get the oldest record in the filtered data AND the very first record from all data
+      const oldestFiltered = data[data.length - 1];
+      const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
+      const veryFirstRecord = allSorted[0]; // The actual start date of the entire flock
+      
+      const latest = data[0];
       const totalDeaths = data.reduce((s, r) => s + r.deaths, 0);
-      const startingBirds = oldest.birdsAlive;
+      const startingBirds = oldestFiltered.birdsAlive;
       const mortalityRate = startingBirds > 0 ? (totalDeaths / startingBirds * 100).toFixed(1) : 0;
       const latestTemp = latest.temp;
       const litterStatus = latest.litter && latest.litter.includes('yes') ? 'Available' : 'Low';
       let lastUnavailable = 'N/A';
       for (let i = 0; i < data.length; i++) { if (!data[i].litter.includes('yes')) { lastUnavailable = `${data[i].date} ${data[i].time || ''}`.trim(); break; } }
-      const daysDiff = Math.max(1, Math.ceil((latest.dateObj - oldest.dateObj) / 86400000) + 1);
       
-      // Calculate weeks and days for display
-      const totalWeeks = Math.floor(daysDiff / 7);
-      const remainingDays = daysDiff % 7;
+      // Calculate cumulative age: from the very first record of ALL data to the latest record in the filtered data
+      const cumulativeDays = Math.max(1, Math.ceil((latest.dateObj - veryFirstRecord.dateObj) / 86400000) + 1);
+      
+      // Calculate the period span within the filtered data
+      const periodDays = Math.max(1, Math.ceil((latest.dateObj - oldestFiltered.dateObj) / 86400000) + 1);
+      
+      // Calculate weeks and days for the cumulative age
+      const totalWeeks = Math.floor(cumulativeDays / 7);
+      const remainingDays = cumulativeDays % 7;
       let weekDayText = '';
       if (totalWeeks > 0 && remainingDays > 0) {
         weekDayText = ` (${totalWeeks} week${totalWeeks !== 1 ? 's' : ''}, ${remainingDays} day${remainingDays !== 1 ? 's' : ''})`;
@@ -1051,16 +1062,16 @@
         weekDayText = ` (${remainingDays} day${remainingDays !== 1 ? 's' : ''})`;
       }
       
-      // Update the monitoring bar
-      const oldestShort = oldest.dateObj.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+      // Update the monitoring bar - show cumulative age but filtered date range
+      const oldestShort = oldestFiltered.dateObj.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
       const latestShort = latest.dateObj.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
-      document.getElementById('monitoringDays').textContent = `${daysDiff} Days${weekDayText}`;
+      document.getElementById('monitoringDays').textContent = `${cumulativeDays} Days${weekDayText}`;
       document.getElementById('monitoringRange').textContent = `${oldestShort} – ${latestShort}`;
       
       updateBadge(latest.date, latest.time);
       
       document.getElementById('heroKPI').textContent = `${fmt(latest.birdsAlive)} Chickens`;
-      document.getElementById('heroStarted').textContent = fmt(startingBirds);
+      document.getElementById('heroStarted').textContent = fmt(veryFirstRecord.birdsAlive);
 
       const weightTrend = latest.avgWeight && data[1]?.avgWeight ? calculateTrend(latest.avgWeight, data[1].avgWeight, true) : { symbol: '—', class: 'neutral', text: 'Pending' };
       const tempTrend = calculateTrend(latestTemp, data[1]?.temp, false);
