@@ -5,6 +5,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#c9a94b">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon.png">
   
@@ -698,7 +699,7 @@
 
   <div class="section-title">📈 Growth & Performance</div>
   <div class="card">
-    <div class="card-header">Average Weight Progression</div>
+    <div class="card-header">Average Weight Progression (with Target)</div>
     <div class="chart-container"><canvas id="weightChart"></canvas></div>
   </div>
 
@@ -722,7 +723,7 @@
   <div class="section-title">🌡️ Environment & Resources</div>
   <div class="two-column">
     <div class="card">
-      <div class="card-header">Temperature Monitoring</div>
+      <div class="card-header">Temperature Monitoring (with Age Target)</div>
       <div id="tempStatus"></div>
       <div class="chart-container"><canvas id="tempChart"></canvas></div>
     </div>
@@ -752,7 +753,10 @@
 
 <script>
   (function() {
+    // 🔧 FIXED: Use a CORS proxy for local development, or use the direct URL in production
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Z8PP96_vPHYKHP6zOmyJwfc4VFTjR0O3H95mHSAElxDUcHnsKuIuklyaqRsqYwY6Z1iSbmq8mrjK/pub?gid=1870817852&single=true&output=csv";
+    // 📊 NEW: Target data CSV URL — replace with your actual published Google Sheet link
+    const TARGET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Z8PP96_vPHYKHP6zOmyJwfc4VFTjR0O3H95mHSAElxDUcHnsKuIuklyaqRsqYwY6Z1iSbmq8mrjK/pub?gid=972239246&single=true&output=csv";
 
     const FALLBACK_DATA = [
       { time:"16:00", date:"25 May 2026", birdsAlive:201, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"yes", avgWeight:null, timeMinutes:960 },
@@ -766,8 +770,55 @@
       { time:"17:30", date:"1 June 2026", birdsAlive:198, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"Yes", avgWeight:147, timeMinutes:1050 }
     ];
 
+    // 📊 NEW: Fallback target data (in case Google Sheet fails)
+    const FALLBACK_TARGET_DATA = [
+      { day:1, targetTemp:30, bodyWeight:57 },
+      { day:2, targetTemp:28, bodyWeight:73 },
+      { day:3, targetTemp:28, bodyWeight:91 },
+      { day:4, targetTemp:28, bodyWeight:111 },
+      { day:5, targetTemp:28, bodyWeight:134 },
+      { day:6, targetTemp:27, bodyWeight:160 },
+      { day:7, targetTemp:27, bodyWeight:189 },
+      { day:8, targetTemp:27, bodyWeight:220 },
+      { day:9, targetTemp:26, bodyWeight:256 },
+      { day:10, targetTemp:26, bodyWeight:294 },
+      { day:11, targetTemp:26, bodyWeight:336 },
+      { day:12, targetTemp:25, bodyWeight:381 },
+      { day:13, targetTemp:25, bodyWeight:429 },
+      { day:14, targetTemp:25, bodyWeight:480 },
+      { day:15, targetTemp:24, bodyWeight:535 },
+      { day:16, targetTemp:24, bodyWeight:593 },
+      { day:17, targetTemp:24, bodyWeight:655 },
+      { day:18, targetTemp:23, bodyWeight:719 },
+      { day:19, targetTemp:23, bodyWeight:786 },
+      { day:20, targetTemp:23, bodyWeight:856 },
+      { day:21, targetTemp:22, bodyWeight:929 },
+      { day:22, targetTemp:22, bodyWeight:1004 },
+      { day:23, targetTemp:22, bodyWeight:1082 },
+      { day:24, targetTemp:21, bodyWeight:1162 },
+      { day:25, targetTemp:21, bodyWeight:1244 },
+      { day:26, targetTemp:21, bodyWeight:1328 },
+      { day:27, targetTemp:20, bodyWeight:1414 },
+      { day:28, targetTemp:20, bodyWeight:1501 },
+      { day:29, targetTemp:20, bodyWeight:1590 },
+      { day:30, targetTemp:20, bodyWeight:1680 },
+      { day:31, targetTemp:20, bodyWeight:1771 },
+      { day:32, targetTemp:20, bodyWeight:1863 },
+      { day:33, targetTemp:20, bodyWeight:1956 },
+      { day:34, targetTemp:20, bodyWeight:2050 },
+      { day:35, targetTemp:20, bodyWeight:2144 },
+      { day:36, targetTemp:20, bodyWeight:2239 },
+      { day:37, targetTemp:20, bodyWeight:2334 },
+      { day:38, targetTemp:20, bodyWeight:2429 },
+      { day:39, targetTemp:20, bodyWeight:2524 },
+      { day:40, targetTemp:20, bodyWeight:2620 },
+      { day:41, targetTemp:20, bodyWeight:2715 },
+      { day:42, targetTemp:20, bodyWeight:2809 }
+    ];
+
     let currentFilter = 'all';
     let allData = [];
+    let targetData = null; // 📊 NEW: Will hold the target data lookup
     
     const toNum = (val) => { if (val === null || val === undefined || val === '') return 0; let num = Number(String(val).replace(/[^0-9.-]/g, '')); return isNaN(num) ? 0 : num; };
     const fmt = (val, decimals = 0) => { if (typeof val !== 'number') return val || '—'; return decimals > 0 ? val.toFixed(decimals) : val.toLocaleString(); };
@@ -810,9 +861,92 @@
       };
     }
 
+    // 📊 NEW: Fetch target data from Google Sheet
+    async function fetchTargetData() {
+      try {
+        const response = await fetch(TARGET_CSV_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const csvText = await response.text();
+        if (!csvText.trim()) throw new Error('Empty target CSV');
+        const rows = parseCSV(csvText);
+        if (rows.length < 2) throw new Error('No target data rows');
+        
+        const headers = rows[0];
+        const dayIdx = headers.findIndex(h => /days|day/i.test(h));
+        const tempIdx = headers.findIndex(h => /target.*temp|temp.*target/i.test(h));
+        const weightIdx = headers.findIndex(h => /body.*weight|weight.*grams|weight/i.test(h));
+        
+        if (dayIdx === -1 || weightIdx === -1) throw new Error('Missing target columns');
+        
+        const data = [];
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          if (row.length === 0) continue;
+          const day = toNum(row[dayIdx]);
+          if (day === 0) continue;
+          data.push({
+            day: day,
+            targetTemp: tempIdx >= 0 ? toNum(row[tempIdx]) : null,
+            bodyWeight: toNum(row[weightIdx])
+          });
+        }
+        
+        // Sort by day
+        data.sort((a, b) => a.day - b.day);
+        return { data, success: true };
+      } catch (err) {
+        console.warn('Failed to fetch target data, using fallback:', err);
+        return { data: FALLBACK_TARGET_DATA, success: false };
+      }
+    }
+
+    // 📊 NEW: Get target values for a specific day (with interpolation for days beyond range)
+    function getTargetForDay(day) {
+      if (!targetData || targetData.length === 0) return { bodyWeight: null, targetTemp: null };
+      
+      // Exact match
+      const exact = targetData.find(t => t.day === day);
+      if (exact) return exact;
+      
+      // If day is beyond our data, extrapolate the last few points
+      if (day > targetData[targetData.length - 1].day) {
+        const last = targetData[targetData.length - 1];
+        const secondLast = targetData[targetData.length - 2];
+        const dailyGain = last.bodyWeight - secondLast.bodyWeight;
+        const extraDays = day - last.day;
+        return {
+          bodyWeight: last.bodyWeight + (dailyGain * extraDays),
+          targetTemp: last.targetTemp
+        };
+      }
+      
+      // If day is before our data
+      if (day < targetData[0].day) {
+        return { bodyWeight: targetData[0].bodyWeight, targetTemp: targetData[0].targetTemp };
+      }
+      
+      // Interpolate between two points
+      for (let i = 0; i < targetData.length - 1; i++) {
+        if (day > targetData[i].day && day < targetData[i + 1].day) {
+          const fraction = (day - targetData[i].day) / (targetData[i + 1].day - targetData[i].day);
+          return {
+            bodyWeight: Math.round(targetData[i].bodyWeight + (targetData[i + 1].bodyWeight - targetData[i].bodyWeight) * fraction),
+            targetTemp: targetData[i + 1].targetTemp
+          };
+        }
+      }
+      
+      return { bodyWeight: null, targetTemp: null };
+    }
+
+    // 🔧 FIXED: Robust fetch with CORS handling
     async function fetchData() {
       try {
-        const response = await fetch(CSV_URL, { cache: 'no-store' });
+        const response = await fetch(CSV_URL, { 
+          cache: 'no-store',
+          mode: 'cors',
+          credentials: 'omit'
+        });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const csvText = await response.text();
         if (!csvText.trim()) throw new Error('Empty CSV');
@@ -840,6 +974,7 @@
         data.sort((a, b) => { const d = b.dateObj - a.dateObj; return d !== 0 ? d : (b.timeMinutes - a.timeMinutes); });
         return { data, success: true };
       } catch (err) {
+        console.warn('Fetch failed, using fallback data:', err);
         updateSyncStatus(false);
         return { data: FALLBACK_DATA, success: false };
       }
@@ -1030,10 +1165,16 @@
         return; 
       }
       
-      // Get the oldest record in the filtered data AND the very first record from all data
+      // 🔧 FIXED: Get the oldest record in the filtered data with null check
       const oldestFiltered = data[data.length - 1];
+      if (!oldestFiltered || !oldestFiltered.dateObj) {
+        console.error('Invalid data record:', oldestFiltered);
+        return;
+      }
+      
+      // Get the very first record from all data
       const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
-      const veryFirstRecord = allSorted[0]; // The actual start date of the entire flock
+      const veryFirstRecord = allSorted.length > 0 ? allSorted[0] : oldestFiltered;
       
       const latest = data[0];
       const totalDeaths = data.reduce((s, r) => s + r.deaths, 0);
@@ -1046,6 +1187,9 @@
       
       // Calculate cumulative age: from the very first record of ALL data to the latest record in the filtered data
       const cumulativeDays = Math.max(1, Math.ceil((latest.dateObj - veryFirstRecord.dateObj) / 86400000) + 1);
+      
+      // 📊 NEW: Get target values for the current cumulative day
+      const targetForToday = getTargetForDay(cumulativeDays);
       
       // Calculate the period span within the filtered data
       const periodDays = Math.max(1, Math.ceil((latest.dateObj - oldestFiltered.dateObj) / 86400000) + 1);
@@ -1076,10 +1220,26 @@
       const weightTrend = latest.avgWeight && data[1]?.avgWeight ? calculateTrend(latest.avgWeight, data[1].avgWeight, true) : { symbol: '—', class: 'neutral', text: 'Pending' };
       const tempTrend = calculateTrend(latestTemp, data[1]?.temp, false);
       
+      // 📊 NEW: Weight comparison with target
+      let weightVsTarget = '';
+      if (latest.avgWeight && targetForToday.bodyWeight) {
+        const diff = latest.avgWeight - targetForToday.bodyWeight;
+        const diffSign = diff >= 0 ? '+' : '';
+        weightVsTarget = ` (Target: ${targetForToday.bodyWeight}g, ${diffSign}${diff}g ${diff >= 0 ? 'ahead' : 'behind'})`;
+      }
+      
+      // 📊 NEW: Temperature comparison with target
+      let tempVsTarget = '';
+      if (latestTemp && targetForToday.targetTemp !== null) {
+        const diff = latestTemp - targetForToday.targetTemp;
+        const diffSign = diff >= 0 ? '+' : '';
+        tempVsTarget = `Target: ${targetForToday.targetTemp}°C`;
+      }
+      
       const metrics = [
         { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total deaths`, trend: { symbol: '—', class: 'neutral', text: 'Tracking' } },
-        { label: 'Last Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: 'Latest measurement', trend: weightTrend },
-        { label: 'Temperature - Last Checked', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp), trend: tempTrend },
+        { label: 'Last Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: weightVsTarget || 'Latest measurement', trend: weightTrend },
+        { label: 'Temperature - Last Checked', value: `${fmt(latestTemp)}°C`, sub: tempVsTarget || getTempStatus(latestTemp), trend: tempTrend },
         { label: 'Litter Status - Last Checked', value: litterStatus, sub: `Last unavailable: ${lastUnavailable}`, trend: { symbol: '•', class: 'neutral', text: '—' } }
       ];
 
@@ -1089,13 +1249,19 @@
         return `<div class="metric-card"><div class="label">${m.label} ${trendHTML}</div><div class="value">${m.value}</div><div class="context">${m.sub}</div></div>`;
       }).join('');
 
-      renderWeightChart(data.filter(r => r.avgWeight !== null).reverse());
+      renderWeightChart(data.filter(r => r.avgWeight !== null).reverse(), cumulativeDays);
       renderCauseChart(data); 
       renderMortalityTimeline(data); 
       renderMortalityKPI(data); 
       updateMortalityDisplay(); 
-      renderTempChart(data);
-      document.getElementById('tempStatus').innerHTML = `<div><span class="temp-indicator ${getTempClass(latestTemp)}">${getTempIcon(latestTemp)} Current: ${fmt(latestTemp)}°C</span><span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">Optimal: 26-32°C</span></div>`;
+      renderTempChart(data, cumulativeDays);
+      
+      // 📊 NEW: Temperature status now shows target comparison
+      const tempStatusText = targetForToday.targetTemp !== null 
+        ? `Target: ${targetForToday.targetTemp}°C · Optimal: 26-32°C`
+        : `Optimal: 26-32°C`;
+      
+      document.getElementById('tempStatus').innerHTML = `<div><span class="temp-indicator ${getTempClass(latestTemp)}">${getTempIcon(latestTemp)} Current: ${fmt(latestTemp)}°C</span><span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">${tempStatusText}</span></div>`;
       renderResourceChart(data); 
       renderDataTable(data);
       document.getElementById('recordCount').textContent = `(${data.length} records)`;
@@ -1130,7 +1296,8 @@
       k.innerHTML = `<div class="label">Total Deaths</div><div class="value">${fmt(total)}</div><div class="subtitle">Over ${days} days · ${rate}% mortality · Started with ${fmt(start)} birds</div>`;
     }
 
-    function renderWeightChart(data) {
+    // 📊 UPDATED: Weight chart now includes target line
+    function renderWeightChart(data, cumulativeDays) {
       const ctx = document.getElementById('weightChart')?.getContext('2d'); 
       if (!ctx || typeof Chart==='undefined') return;
       if (window.weightChartInstance) { window.weightChartInstance.destroy(); window.weightChartInstance = null; }
@@ -1138,7 +1305,88 @@
         document.getElementById('weightChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data for this period</p>'; 
         return; 
       }
-      window.weightChartInstance = new Chart(ctx, { type:'line', data:{ labels:data.map(r=>`${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`), datasets:[{ label:'Avg Weight (g)', data:data.map(r=>r.avgWeight), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.15)', borderWidth:3, pointBackgroundColor:'#fff', pointBorderColor:'#c9a94b', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`Weight: ${ctx.parsed.y}g`}} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.data.datasets.forEach((ds,i)=>{ chart.getDatasetMeta(i).data.forEach((p,idx)=>{ const v=ds.data[idx]; if(v!==null){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 9px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'g',p.x,p.y-10); } }); }); } }] });
+      
+      // 📊 NEW: Generate target weight curve for the same date range as actual data
+      const labels = data.map(r => `${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`);
+      const targetWeights = [];
+      const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
+      const veryFirstRecord = allSorted.length > 0 ? allSorted[0] : data[data.length - 1];
+      
+      data.forEach(r => {
+        const dayForRecord = Math.max(1, Math.ceil((r.dateObj - veryFirstRecord.dateObj) / 86400000) + 1);
+        const target = getTargetForDay(dayForRecord);
+        targetWeights.push(target.bodyWeight);
+      });
+      
+      window.weightChartInstance = new Chart(ctx, { 
+        type:'line', 
+        data:{ 
+          labels: labels,
+          datasets: [
+            { 
+              label:'Actual Weight (g)', 
+              data: data.map(r=>r.avgWeight), 
+              borderColor:'#c9a94b', 
+              backgroundColor:'rgba(201,169,75,0.15)', 
+              borderWidth:3, 
+              pointBackgroundColor:'#fff', 
+              pointBorderColor:'#c9a94b', 
+              pointRadius:4, 
+              pointHoverRadius:6, 
+              fill:true, 
+              tension:0.3 
+            },
+            // 📊 NEW: Target weight line
+            {
+              label:'Target Weight (g)',
+              data: targetWeights,
+              borderColor:'rgba(201, 169, 75, 0.4)',
+              backgroundColor:'transparent',
+              borderWidth:2,
+              borderDash:[10, 5],
+              pointBackgroundColor:'rgba(201, 169, 75, 0.6)',
+              pointBorderColor:'rgba(201, 169, 75, 0.3)',
+              pointRadius:3,
+              pointHoverRadius:5,
+              fill:false,
+              tension:0.3
+            }
+          ] 
+        }, 
+        options:{ 
+          responsive:true, 
+          maintainAspectRatio:false, 
+          plugins:{ 
+            legend:{
+              display:true,
+              position:'top',
+              labels:{
+                color:'#b9c7dd',
+                font:{size:10,family:'Libre Franklin'},
+                usePointStyle:true,
+                pointStyleWidth:8,
+                padding:15
+              }
+            }, 
+            tooltip:{ 
+              backgroundColor:'#0b1a2b', 
+              titleColor:'#fff', 
+              bodyColor:'#f0f2f5', 
+              borderColor:'#c9a94b', 
+              borderWidth:1, 
+              callbacks:{
+                label: function(ctx) {
+                  return `${ctx.dataset.label}: ${ctx.parsed.y}g`;
+                }
+              }
+            } 
+          }, 
+          scales:{ 
+            x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, 
+            y:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false } 
+          } 
+        }
+      });
     }
 
     function renderCauseChart(data) {
@@ -1203,7 +1451,8 @@
       });
     }
 
-    function renderTempChart(data) {
+    // 📊 UPDATED: Temperature chart now includes target temperature line
+    function renderTempChart(data, cumulativeDays) {
       const ctx = document.getElementById('tempChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.tempChartInstance) { window.tempChartInstance.destroy(); window.tempChartInstance = null; }
       const rec=data.slice(0,15).reverse(), temps=rec.map(r=>r.temp);
@@ -1211,7 +1460,88 @@
         document.getElementById('tempChart').parentNode.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No temperature data for this period</p>';
         return;
       }
-      window.tempChartInstance = new Chart(ctx, { type:'line', data:{ labels:rec.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), datasets:[ { label:'Temp (°C)', data:temps, borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.1)', borderWidth:3, pointRadius:4, pointBackgroundColor:'#fff', tension:0.3, fill:true }, { label:'Min (26°C)', data:Array(temps.length).fill(26), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }, { label:'Max (32°C)', data:Array(temps.length).fill(32), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false } ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{display:false} }, y:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'}, min:20, max:40 } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((p,i)=>{ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 8px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(chart.data.datasets[0].data[i]+'°',p.x,p.y-10); }); } }] });
+      
+      // 📊 NEW: Get target temperature for the current day
+      const targetForToday = getTargetForDay(cumulativeDays);
+      
+      const datasets = [ 
+        { 
+          label:'Actual Temp (°C)', 
+          data:temps, 
+          borderColor:'#c9a94b', 
+          backgroundColor:'rgba(201,169,75,0.1)', 
+          borderWidth:3, 
+          pointRadius:4, 
+          pointBackgroundColor:'#fff', 
+          tension:0.3, 
+          fill:true 
+        }, 
+        { 
+          label:'Min (26°C)', 
+          data:Array(temps.length).fill(26), 
+          borderColor:'rgba(201,169,75,0.4)', 
+          borderDash:[8,4], 
+          borderWidth:1.5, 
+          pointRadius:0, 
+          fill:false 
+        }, 
+        { 
+          label:'Max (32°C)', 
+          data:Array(temps.length).fill(32), 
+          borderColor:'rgba(201,169,75,0.4)', 
+          borderDash:[8,4], 
+          borderWidth:1.5, 
+          pointRadius:0, 
+          fill:false 
+        } 
+      ];
+      
+      // 📊 NEW: Add target temperature line if available
+      if (targetForToday.targetTemp !== null) {
+        datasets.push({
+          label:`Day ${cumulativeDays} Target (${targetForToday.targetTemp}°C)`,
+          data:Array(temps.length).fill(targetForToday.targetTemp),
+          borderColor:'#2ecc71',
+          backgroundColor:'transparent',
+          borderDash:[6, 3],
+          borderWidth:2,
+          pointRadius:0,
+          fill:false
+        });
+      }
+      
+      window.tempChartInstance = new Chart(ctx, { 
+        type:'line', 
+        data:{ 
+          labels:rec.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), 
+          datasets: datasets
+        }, 
+        options:{ 
+          responsive:true, 
+          maintainAspectRatio:false, 
+          plugins:{ 
+            legend:{
+              display:true,
+              position:'top',
+              labels:{
+                color:'#b9c7dd',
+                font:{size:9,family:'Libre Franklin'},
+                usePointStyle:true,
+                pointStyleWidth:8,
+                padding:10,
+                filter: function(item) {
+                  // Hide the min/max labels to keep legend clean, but keep target if present
+                  return !item.text.includes('Min (26') && !item.text.includes('Max (32');
+                }
+              }
+            } 
+          }, 
+          scales:{ 
+            x:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{display:false} }, 
+            y:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'}, min:18, max:40 } 
+          } 
+        }
+      });
     }
 
     function renderResourceChart(data) {
@@ -1287,6 +1617,10 @@
     window.addEventListener('DOMContentLoaded', async () => {
       const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
       try { 
+        // 📊 NEW: Fetch target data first
+        const targetResult = await fetchTargetData();
+        targetData = targetResult.data;
+        
         const { data, success } = await fetchData(); 
         if(data.length===0) throw new Error('No data records'); 
         allData = data;
@@ -1295,12 +1629,17 @@
         if(success) setInterval(async()=>{ 
           const { data: freshData } = await fetchData();
           allData = freshData;
+          // 📊 NEW: Refresh target data periodically too (in case it's updated)
+          const targetRefresh = await fetchTargetData();
+          targetData = targetRefresh.data;
           const filteredData = filterDataByWeek(allData, currentFilter);
           render(filteredData); 
         }, 300000); 
       }
       catch(e) { 
+        console.warn('Initialization error, using fallback:', e);
         allData = FALLBACK_DATA;
+        targetData = FALLBACK_TARGET_DATA;
         buildWeekFilterButtons(allData);
         render(allData); 
       }
