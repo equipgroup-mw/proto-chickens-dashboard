@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- PWA Meta Tags -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#c9a94b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon.png">
-  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Poultry Farm Dashboard | Live Monitoring</title>
@@ -52,7 +50,7 @@
     
     .dashboard { max-width: 1400px; margin: 0 auto; width: 100%; }
     
-    /* ========== MONITORING BAR (BELOW METRICS GRID) ========== */
+    /* ========== MONITORING BAR ========== */
     .monitoring-bar {
       display: flex;
       align-items: center;
@@ -63,7 +61,6 @@
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
     }
-    
     .monitoring-age {
       flex: 0 0 50%;
       display: flex;
@@ -74,7 +71,6 @@
       align-items: flex-start;
       min-width: 0;
     }
-    
     .monitoring-age-row {
       display: flex;
       align-items: baseline;
@@ -82,7 +78,6 @@
       flex-wrap: nowrap;
       white-space: nowrap;
     }
-    
     .monitoring-age-label {
       font-size: clamp(0.7rem, 2.2vw, 0.78rem);
       text-transform: uppercase;
@@ -92,7 +87,6 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-    
     .monitoring-age-value {
       font-size: clamp(1rem, 3vw, 1.3rem);
       font-weight: 700;
@@ -100,13 +94,11 @@
       font-family: 'Georgia', serif;
       white-space: nowrap;
     }
-    
     .monitoring-age-sub {
       font-size: clamp(0.65rem, 2vw, 0.7rem);
       color: var(--text-muted);
       white-space: nowrap;
     }
-    
     .monitoring-filter {
       flex: 0 0 50%;
       display: flex;
@@ -116,7 +108,6 @@
       padding-left: clamp(1rem, 3vw, 2rem);
       justify-content: flex-start;
     }
-    
     .monitoring-filter-label {
       font-size: clamp(0.65rem, 2vw, 0.7rem);
       text-transform: uppercase;
@@ -126,7 +117,6 @@
       white-space: nowrap;
       margin-right: 0.3rem;
     }
-    
     .week-filter-btn {
       background: rgba(201, 169, 75, 0.08);
       color: var(--text-secondary);
@@ -140,14 +130,12 @@
       transition: var(--transition);
       white-space: nowrap;
     }
-    
     .week-filter-btn:hover {
       background: rgba(201, 169, 75, 0.2);
       border-color: var(--brand-gold);
       color: var(--brand-gold-light);
       transform: translateY(-1px);
     }
-    
     .week-filter-btn.active {
       background: var(--brand-gold);
       color: var(--brand-navy);
@@ -155,7 +143,6 @@
       box-shadow: 0 4px 12px rgba(201, 169, 75, 0.4);
       font-weight: 700;
     }
-    
     @media (max-width: 900px) {
       .monitoring-bar {
         flex-direction: column;
@@ -163,7 +150,6 @@
         gap: 0.7rem;
         padding: 0.8rem;
       }
-      
       .monitoring-age {
         flex: 1 1 auto;
         width: 100%;
@@ -174,17 +160,8 @@
         align-items: center;
         text-align: center;
       }
-      
-      .monitoring-age-row {
-        flex-wrap: wrap;
-        justify-content: center;
-        white-space: normal;
-      }
-      
-      .monitoring-age-sub {
-        white-space: normal;
-      }
-      
+      .monitoring-age-row { flex-wrap: wrap; justify-content: center; white-space: normal; }
+      .monitoring-age-sub { white-space: normal; }
       .monitoring-filter {
         flex: 1 1 auto;
         width: 100%;
@@ -192,35 +169,16 @@
         justify-content: center;
         gap: 0.3rem;
       }
-      
-      .week-filter-btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.65rem;
-      }
+      .week-filter-btn { padding: 0.3rem 0.6rem; font-size: 0.65rem; }
     }
-    
     @media (max-width: 600px) {
-      .monitoring-age-row {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.3rem;
-      }
-      
-      .monitoring-age-label {
-        font-size: 0.65rem;
-      }
-      
-      .monitoring-age-value {
-        font-size: 0.9rem;
-      }
-      
-      .monitoring-age-sub {
-        font-size: 0.6rem;
-      }
+      .monitoring-age-row { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.3rem; }
+      .monitoring-age-label { font-size: 0.65rem; }
+      .monitoring-age-value { font-size: 0.9rem; }
+      .monitoring-age-sub { font-size: 0.6rem; }
     }
-    
-    /* ========== DESKTOP HEADER (Original Side-by-Side Layout) ========== */
+
+    /* ========== HEADER ========== */
     .header { 
       display: flex; 
       align-items: center; 
@@ -229,12 +187,7 @@
       margin-bottom: 1.5rem; 
       padding: 0.5rem 0; 
     }
-    
-    .header-content { 
-      flex: 1;
-      min-width: 0;
-    }
-    
+    .header-content { flex: 1; min-width: 0; }
     .header h1 { 
       font-size: clamp(1.4rem, 5vw, 2.2rem); 
       letter-spacing: -0.3px; 
@@ -245,7 +198,6 @@
       line-height: 1.2;
       margin-bottom: 0.3rem;
     }
-    
     .header h1 .live-badge { 
       background: var(--brand-gold); 
       color: var(--brand-navy); 
@@ -255,7 +207,6 @@
       font-weight: 600; 
       white-space: nowrap; 
     }
-    
     .subtitle { 
       color: var(--text-secondary); 
       font-size: clamp(0.85rem, 2.8vw, 1rem); 
@@ -264,7 +215,6 @@
       gap: 0.5rem; 
       flex-wrap: wrap; 
     }
-    
     .latest-update-badge { 
       background: rgba(201, 169, 75, 0.12); 
       border: 1px solid var(--brand-gold); 
@@ -278,30 +228,22 @@
       gap: 0.3rem; 
       white-space: nowrap; 
     }
-    
     .logo-row {
       display: flex;
       align-items: center;
       gap: clamp(1rem, 3vw, 2rem);
       flex-shrink: 0;
     }
-    
-    /* Updated: Logo link styling */
     .logo-link {
       display: block;
       text-decoration: none;
       transition: var(--transition);
     }
-    
-    .logo-link:hover {
-      transform: translateY(-3px);
-    }
-    
+    .logo-link:hover { transform: translateY(-3px); }
     .logo-link:hover .logo-item {
       box-shadow: 0 8px 25px rgba(201, 169, 75, 0.6);
       border-color: var(--brand-gold-light);
     }
-    
     .logo-item {
       height: clamp(60px, 12vw, 80px);
       border-radius: 16px;
@@ -312,21 +254,13 @@
       background: rgba(255,255,255,0.05);
       flex-shrink: 0;
     }
-    
-    .logo-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* Hide mobile-specific elements on desktop */
+    .logo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .header-title-row { display: none; }
     .header-meta-row { display: none; }
     .refresh-btn { display: none; }
     .location-text { display: none; }
 
-    /* ========== PREMIUM HERO CARD (DESKTOP PERFECT) ========== */
+    /* ========== HERO CARD ========== */
     .hero-section { margin-bottom: 1.5rem; perspective: 800px; }
     .hero-card {
       background: linear-gradient(160deg, #1e3a5f, #142d4a, #0d1f36);
@@ -344,27 +278,23 @@
       animation: heroFadeIn 0.8s ease-out;
     }
     @keyframes heroFadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    
     .hero-top-line { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, rgba(201,169,75,0), #e6c468, rgba(201,169,75,0)); box-shadow: 0 0 15px rgba(201,169,75,0.5); z-index: 2; }
     .hero-ambient-light { position: absolute; top: -40%; right: -10%; width: 450px; height: 450px; background: radial-gradient(circle, rgba(201,169,75,0.1) 0%, transparent 70%); pointer-events: none; z-index: 1; }
-
     .hero-left { flex: 0 0 auto; width: clamp(60px, 12vw, 90px); display: flex; align-items: center; justify-content: center; z-index: 2; }
     .hero-icon-ring { width: 100%; aspect-ratio: 1; border-radius: 50%; background: rgba(201,169,75,0.08); border: 2px solid rgba(201,169,75,0.3); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(201,169,75,0.25), inset 0 0 15px rgba(201,169,75,0.1); }
     .hero-icon { font-size: clamp(2rem, 4vw, 3rem); line-height: 1; }
-
     .hero-center { flex: 1; min-width: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; }
     .hero-title { font-family: 'Georgia', serif; font-size: clamp(0.75rem, 1.5vw, 0.85rem); text-transform: uppercase; letter-spacing: 3px; color: var(--brand-gold-light); margin-bottom: 0.1rem; font-weight: 700; }
     .hero-kpi { font-family: 'Libre Franklin', sans-serif; font-size: clamp(4.5rem, 10vw, 7rem); font-weight: 800; letter-spacing: -3px; color: #ffffff; line-height: 0.9; white-space: nowrap; margin-bottom: 0.15rem; }
     .hero-started { font-size: clamp(0.95rem, 2vw, 1.1rem); color: rgba(255,255,255,0.85); font-weight: 500; letter-spacing: 0.3px; }
     .hero-started strong { color: #ffffff; font-weight: 700; font-size: 1.05em; }
-
     .hero-right { flex: 0 0 auto; width: clamp(140px, 22vw, 170px); display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 0.6rem; z-index: 2; }
     .sync-pill { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.06); padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.8rem; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); }
     .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px rgba(46,204,113,0.6); animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px rgba(46,204,113,0.6); } 50% { opacity: 0.6; transform: scale(0.9); box-shadow: 0 0 4px rgba(46,204,113,0.3); } }
     .hero-context-bottom { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-align: right; }
 
-    /* ========== SECONDARY METRICS ========== */
+    /* ========== METRICS ========== */
     .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 30vw, 180px), 1fr)); gap: clamp(0.6rem, 2vw, 1rem); margin-bottom: 0.5rem; }
     .metric-card { background: var(--brand-card-bg); border: 1px solid var(--border-subtle); border-radius: 16px; padding: clamp(0.9rem, 3vw, 1.2rem); box-shadow: var(--shadow-card); transition: var(--transition); border-left: 4px solid var(--brand-gold); display: flex; flex-direction: column; min-height: 110px; }
     .metric-card:hover { transform: translateY(-3px); border-left-color: var(--brand-gold-light); box-shadow: 0 12px 40px rgba(0,0,0,0.45); }
@@ -409,8 +339,343 @@
     .updated { text-align: right; color: var(--text-muted); font-size: clamp(0.65rem, 2.2vw, 0.7rem); margin-top: clamp(1.2rem, 4vw, 2rem); padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); }
     .error-message { background: rgba(231, 76, 60, 0.12); border: 1px solid var(--danger); padding: clamp(0.6rem, 2.5vw, 0.9rem); border-radius: 12px; color: #ffcccc; font-size: clamp(0.75rem, 2.5vw, 0.85rem); margin: clamp(0.4rem, 1.5vw, 0.6rem) 0; line-height: 1.4; }
     .error-message code { background: rgba(0,0,0,0.2); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; word-break: break-all; }
-    
-    /* ========== FLOATING INSTALL BUTTON ========== */
+
+    /* ========== VACCINATION CARD (DESKTOP) ========== */
+    .vaccination-card {
+      background: linear-gradient(160deg, #1a3048 0%, #0f2136 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      padding: 1.8rem 2rem 2rem;
+      margin-top: clamp(0.6rem, 2vw, 1rem);
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+    .vaccination-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(180deg, var(--brand-gold), rgba(201,169,75,0.15));
+    }
+    .vaccination-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      padding-left: 0.3rem;
+    }
+    .vaccination-header-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: rgba(201,169,75,0.1);
+      border: 1.5px solid rgba(201,169,75,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .vaccination-header-text {
+      font-family: 'Georgia', serif;
+      font-size: clamp(1rem, 3.5vw, 1.1rem);
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .vaccination-header-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+    .vaccination-header-count {
+      margin-left: auto;
+      background: rgba(201,169,75,0.1);
+      border: 1px solid var(--border-subtle);
+      color: var(--brand-gold-light);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.85rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Timeline track */
+    .vaccination-timeline {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding-top: 1rem;
+      padding-left: 0.3rem;
+      position: relative;
+    }
+    .vaccination-timeline::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: calc(0.3rem + 80px / 2);
+      right: calc(80px / 2);
+      height: 2px;
+      background: linear-gradient(90deg,
+        rgba(201,169,75,0.1) 0%,
+        var(--brand-gold) 20%,
+        var(--brand-gold-light) 50%,
+        var(--brand-gold) 80%,
+        rgba(201,169,75,0.1) 100%
+      );
+    }
+
+    /* Each node - DESKTOP ONLY */
+    .vaccination-node-desktop {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
+      cursor: default;
+    }
+    .vaccination-node-desktop:hover .vaccination-dot {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 8px rgba(201,169,75,0.4), 0 0 24px rgba(201,169,75,0.5);
+    }
+    .vaccination-node-desktop:hover .vacc-node-card {
+      border-color: rgba(201,169,75,0.6);
+      background: rgba(201,169,75,0.06);
+    }
+
+    .vaccination-day {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--brand-gold-light);
+      background: rgba(201,169,75,0.1);
+      border: 1px solid rgba(201,169,75,0.25);
+      border-radius: 10px;
+      padding: 0.12rem 0.55rem;
+      margin-bottom: 0.45rem;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      font-family: 'Libre Franklin', sans-serif;
+    }
+
+    .vaccination-dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--brand-gold);
+      border: 3px solid #10273e;
+      box-shadow: 0 0 0 4px rgba(201,169,75,0.3), 0 0 16px rgba(201,169,75,0.3);
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+      position: relative;
+      z-index: 2;
+      animation: vaccDotPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes vaccDotPulse {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(201,169,75,0.3), 0 0 14px rgba(201,169,75,0.25); }
+      50% { box-shadow: 0 0 0 7px rgba(201,169,75,0.45), 0 0 22px rgba(201,169,75,0.4); }
+    }
+
+    .vacc-node-card {
+      margin-top: 0.7rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 0.65rem 0.7rem 0.7rem;
+      width: calc(100% - 12px);
+      transition: all 0.2s ease;
+    }
+    .vacc-node-date {
+      font-family: 'Georgia', serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+    .vacc-node-date .year {
+      display: block;
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 0.05rem;
+    }
+    .vacc-tags { display: flex; flex-direction: column; gap: 0.28rem; }
+    .vacc-tag {
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 0.22rem 0.55rem;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: rgba(201,169,75,0.14);
+      border: 1px solid rgba(201,169,75,0.35);
+      color: var(--brand-gold-light);
+      font-family: 'Libre Franklin', sans-serif;
+    }
+
+    /* Footer */
+    .vaccination-footer {
+      margin-top: 1.5rem;
+      padding-top: 0.9rem;
+      border-top: 1px dashed rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .vaccination-coverage-stat { font-size: 0.7rem; color: var(--text-muted); }
+    .vaccination-coverage-stat strong { color: var(--text-secondary); font-weight: 600; }
+
+    /* Hide mobile elements on desktop */
+    .vaccination-node-mobile { display: none; }
+
+    /* ========== MOBILE VACCINATION (REDESIGNED) ========== */
+    @media (max-width: 900px) {
+      .vaccination-card {
+        padding: 1.2rem 1rem 1.4rem;
+      }
+      .vaccination-card::before { width: 3px; }
+      .vaccination-header {
+        margin-bottom: 1.2rem;
+        padding-left: 0;
+        flex-wrap: wrap;
+      }
+      .vaccination-header-icon {
+        width: 36px; height: 36px;
+        font-size: 1.1rem;
+      }
+      .vaccination-header-text { font-size: 1rem; }
+      .vaccination-header-sub { font-size: 0.65rem; }
+      .vaccination-header-count {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.65rem;
+        margin-left: 0;
+        margin-top: 0.3rem;
+        width: 100%;
+        text-align: center;
+      }
+
+      /* Hide desktop nodes, show mobile */
+      .vaccination-node-desktop { display: none !important; }
+      .vaccination-node-mobile { display: flex; }
+
+      /* Reset timeline to vertical stack */
+      .vaccination-timeline {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+      }
+      /* Kill the desktop connecting line completely */
+      .vaccination-timeline::before { content: none; }
+
+      /* Each node becomes a horizontal card */
+      .vaccination-node-mobile {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+      }
+      .vaccination-node-mobile + .vaccination-node-mobile {
+        margin-top: 0.6rem;
+      }
+      .vaccination-node-mobile:active {
+        border-color: rgba(201,169,75,0.4);
+        background: rgba(201,169,75,0.04);
+      }
+
+      /* Left accent strip */
+      .vaccination-node-left {
+        flex: 0 0 auto;
+        width: 56px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding: 0.8rem 0.4rem;
+        background: rgba(201,169,75,0.06);
+        border-right: 2px solid rgba(201,169,75,0.25);
+      }
+      .vaccination-node-dot-mobile {
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        background: var(--brand-gold);
+        border: 2px solid #10273e;
+        box-shadow: 0 0 0 3px rgba(201,169,75,0.3), 0 0 10px rgba(201,169,75,0.25);
+        flex-shrink: 0;
+      }
+      .vaccination-node-day-mobile {
+        font-family: 'Libre Franklin', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--brand-gold-light);
+        text-align: center;
+        line-height: 1.1;
+      }
+
+      /* Right content area */
+      .vaccination-node-right {
+        flex: 1;
+        min-width: 0;
+        padding: 0.7rem 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        justify-content: center;
+      }
+      .vaccination-node-date-mobile {
+        font-family: 'Georgia', serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.2;
+      }
+      .vaccination-node-year-mobile {
+        font-family: 'Libre Franklin', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 400;
+        color: var(--text-muted);
+        margin-left: 0.3rem;
+      }
+      .vaccination-node-tags-mobile {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
+      .vaccination-tag-mobile {
+        font-family: 'Libre Franklin', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 0.18rem 0.5rem;
+        border-radius: 8px;
+        background: rgba(201,169,75,0.14);
+        border: 1px solid rgba(201,169,75,0.3);
+        color: var(--brand-gold-light);
+        white-space: nowrap;
+      }
+
+      /* Footer */
+      .vaccination-footer {
+        margin-top: 1rem;
+        padding-top: 0.7rem;
+        justify-content: center;
+      }
+      .vaccination-coverage-stat {
+        font-size: 0.65rem;
+        text-align: center;
+      }
+    }
+
+    /* ========== INSTALL BUTTON ========== */
     #installButton {
       position: fixed;
       bottom: clamp(1rem, 3vw, 2rem);
@@ -433,59 +698,29 @@
       animation: pulseInstall 2s infinite;
       max-width: 90vw;
     }
-    
     @keyframes pulseInstall {
       0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(201, 169, 75, 0.5), 0 4px 12px rgba(0,0,0,0.3); }
       50% { transform: scale(1.03); box-shadow: 0 12px 35px rgba(201, 169, 75, 0.7), 0 6px 18px rgba(0,0,0,0.4); }
     }
-    
-    #installButton:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 12px 35px rgba(201, 169, 75, 0.6), 0 6px 18px rgba(0,0,0,0.4);
-    }
-    
-    #installButton:active {
-      transform: translateY(0) scale(0.98);
-    }
-    
-    #installButton .install-icon {
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-      line-height: 1;
-    }
-    
+    #installButton:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 35px rgba(201, 169, 75, 0.6), 0 6px 18px rgba(0,0,0,0.4); }
+    #installButton:active { transform: translateY(0) scale(0.98); }
+    #installButton .install-icon { font-size: clamp(1.2rem, 3vw, 1.5rem); line-height: 1; }
     @media (max-width: 400px) {
-      #installButton {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.9rem;
-        bottom: 1rem;
-        right: 1rem;
-      }
+      #installButton { padding: 0.7rem 1.2rem; font-size: 0.9rem; bottom: 1rem; right: 1rem; }
     }
-    
+
     /* ========== MOBILE OPTIMIZATIONS ========== */
     @media (max-width: 900px) {
       body { padding: 0.8rem; background: #0a1625; }
-      
-      /* Switch to mobile column layout */
-      .header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.7rem;
-        padding: 0.2rem 0 1rem;
-      }
-      
-      /* Hide desktop elements */
+      .header { flex-direction: column; align-items: stretch; gap: 0.7rem; padding: 0.2rem 0 1rem; }
       .header-content { display: none; }
       .subtitle { display: none; }
-      
-      /* Show mobile-specific elements */
       .header-title-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 0.8rem;
       }
-      
       .header-title-row h1 {
         font-size: clamp(1.2rem, 5.5vw, 1.6rem);
         letter-spacing: -0.3px;
@@ -495,9 +730,7 @@
         gap: 0.5rem;
         line-height: 1.2;
       }
-      
       .header-title-row h1 .live-badge { display: none; }
-      
       .header-meta-row {
         display: flex;
         align-items: center;
@@ -505,14 +738,7 @@
         gap: 0.5rem;
         flex-wrap: wrap;
       }
-      
-      .location-text {
-        color: var(--text-secondary);
-        font-size: 0.75rem;
-        display: inline-flex;
-        align-items: center;
-      }
-      
+      .location-text { color: var(--text-secondary); font-size: 0.75rem; display: inline-flex; align-items: center; }
       .refresh-btn {
         display: inline-flex;
         background: var(--brand-gold);
@@ -528,36 +754,11 @@
         white-space: nowrap;
         flex-shrink: 0;
       }
-      
-      .refresh-btn:hover {
-        background: var(--brand-gold-light);
-        transform: translateY(-1px);
-      }
-      
-      /* Logo row full width on mobile */
-      .logo-row {
-        order: -1;
-        width: 100%;
-        justify-content: space-between;
-        gap: clamp(0.2rem, 1.5vw, 0.5rem);
-      }
-      
-      .logo-link {
-        flex: 1;
-      }
-      
-      .logo-item {
-        height: clamp(45px, 11vw, 65px);
-        border-width: 2px;
-        width: 100%;
-      }
-      
-      #latestUpdateBadge {
-        font-size: 0.65rem;
-        padding: 0.2rem 0.5rem;
-        margin-left: auto;
-      }
-      
+      .refresh-btn:hover { background: var(--brand-gold-light); transform: translateY(-1px); }
+      .logo-row { order: -1; width: 100%; justify-content: space-between; gap: clamp(0.2rem, 1.5vw, 0.5rem); }
+      .logo-link { flex: 1; }
+      .logo-item { height: clamp(45px, 11vw, 65px); border-width: 2px; width: 100%; }
+      #latestUpdateBadge { font-size: 0.65rem; padding: 0.2rem 0.5rem; margin-left: auto; }
       .hero-card {
         flex-direction: row;
         align-items: flex-start;
@@ -568,30 +769,24 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         background: #11263c;
       }
-      
       .hero-left { width: 45px; margin-top: 0.3rem; }
       .hero-icon-ring { width: 45px; box-shadow: none; border-width: 1px; }
       .hero-icon { font-size: 1.8rem; }
-      
       .hero-center { flex: 1; min-width: 0; align-items: flex-start; }
       .hero-title { font-size: 0.7rem; letter-spacing: 1.5px; margin-bottom: 0.1rem; color: var(--text-muted); }
       .hero-kpi { font-size: 2.2rem; letter-spacing: -1px; line-height: 1.1; margin-bottom: 0.2rem; }
       .hero-started { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
       .hero-started strong { color: rgba(255,255,255,0.9); }
-      
       .hero-right { position: absolute; top: 1rem; right: 1rem; align-items: flex-end; }
       .sync-pill { padding: 0.25rem 0.6rem; font-size: 0.7rem; background: rgba(46, 204, 113, 0.15); border-color: rgba(46, 204, 113, 0.3); color: var(--success); }
       .sync-dot { width: 6px; height: 6px; }
       .hero-context-bottom { display: none; }
-      
       .hero-ambient-light { display: none; }
-      
       .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
       .metric-card { padding: 0.8rem; min-height: auto; border-left: none; border-top: 3px solid var(--brand-gold); }
       .metric-card .label { font-size: 0.6rem; letter-spacing: 0.5px; }
       .metric-card .value { font-size: 1.2rem; }
       .metric-card .context { font-size: 0.6rem; }
-      
       .two-column { grid-template-columns: 1fr; }
       .card { padding: 1rem; border-radius: 12px; }
       .section-title { font-size: 0.7rem; }
@@ -599,38 +794,32 @@
       .table-scroll { margin: 0 -1rem; padding: 0 1rem; max-height: 300px; }
       .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
-    
+
     @media (prefers-reduced-motion: reduce) { 
       * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
       #installButton { animation: none; }
     }
   </style>
+<base target="_blank">
 </head>
 <body>
 <div class="dashboard">
   <div class="header">
-    <!-- DESKTOP LAYOUT: Title + subtitle left, logos right -->
     <div class="header-content">
       <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
       <div class="subtitle">
-        <span> Real-time flock analytics</span>
+        <span>Real-time flock analytics</span>
         <span id="latestUpdateBadge" class="latest-update-badge">⏱ Loading...</span>
       </div>
     </div>
-    
-    <!-- MOBILE LAYOUT: Title row (shown only on mobile) -->
     <div class="header-title-row">
       <h1>Poultry Farm Monitor <span class="live-badge">Live</span></h1>
       <button class="refresh-btn" id="refreshBtn">↻ Refresh Data</button>
     </div>
-    
-    <!-- MOBILE LAYOUT: Meta row (shown only on mobile) -->
     <div class="header-meta-row">
-      <span class="location-text"> Real-time flock analytics</span>
+      <span class="location-text">Real-time flock analytics</span>
       <span id="latestUpdateBadgeMobile" class="latest-update-badge">⏱ Loading...</span>
     </div>
-    
-    <!-- UPDATED: Logo row with clickable links -->
     <div class="logo-row">
       <a href="https://www.equipgroup.co" target="_blank" rel="noopener noreferrer" class="logo-link" title="Visit Equip">
         <div class="logo-item">
@@ -654,19 +843,16 @@
     <div class="hero-card">
       <div class="hero-top-line"></div>
       <div class="hero-ambient-light"></div>
-      
       <div class="hero-left">
         <div class="hero-icon-ring">
           <span class="hero-icon">🐔</span>
         </div>
       </div>
-      
       <div class="hero-center">
         <div class="hero-title">BIRDS ALIVE</div>
         <div class="hero-kpi" id="heroKPI">198 Chickens</div>
         <div class="hero-started">Started with <strong id="heroStarted">201</strong></div>
       </div>
-      
       <div class="hero-right">
         <div class="sync-pill">
           <span class="sync-dot" id="syncDot"></span>
@@ -679,7 +865,6 @@
 
   <div class="metrics-grid" id="topMetrics"></div>
 
-  <!-- AGE & MONITORING PERIOD + WEEK FILTER (BELOW METRICS GRID) -->
   <div class="monitoring-bar">
     <div class="monitoring-age">
       <div class="monitoring-age-row">
@@ -690,9 +875,7 @@
     </div>
     <div class="monitoring-filter">
       <span class="monitoring-filter-label">Filter</span>
-      <div id="weekFilterButtons" style="display:flex;flex-wrap:wrap;gap:0.3rem;">
-        <!-- Dynamically generated by JS -->
-      </div>
+      <div id="weekFilterButtons" style="display:flex;flex-wrap:wrap;gap:0.3rem;"></div>
     </div>
   </div>
 
@@ -702,13 +885,12 @@
     <div class="chart-container"><canvas id="weightChart"></canvas></div>
   </div>
 
-  <div class="section-title">️ Mortality Analysis</div>
+  <div class="section-title">☠️ Mortality Analysis</div>
   <div class="two-column">
     <div class="card">
       <div class="card-header">Deaths by Day</div>
       <div class="chart-container"><canvas id="causeChart"></canvas></div>
     </div>
-    
     <div class="card" id="mortalityCard">
       <div class="card-header">
         <span>Daily Mortality Trend</span>
@@ -716,6 +898,23 @@
       </div>
       <div id="mortalityTimeline" class="mortality-timeline"></div>
       <div id="mortalityKPI" class="kpi-total" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- 💉 Vaccination History -->
+  <div class="section-title">💉 Vaccination History</div>
+  <div class="vaccination-card" id="vaccinationCard">
+    <div class="vaccination-header">
+      <div class="vaccination-header-icon">💉</div>
+      <div>
+        <div class="vaccination-header-text">Vaccination Record</div>
+        <div class="vaccination-header-sub">Full flock immunisation history</div>
+      </div>
+      <div class="vaccination-header-count" id="vaccinationCount">6 doses</div>
+    </div>
+    <div id="vaccinationTimeline" class="vaccination-timeline"></div>
+    <div class="vaccination-footer">
+      <div class="vaccination-coverage-stat" id="vaccinationStats"></div>
     </div>
   </div>
 
@@ -744,7 +943,6 @@
   <div class="updated" id="updatedLine"></div>
 </div>
 
-<!-- 🔧 FLOATING INSTALL BUTTON -->
 <button id="installButton" title="Install Proto Project">
   <span class="install-icon">📲</span>
   <span>Install App</span>
@@ -753,6 +951,12 @@
 <script>
   (function() {
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Z8PP96_vPHYKHP6zOmyJwfc4VFTjR0O3H95mHSAElxDUcHnsKuIuklyaqRsqYwY6Z1iSbmq8mrjK/pub?gid=1870817852&single=true&output=csv";
+    const TARGET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Z8PP96_vPHYKHP6zOmyJwfc4VFTjR0O3H95mHSAElxDUcHnsKuIuklyaqRsqYwY6Z1iSbmq8mrjK/pub?gid=972239246&single=true&output=csv";
+    const VACCINATION_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Z8PP96_vPHYKHP6zOmyJwfc4VFTjR0O3H95mHSAElxDUcHnsKuIuklyaqRsqYwY6Z1iSbmq8mrjK/pub?gid=513211046&single=true&output=csv";
+    let TARGET_DATA = null;
+    let VACCINATION_DATA = null;
+
+    const isMobile = () => window.innerWidth <= 900;
 
     const FALLBACK_DATA = [
       { time:"16:00", date:"25 May 2026", birdsAlive:201, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"yes", avgWeight:null, timeMinutes:960 },
@@ -766,9 +970,15 @@
       { time:"17:30", date:"1 June 2026", birdsAlive:198, deaths:0, deathCause:"", feed:3, water:20, temp:30, litter:"Yes", avgWeight:147, timeMinutes:1050 }
     ];
 
+    const FALLBACK_VACCINATION_DATA = [
+      { date:"25 May 2026", dayOfCycle:0, items:"Gumboro, Newcastle (NCD), IB, IB Variant" },
+      { date:"9 June 2026", dayOfCycle:16, items:"Gumboro" },
+      { date:"12 June 2026", dayOfCycle:19, items:"Newcastle (NCD)" }
+    ];
+
     let currentFilter = 'all';
     let allData = [];
-    
+
     const toNum = (val) => { if (val === null || val === undefined || val === '') return 0; let num = Number(String(val).replace(/[^0-9.-]/g, '')); return isNaN(num) ? 0 : num; };
     const fmt = (val, decimals = 0) => { if (typeof val !== 'number') return val || '—'; return decimals > 0 ? val.toFixed(decimals) : val.toLocaleString(); };
     const parseDate = (dateStr) => {
@@ -845,8 +1055,122 @@
       }
     }
 
-    // ========== WEEK FILTERING LOGIC ==========
-    
+    async function fetchTargetData() {
+      try {
+        if (!TARGET_CSV_URL) return null;
+        const response = await fetch(TARGET_CSV_URL, { cache: 'no-store' });
+        if (!response.ok) return null;
+        const csvText = await response.text();
+        if (!csvText.trim()) return null;
+        const rows = parseCSV(csvText);
+        if (rows.length < 2) return null;
+        const targets = {};
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          if (row.length < 3) continue;
+          const day = toNum(row[0]), temp = toNum(row[1]), weight = toNum(row[2]);
+          if (day > 0) targets[day] = { temp, weight };
+        }
+        return targets;
+      } catch (err) { return null; }
+    }
+
+    async function fetchVaccinationData() {
+      try {
+        if (!VACCINATION_CSV_URL || VACCINATION_CSV_URL.includes('YOUR_PUBLISHED')) return null;
+        const response = await fetch(VACCINATION_CSV_URL, { cache: 'no-store' });
+        if (!response.ok) return null;
+        const csvText = await response.text();
+        if (!csvText.trim()) return null;
+        const rows = parseCSV(csvText);
+        if (rows.length < 2) return null;
+        const vaccinations = [];
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          if (row.length < 3) continue;
+          const date = (row[0] || '').trim(), dayOfCycle = toNum(row[1]), items = (row[2] || '').trim();
+          if (date && items) vaccinations.push({ date, dayOfCycle, items });
+        }
+        vaccinations.sort((a, b) => parseDate(a.date) - parseDate(b.date));
+        return vaccinations;
+      } catch (err) { return null; }
+    }
+
+    /* ========== VACCINATION RENDER ========== */
+    function renderVaccinationTimeline() {
+      const container = document.getElementById('vaccinationTimeline');
+      const countBadge = document.getElementById('vaccinationCount');
+      const statsEl = document.getElementById('vaccinationStats');
+      const data = VACCINATION_DATA || FALLBACK_VACCINATION_DATA;
+
+      if (!container) return;
+
+      if (!data || data.length === 0) {
+        container.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:2rem;">No vaccination records found</div>`;
+        if (countBadge) countBadge.textContent = '0 doses';
+        if (statsEl) statsEl.textContent = '';
+        return;
+      }
+
+      const totalDoses = data.reduce((sum, v) => sum + v.items.split(',').length, 0);
+      if (countBadge) countBadge.textContent = `${totalDoses} dose${totalDoses !== 1 ? 's' : ''}`;
+
+      const firstDate = parseDate(data[0].date);
+      const lastDate = parseDate(data[data.length - 1].date);
+      const spanDays = Math.round((lastDate - firstDate) / 86400000);
+      if (statsEl) statsEl.innerHTML = `<strong>${data.length}</strong> sessions · <strong>${totalDoses}</strong> total doses · Span: <strong>${spanDays} days</strong>`;
+
+      // Build desktop nodes
+      const desktopNodes = data.map(v => {
+        const itemList = v.items.split(',').map(i => i.trim());
+        const parsedDate = parseDate(v.date);
+        const dateFormatted = parsedDate.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+        const year = parsedDate.getFullYear();
+        
+        return `
+          <div class="vaccination-node-desktop">
+            <div class="vaccination-day">Day ${v.dayOfCycle}</div>
+            <div class="vaccination-dot"></div>
+            <div class="vacc-node-card">
+              <div class="vacc-node-date">
+                ${dateFormatted}
+                <span class="year">${year}</span>
+              </div>
+              <div class="vacc-tags">
+                ${itemList.map(item => `<div class="vacc-tag">${item}</div>`).join('')}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // Build mobile nodes
+      const mobileNodes = data.map(v => {
+        const itemList = v.items.split(',').map(i => i.trim());
+        const parsedDate = parseDate(v.date);
+        const dateFormatted = parsedDate.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+        const year = parsedDate.getFullYear();
+        
+        return `
+          <div class="vaccination-node-mobile">
+            <div class="vaccination-node-left">
+              <div class="vaccination-node-dot-mobile"></div>
+              <div class="vaccination-node-day-mobile">Day ${v.dayOfCycle}</div>
+            </div>
+            <div class="vaccination-node-right">
+              <div class="vaccination-node-date-mobile">
+                ${dateFormatted}<span class="vaccination-node-year-mobile">${year}</span>
+              </div>
+              <div class="vaccination-node-tags-mobile">
+                ${itemList.map(item => `<span class="vaccination-tag-mobile">${item}</span>`).join('')}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      container.innerHTML = desktopNodes + mobileNodes;
+    }
+
+    /* ========== WEEK FILTERING ========== */
     function getWeekMonday(date) {
       const d = new Date(date);
       const day = d.getDay();
@@ -855,90 +1179,74 @@
       monday.setHours(0, 0, 0, 0);
       return monday;
     }
-    
+
     function calculateWeeks(data) {
       if (!data || data.length === 0) return { weekMap: new Map(), weekLabels: [], weeks: [] };
       const sorted = [...data].sort((a, b) => a.dateObj - b.dateObj);
-      const firstDate = sorted[0].dateObj;
-      const firstMonday = getWeekMonday(firstDate);
+      const firstMonday = getWeekMonday(sorted[0].dateObj);
       const weekMap = new Map();
-      
       data.forEach(record => {
-        const recordMonday = getWeekMonday(record.dateObj);
-        const diffTime = recordMonday.getTime() - firstMonday.getTime();
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = Math.floor((getWeekMonday(record.dateObj) - firstMonday) / (1000 * 60 * 60 * 24));
         const weekNum = Math.floor(diffDays / 7) + 1;
-        
-        if (!weekMap.has(weekNum)) {
-          weekMap.set(weekNum, []);
-        }
+        if (!weekMap.has(weekNum)) weekMap.set(weekNum, []);
         weekMap.get(weekNum).push(record);
       });
-      
       const weeks = Array.from(weekMap.keys()).sort((a, b) => a - b);
-      const weekLabels = weeks.map(w => `Week ${w}`);
-      
-      return { weekMap, weekLabels, weeks };
+      return { weekMap, weekLabels: weeks.map(w => `Week ${w}`), weeks };
     }
-    
+
     function filterDataByWeek(data, filter) {
       if (filter === 'all') return data;
       if (filter === 'this-week') {
-        const now = new Date();
-        const currentMonday = getWeekMonday(now);
-        return data.filter(record => {
-          const recordMonday = getWeekMonday(record.dateObj);
-          return recordMonday.getTime() === currentMonday.getTime();
-        });
+        const currentMonday = getWeekMonday(new Date());
+        return data.filter(r => getWeekMonday(r.dateObj).getTime() === currentMonday.getTime());
       }
       const { weekMap } = calculateWeeks(data);
-      const weekNum = parseInt(filter.replace('week-', ''), 10);
-      return weekMap.get(weekNum) || [];
+      return weekMap.get(parseInt(filter.replace('week-', ''), 10)) || [];
     }
-    
+
     function buildWeekFilterButtons(data) {
       const { weekLabels, weeks } = calculateWeeks(data);
       const container = document.getElementById('weekFilterButtons');
       if (!container) return;
-      
-      let buttonsHTML = `
-        <button class="week-filter-btn active" data-filter="all">All</button>
-        <button class="week-filter-btn" data-filter="this-week">This Week</button>
-      `;
-      
-      weeks.forEach((weekNum, index) => {
-        buttonsHTML += `<button class="week-filter-btn" data-filter="week-${weekNum}">${weekLabels[index]}</button>`;
-      });
-      
-      container.innerHTML = buttonsHTML;
-      
+      let html = `<button class="week-filter-btn active" data-filter="all">All</button><button class="week-filter-btn" data-filter="this-week">This Week</button>`;
+      weeks.forEach((weekNum, i) => { html += `<button class="week-filter-btn" data-filter="week-${weekNum}">${weekLabels[i]}</button>`; });
+      container.innerHTML = html;
       container.querySelectorAll('.week-filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           container.querySelectorAll('.week-filter-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
-          
           currentFilter = this.dataset.filter;
-          const filteredData = filterDataByWeek(allData, currentFilter);
-          render(filteredData);
+          render(filterDataByWeek(allData, currentFilter));
         });
       });
     }
 
     function calculateTrend(current, previous, isHigherBetter = true) {
       if (previous === null || previous === undefined || current === null) return { symbol: '—', class: 'neutral', text: 'No comparison' };
-      const diff = current - previous, absDiff = Math.abs(diff), pct = previous !== 0 ? Math.round((diff / Math.abs(previous)) * 100) : 0;
-      if (absDiff < 0.5) return { symbol: '→', class: 'neutral', text: 'Stable' };
+      const diff = current - previous, pct = previous !== 0 ? Math.round((diff / Math.abs(previous)) * 100) : 0;
+      if (Math.abs(diff) < 0.5) return { symbol: '→', class: 'neutral', text: 'Stable' };
       const isPositive = diff > 0, isGood = isHigherBetter ? isPositive : !isPositive;
       return { symbol: isPositive ? '↑' : '↓', class: isGood ? 'up' : 'down', text: `${isPositive ? '+' : ''}${fmt(diff, 1)} ${pct !== 0 ? `(${pct}%)` : ''}` };
     }
 
-    function getTempClass(temp) { return temp >= 26 && temp <= 32 ? 'temp-optimal' : (temp < 24 || temp > 34 ? 'temp-critical' : 'temp-warning'); }
-    function getTempIcon(temp) { return temp >= 26 && temp <= 32 ? '✅' : (temp < 26 ? '️↓' : '🌡️↑'); }
-    function getTempStatus(temp) { return temp >= 26 && temp <= 32 ? 'Optimal range' : (temp < 26 ? 'Below optimal' : 'Above optimal'); }
-    
+    function getTempClass(temp, targetTemp) {
+      if (!targetTemp) return temp >= 26 && temp <= 32 ? 'temp-optimal' : (temp < 24 || temp > 34 ? 'temp-critical' : 'temp-warning');
+      const lower = targetTemp - 3, upper = targetTemp + 3;
+      return temp >= lower && temp <= upper ? 'temp-optimal' : (temp < lower - 2 || temp > upper + 2 ? 'temp-critical' : 'temp-warning');
+    }
+    function getTempIcon(temp, targetTemp) {
+      if (!targetTemp) return temp >= 26 && temp <= 32 ? '✅' : (temp < 26 ? '️↓' : '🌡️↑');
+      const lower = targetTemp - 3, upper = targetTemp + 3;
+      return temp >= lower && temp <= upper ? '✅' : (temp < lower ? '️↓' : '🌡️↑');
+    }
+    function getTempStatus(temp, targetTemp) {
+      if (!targetTemp) return temp >= 26 && temp <= 32 ? 'Optimal range' : (temp < 26 ? 'Below optimal' : 'Above optimal');
+      const lower = targetTemp - 3, upper = targetTemp + 3;
+      return temp >= lower && temp <= upper ? `Optimal (${lower}-${upper}°C)` : (temp < lower ? `Below ${lower}°C` : `Above ${upper}°C`);
+    }
     function updateSyncStatus(online) {
-      const dot = document.getElementById('syncDot');
-      const text = document.getElementById('syncStatusText');
+      const dot = document.getElementById('syncDot'), text = document.getElementById('syncStatusText');
       if (dot) dot.classList.toggle('offline', !online);
       if (text) text.textContent = online ? 'Synced' : 'Offline';
     }
@@ -950,10 +1258,8 @@
         mortalityViewMode = mortalityViewMode === 'timeline' ? 'total' : 'timeline';
         updateMortalityDisplay();
         btn.innerHTML = mortalityViewMode === 'total' ? ' Show Daily' : '📊 Show Total';
-        const filteredData = filterDataByWeek(allData, currentFilter);
-        renderMortalitySection(filteredData);
+        renderMortalitySection(filterDataByWeek(allData, currentFilter));
       });
-      
       const refreshBtn = document.getElementById('refreshBtn');
       if (refreshBtn) {
         refreshBtn.addEventListener('click', async () => {
@@ -962,79 +1268,58 @@
           try {
             const { data } = await fetchData();
             allData = data;
+            TARGET_DATA = await fetchTargetData();
+            VACCINATION_DATA = await fetchVaccinationData();
+            renderVaccinationTimeline();
             buildWeekFilterButtons(allData);
             currentFilter = 'all';
+            document.querySelectorAll('.week-filter-btn').forEach(b => b.classList.remove('active'));
             const allBtn = document.querySelector('.week-filter-btn[data-filter="all"]');
-            if (allBtn) {
-              document.querySelectorAll('.week-filter-btn').forEach(b => b.classList.remove('active'));
-              allBtn.classList.add('active');
-            }
+            if (allBtn) allBtn.classList.add('active');
             render(allData);
             refreshBtn.textContent = '✓ Updated!';
-            setTimeout(() => {
-              refreshBtn.textContent = '↻ Refresh Data';
-              refreshBtn.disabled = false;
-            }, 1500);
+            setTimeout(() => { refreshBtn.textContent = '↻ Refresh Data'; refreshBtn.disabled = false; }, 1500);
           } catch(e) {
             refreshBtn.textContent = '✗ Error';
-            setTimeout(() => {
-              refreshBtn.textContent = '↻ Refresh Data';
-              refreshBtn.disabled = false;
-            }, 2000);
+            setTimeout(() => { refreshBtn.textContent = '↻ Refresh Data'; refreshBtn.disabled = false; }, 2000);
           }
         });
       }
     });
-    
+
     function updateMortalityDisplay() {
-      const timeline = document.getElementById('mortalityTimeline');
-      const kpi = document.getElementById('mortalityKPI');
+      const timeline = document.getElementById('mortalityTimeline'), kpi = document.getElementById('mortalityKPI');
       if (timeline) timeline.style.display = mortalityViewMode === 'total' ? 'none' : 'flex';
       if (kpi) kpi.style.display = mortalityViewMode === 'total' ? 'block' : 'none';
     }
-    
     function renderMortalitySection(data) {
-      renderMortalityTimeline(data);
-      renderMortalityKPI(data);
-      updateMortalityDisplay();
-      renderCauseChart(data);
+      renderMortalityTimeline(data); renderMortalityKPI(data); updateMortalityDisplay(); renderCauseChart(data);
     }
-
     function updateBadge(date, time) {
-      const badge = document.getElementById('latestUpdateBadge');
-      const badgeMobile = document.getElementById('latestUpdateBadgeMobile');
       const text = `⏱ ${date} at ${time || '—'}`;
-      if (badge) badge.textContent = text;
-      if (badgeMobile) badgeMobile.textContent = text;
+      const b = document.getElementById('latestUpdateBadge'), bm = document.getElementById('latestUpdateBadgeMobile');
+      if (b) b.textContent = text; if (bm) bm.textContent = text;
     }
 
     function render(data) {
-      if (!data || data.length === 0) { 
-        document.getElementById('topMetrics').innerHTML = '<div class="metric-card" style="grid-column:span 6;text-align:center;">❌ No data for this period</div>'; 
-        document.getElementById('weightChart')?.parentNode && (document.getElementById('weightChart').parentNode.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data for this period</p>');
+      if (!data || data.length === 0) {
+        document.getElementById('topMetrics').innerHTML = '<div class="metric-card" style="grid-column:span 6;text-align:center;">❌ No data for this period</div>';
         if (window.weightChartInstance) { window.weightChartInstance.destroy(); window.weightChartInstance = null; }
-        renderCauseChart(data);
-        renderMortalityTimeline(data); 
-        renderMortalityKPI(data); 
-        updateMortalityDisplay(); 
-        renderTempChart(data);
-        document.getElementById('tempStatus').innerHTML = '<div><span class="temp-indicator temp-optimal">— No temperature data</span></div>';
-        renderResourceChart(data); 
-        renderDataTable(data);
+        renderCauseChart(data); renderMortalityTimeline(data); renderMortalityKPI(data); updateMortalityDisplay();
+        renderTempChart(data); document.getElementById('tempStatus').innerHTML = '<div><span class="temp-indicator temp-optimal">— No temperature data</span></div>';
+        renderResourceChart(data); renderDataTable(data);
         document.getElementById('recordCount').textContent = `(${data.length} records)`;
         document.getElementById('updatedLine').textContent = `Last updated: ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'})}`;
         document.getElementById('heroKPI').textContent = '—';
         document.getElementById('heroStarted').textContent = '—';
         document.getElementById('monitoringDays').textContent = '0 Days';
         document.getElementById('monitoringRange').textContent = 'No data';
-        return; 
+        return;
       }
-      
-      // Get the oldest record in the filtered data AND the very first record from all data
+
       const oldestFiltered = data[data.length - 1];
       const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
-      const veryFirstRecord = allSorted[0]; // The actual start date of the entire flock
-      
+      const veryFirstRecord = allSorted[0];
       const latest = data[0];
       const totalDeaths = data.reduce((s, r) => s + r.deaths, 0);
       const startingBirds = oldestFiltered.birdsAlive;
@@ -1043,43 +1328,39 @@
       const litterStatus = latest.litter && latest.litter.includes('yes') ? 'Available' : 'Low';
       let lastUnavailable = 'N/A';
       for (let i = 0; i < data.length; i++) { if (!data[i].litter.includes('yes')) { lastUnavailable = `${data[i].date} ${data[i].time || ''}`.trim(); break; } }
-      
-      // Calculate cumulative age: from the very first record of ALL data to the latest record in the filtered data
       const cumulativeDays = Math.max(1, Math.ceil((latest.dateObj - veryFirstRecord.dateObj) / 86400000) + 1);
-      
-      // Calculate the period span within the filtered data
-      const periodDays = Math.max(1, Math.ceil((latest.dateObj - oldestFiltered.dateObj) / 86400000) + 1);
-      
-      // Calculate weeks and days for the cumulative age
+
+      let targetTempForDay = null;
+      if (TARGET_DATA) {
+        const utc1 = Date.UTC(latest.dateObj.getFullYear(), latest.dateObj.getMonth(), latest.dateObj.getDate());
+        const utc2 = Date.UTC(veryFirstRecord.dateObj.getFullYear(), veryFirstRecord.dateObj.getMonth(), veryFirstRecord.dateObj.getDate());
+        const dayDiff = Math.floor((utc1 - utc2) / (1000 * 60 * 60 * 24)) + 1;
+        if (TARGET_DATA[dayDiff]) targetTempForDay = TARGET_DATA[dayDiff].temp;
+      }
+
       const totalWeeks = Math.floor(cumulativeDays / 7);
       const remainingDays = cumulativeDays % 7;
       let weekDayText = '';
-      if (totalWeeks > 0 && remainingDays > 0) {
-        weekDayText = ` (${totalWeeks} week${totalWeeks !== 1 ? 's' : ''}, ${remainingDays} day${remainingDays !== 1 ? 's' : ''})`;
-      } else if (totalWeeks > 0) {
-        weekDayText = ` (${totalWeeks} week${totalWeeks !== 1 ? 's' : ''})`;
-      } else {
-        weekDayText = ` (${remainingDays} day${remainingDays !== 1 ? 's' : ''})`;
-      }
-      
-      // Update the monitoring bar - show cumulative age but filtered date range
+      if (totalWeeks > 0 && remainingDays > 0) weekDayText = ` (${totalWeeks} week${totalWeeks !== 1 ? 's' : ''}, ${remainingDays} day${remainingDays !== 1 ? 's' : ''})`;
+      else if (totalWeeks > 0) weekDayText = ` (${totalWeeks} week${totalWeeks !== 1 ? 's' : ''})`;
+      else weekDayText = ` (${remainingDays} day${remainingDays !== 1 ? 's' : ''})`;
+
       const oldestShort = oldestFiltered.dateObj.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
       const latestShort = latest.dateObj.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
       document.getElementById('monitoringDays').textContent = `${cumulativeDays} Days${weekDayText}`;
       document.getElementById('monitoringRange').textContent = `${oldestShort} – ${latestShort}`;
-      
+
       updateBadge(latest.date, latest.time);
-      
       document.getElementById('heroKPI').textContent = `${fmt(latest.birdsAlive)} Chickens`;
       document.getElementById('heroStarted').textContent = fmt(veryFirstRecord.birdsAlive);
 
       const weightTrend = latest.avgWeight && data[1]?.avgWeight ? calculateTrend(latest.avgWeight, data[1].avgWeight, true) : { symbol: '—', class: 'neutral', text: 'Pending' };
       const tempTrend = calculateTrend(latestTemp, data[1]?.temp, false);
-      
+
       const metrics = [
         { label: 'Mortality Rate', value: `${mortalityRate}%`, sub: `${fmt(totalDeaths)} total deaths`, trend: { symbol: '—', class: 'neutral', text: 'Tracking' } },
         { label: 'Last Avg Weight', value: latest.avgWeight ? `${fmt(latest.avgWeight)}g` : '—', sub: 'Latest measurement', trend: weightTrend },
-        { label: 'Temperature - Last Checked', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp), trend: tempTrend },
+        { label: 'Temperature - Last Checked', value: `${fmt(latestTemp)}°C`, sub: getTempStatus(latestTemp, targetTempForDay), trend: tempTrend },
         { label: 'Litter Status - Last Checked', value: litterStatus, sub: `Last unavailable: ${lastUnavailable}`, trend: { symbol: '•', class: 'neutral', text: '—' } }
       ];
 
@@ -1090,14 +1371,17 @@
       }).join('');
 
       renderWeightChart(data.filter(r => r.avgWeight !== null).reverse());
-      renderCauseChart(data); 
-      renderMortalityTimeline(data); 
-      renderMortalityKPI(data); 
-      updateMortalityDisplay(); 
+      renderCauseChart(data); renderMortalityTimeline(data); renderMortalityKPI(data); updateMortalityDisplay();
       renderTempChart(data);
-      document.getElementById('tempStatus').innerHTML = `<div><span class="temp-indicator ${getTempClass(latestTemp)}">${getTempIcon(latestTemp)} Current: ${fmt(latestTemp)}°C</span><span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">Optimal: 26-32°C</span></div>`;
-      renderResourceChart(data); 
-      renderDataTable(data);
+
+      if (targetTempForDay) {
+        const lower = targetTempForDay - 3, upper = targetTempForDay + 3;
+        document.getElementById('tempStatus').innerHTML = `<div><span class="temp-indicator ${getTempClass(latestTemp, targetTempForDay)}">${getTempIcon(latestTemp, targetTempForDay)} Current: ${fmt(latestTemp)}°C</span><span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">Optimal: ${lower}-${upper}°C (Target: ${targetTempForDay}°C)</span></div>`;
+      } else {
+        document.getElementById('tempStatus').innerHTML = `<div><span class="temp-indicator ${getTempClass(latestTemp, null)}">${getTempIcon(latestTemp, null)} Current: ${fmt(latestTemp)}°C</span><span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.5rem;">Optimal: 26-32°C</span></div>`;
+      }
+
+      renderResourceChart(data); renderDataTable(data);
       document.getElementById('recordCount').textContent = `(${data.length} records)`;
       document.getElementById('updatedLine').textContent = `Last updated: ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'})}`;
       updateSyncStatus(true);
@@ -1106,12 +1390,7 @@
     function renderMortalityTimeline(data) {
       const c = document.getElementById('mortalityTimeline'); if (!c) return;
       const deathRecords = data.filter(r => r.deaths > 0);
-      
-      if (deathRecords.length === 0) {
-        c.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:1rem;">✅ No deaths recorded in this period</div>';
-        return;
-      }
-
+      if (deathRecords.length === 0) { c.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:1rem;">✅ No deaths recorded in this period</div>'; return; }
       c.innerHTML = deathRecords.map(r => `
         <div class="mortality-item">
           <div class="mortality-dot"></div>
@@ -1130,184 +1409,199 @@
       k.innerHTML = `<div class="label">Total Deaths</div><div class="value">${fmt(total)}</div><div class="subtitle">Over ${days} days · ${rate}% mortality · Started with ${fmt(start)} birds</div>`;
     }
 
+    function smartSample(data, maxPoints) {
+      if (!isMobile() || data.length <= maxPoints) return { sampledData: data, labelIndices: new Set(data.map((_, i) => i)) };
+      const n = data.length, step = (n - 1) / (maxPoints - 1);
+      const sampledData = [data[0]], labelIndices = new Set([0]);
+      for (let i = 1; i < maxPoints - 1; i++) { const idx = Math.round(i * step); sampledData.push(data[idx]); labelIndices.add(idx); }
+      sampledData.push(data[n - 1]); labelIndices.add(n - 1);
+      return { sampledData, labelIndices };
+    }
+
     function renderWeightChart(data) {
-      const ctx = document.getElementById('weightChart')?.getContext('2d'); 
+      const ctx = document.getElementById('weightChart')?.getContext('2d');
       if (!ctx || typeof Chart==='undefined') return;
       if (window.weightChartInstance) { window.weightChartInstance.destroy(); window.weightChartInstance = null; }
-      if (data.length===0) { 
-        document.getElementById('weightChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data for this period</p>'; 
-        return; 
-      }
-      window.weightChartInstance = new Chart(ctx, { type:'line', data:{ labels:data.map(r=>`${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`), datasets:[{ label:'Avg Weight (g)', data:data.map(r=>r.avgWeight), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.15)', borderWidth:3, pointBackgroundColor:'#fff', pointBorderColor:'#c9a94b', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`Weight: ${ctx.parsed.y}g`}} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:false } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.data.datasets.forEach((ds,i)=>{ chart.getDatasetMeta(i).data.forEach((p,idx)=>{ const v=ds.data[idx]; if(v!==null){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 9px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'g',p.x,p.y-10); } }); }); } }] });
+      if (data.length===0) { document.getElementById('weightChart').parentNode.innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem;">No weight data for this period</p>'; return; }
+      const { sampledData, labelIndices } = smartSample(data, 14);
+      const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
+      const oldestDate = allSorted.length > 0 ? allSorted[0].dateObj : sampledData[sampledData.length - 1].dateObj;
+      const targetValues = sampledData.map(r => {
+        if (!TARGET_DATA) return null;
+        const dayDiff = Math.floor((Date.UTC(r.dateObj.getFullYear(), r.dateObj.getMonth(), r.dateObj.getDate()) - Date.UTC(oldestDate.getFullYear(), oldestDate.getMonth(), oldestDate.getDate())) / 86400000) + 1;
+        return TARGET_DATA[dayDiff] ? TARGET_DATA[dayDiff].weight : null;
+      });
+      window.weightChartInstance = new Chart(ctx, {
+        type:'line',
+        data:{ labels:sampledData.map(r=>`${r.dateObj.getDate()} ${r.dateObj.toLocaleString('en-GB',{month:'short'})}`),
+          datasets:[
+            { label:'Avg Weight (g)', data:sampledData.map(r=>r.avgWeight), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.15)', borderWidth:3, pointBackgroundColor:'#fff', pointBorderColor:'#c9a94b', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 },
+            { label:'Target Weight', data:targetValues, borderColor:'#8a949e', backgroundColor:'transparent', borderWidth:2, borderDash:[6,4], pointRadius:0, pointHoverRadius:5, pointBackgroundColor:'#8a949e', pointBorderColor:'#ffffff', fill:false, tension:0.2 }
+          ]},
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ display:true, position:'top', align:'end', labels:{ color:'#b9c7dd', font:{size:10}, boxWidth:15, padding:10, filter:(item)=>item.text==='Target Weight' }},
+            tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}g`}}},
+          scales:{ x:{ticks:{color:'#b9c7dd',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'#b9c7dd',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:false}}},
+        plugins:[{ id:'lbl', afterDatasetsDraw(chart){
+          chart.getDatasetMeta(0).data.forEach((p,idx)=>{
+            const v=chart.data.datasets[0].data[idx];
+            if(v!==null&&v!==undefined&&labelIndices.has(idx)){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 9px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'g',p.x,p.y-10); }
+          });
+        }}]
+      });
     }
 
     function renderCauseChart(data) {
       const ctx = document.getElementById('causeChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.causeChartInstance) { window.causeChartInstance.destroy(); window.causeChartInstance = null; }
-      
       const dailyDeaths = {};
       data.forEach(r => { if (r.date) dailyDeaths[r.date] = (dailyDeaths[r.date] || 0) + r.deaths; });
       const sortedDates = Object.keys(dailyDeaths).sort((a, b) => parseDate(a) - parseDate(b));
-      
-      if (sortedDates.length === 0) {
-        document.getElementById('causeChart').parentNode.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No death data for this period</p>';
-        return;
-      }
-      
-      window.causeChartInstance = new Chart(ctx, { 
-        type:'line', 
-        data:{ 
-          labels: sortedDates.map(d => parseDate(d).toLocaleDateString('en-GB', {day:'numeric', month:'short'})), 
-          datasets:[{ 
-            label:'Daily Deaths', 
-            data: sortedDates.map(d => dailyDeaths[d]), 
-            borderColor:'#e74c3c', 
-            backgroundColor:'rgba(231,76,60,0.2)', 
-            borderWidth:2, 
-            pointBackgroundColor:'#e74c3c', 
-            pointBorderColor:'#fff', 
-            pointRadius:4, 
-            pointHoverRadius:6, 
-            fill:true, 
-            tension:0.3 
-          }] 
-        }, 
-        options:{ 
-          responsive:true, maintainAspectRatio:false, 
-          plugins:{ 
-            legend:{display:false}, 
-            tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`Deaths: ${ctx.parsed.y}`} } 
-          }, 
-          scales:{ 
-            x:{ ticks:{color:'#b9c7dd',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} }, 
-            y:{ 
-              max: 5,
-              ticks:{color:'#b9c7dd',font:{size:10},stepSize:1}, 
-              grid:{color:'rgba(255,255,255,0.05)'}, 
-              beginAtZero:true 
-            } 
-          } 
-        }, 
-        plugins:[{ 
-          id:'lbl', 
-          afterDatasetsDraw(chart){ 
-            chart.getDatasetMeta(0).data.forEach((p,i)=>{ 
-              const v=chart.data.datasets[0].data[i]; 
-              chart.ctx.fillStyle='#fff'; 
-              chart.ctx.font='bold 10px Georgia'; 
-              chart.ctx.textAlign='center'; 
-              chart.ctx.fillText(v,p.x,p.y-12); 
-            }); 
-          } 
-        }] 
+      if (sortedDates.length === 0) { document.getElementById('causeChart').parentNode.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No death data for this period</p>'; return; }
+      window.causeChartInstance = new Chart(ctx, {
+        type:'line',
+        data:{ labels:sortedDates.map(d=>parseDate(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'})),
+          datasets:[{ label:'Daily Deaths', data:sortedDates.map(d=>dailyDeaths[d]), borderColor:'#e74c3c', backgroundColor:'rgba(231,76,60,0.2)', borderWidth:2, pointBackgroundColor:'#e74c3c', pointBorderColor:'#fff', pointRadius:4, pointHoverRadius:6, fill:true, tension:0.3 }]},
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#0b1a2b',callbacks:{label:ctx=>`Deaths: ${ctx.parsed.y}`}}},
+          scales:{ x:{ticks:{color:'#b9c7dd',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{max:5,ticks:{color:'#b9c7dd',font:{size:10},stepSize:1},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true}}},
+        plugins:[{ id:'lbl', afterDatasetsDraw(chart){
+          chart.getDatasetMeta(0).data.forEach((p,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 10px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v,p.x,p.y-12); });
+        }}]
       });
     }
 
     function renderTempChart(data) {
       const ctx = document.getElementById('tempChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.tempChartInstance) { window.tempChartInstance.destroy(); window.tempChartInstance = null; }
-      const rec=data.slice(0,15).reverse(), temps=rec.map(r=>r.temp);
-      if (rec.length === 0) {
-        document.getElementById('tempChart').parentNode.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No temperature data for this period</p>';
-        return;
+      const rec = data.slice(0,15).reverse();
+      if (rec.length === 0) { document.getElementById('tempChart').parentNode.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">No temperature data for this period</p>'; return; }
+      const { sampledData, labelIndices } = smartSample(rec, 14);
+      const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
+      const oldestDate = allSorted.length > 0 ? allSorted[0].dateObj : sampledData[sampledData.length - 1].dateObj;
+      const targetTemps = sampledData.map(r => {
+        if (!TARGET_DATA) return null;
+        const dayDiff = Math.floor((Date.UTC(r.dateObj.getFullYear(), r.dateObj.getMonth(), r.dateObj.getDate()) - Date.UTC(oldestDate.getFullYear(), oldestDate.getMonth(), oldestDate.getDate())) / 86400000) + 1;
+        return TARGET_DATA[dayDiff] ? TARGET_DATA[dayDiff].temp : null;
+      });
+      let latestTargetTemp = null;
+      if (TARGET_DATA && rec[0]) {
+        const dayDiff = Math.floor((Date.UTC(rec[0].dateObj.getFullYear(), rec[0].dateObj.getMonth(), rec[0].dateObj.getDate()) - Date.UTC(oldestDate.getFullYear(), oldestDate.getMonth(), oldestDate.getDate())) / 86400000) + 1;
+        if (TARGET_DATA[dayDiff]) latestTargetTemp = TARGET_DATA[dayDiff].temp;
       }
-      window.tempChartInstance = new Chart(ctx, { type:'line', data:{ labels:rec.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), datasets:[ { label:'Temp (°C)', data:temps, borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.1)', borderWidth:3, pointRadius:4, pointBackgroundColor:'#fff', tension:0.3, fill:true }, { label:'Min (26°C)', data:Array(temps.length).fill(26), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }, { label:'Max (32°C)', data:Array(temps.length).fill(32), borderColor:'rgba(201,169,75,0.4)', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false } ] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ x:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{display:false} }, y:{ ticks:{color:'#b9c7dd',font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'}, min:20, max:40 } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((p,i)=>{ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 8px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(chart.data.datasets[0].data[i]+'°',p.x,p.y-10); }); } }] });
+      const datasets = [
+        { label:'Temp (°C)', data:sampledData.map(r=>r.temp), borderColor:'#c9a94b', backgroundColor:'rgba(201,169,75,0.1)', borderWidth:3, pointRadius:4, pointBackgroundColor:'#fff', tension:0.3, fill:true },
+        { label:'Target Temp', data:targetTemps, borderColor:'#8a949e', backgroundColor:'transparent', borderWidth:2, borderDash:[6,4], pointRadius:0, pointHoverRadius:5, fill:false, tension:0.2 }
+      ];
+      if (latestTargetTemp) {
+        const lower = latestTargetTemp - 3, upper = latestTargetTemp + 3;
+        datasets.push({ label:`Upper (${upper}°C)`, data:Array(sampledData.length).fill(upper), borderColor:'rgba(201,169,75,0.25)', borderDash:[4,4], borderWidth:1, pointRadius:0, fill:false });
+        datasets.push({ label:`Lower (${lower}°C)`, data:Array(sampledData.length).fill(lower), borderColor:'rgba(201,169,75,0.25)', borderDash:[4,4], borderWidth:1, pointRadius:0, fill:false });
+      }
+      window.tempChartInstance = new Chart(ctx, {
+        type:'line',
+        data:{ labels:sampledData.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), datasets },
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ display:true, position:'top', align:'end', labels:{ color:'#b9c7dd', font:{size:10}, boxWidth:15, padding:10, filter:(item)=>item.text==='Target Temp' }},
+            tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}°C`}}},
+          scales:{ x:{ticks:{color:'#b9c7dd',font:{size:9}},grid:{display:false}}, y:{ticks:{color:'#b9c7dd',font:{size:9}},grid:{color:'rgba(255,255,255,0.05)'},min:15,max:40}}},
+        plugins:[{ id:'lbl', afterDatasetsDraw(chart){
+          chart.getDatasetMeta(0).data.forEach((p,i)=>{
+            const v=chart.data.datasets[0].data[i];
+            if(v!==null&&v!==undefined&&labelIndices.has(i)){ chart.ctx.fillStyle='#c9a94b'; chart.ctx.font='bold 8px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v+'°',p.x,p.y-10); }
+          });
+        }}]
+      });
     }
 
     function renderResourceChart(data) {
       const ctx = document.getElementById('resourceChart')?.getContext('2d'); if (!ctx || typeof Chart==='undefined') return;
       if (window.resourceChartInstance) { window.resourceChartInstance.destroy(); window.resourceChartInstance = null; }
       const avgF=data.reduce((s,r)=>s+r.feed,0)/data.length, avgW=data.reduce((s,r)=>s+r.water,0)/data.length;
-      window.resourceChartInstance = new Chart(ctx, { type:'bar', data:{ labels:['Feed','Water'], datasets:[{ label:'Daily', data:[avgF,avgW], backgroundColor:['#8a949e','rgba(201,169,75,0.7)'], borderColor:['#7a848e','#c9a94b'], borderWidth:3, borderRadius:12, borderSkipped:false, barPercentage:0.6, categoryPercentage:0.8 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#0b1a2b', callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(1)} ${ctx.label==='Feed'?'kg':'L'}`} } }, scales:{ x:{ ticks:{color:'#f0f2f5',font:{size:11,weight:'bold',family:'Georgia'}, callback:(_,i)=>i===0?'Feed (kg)':'Water (L)'}, grid:{display:false} }, y:{ 
-        max: 25,
-        ticks:{color:'#b9c7dd',font:{size:10},callback:v=>v.toFixed(1)}, grid:{color:'rgba(255,255,255,0.05)'}, beginAtZero:true } } }, plugins:[{ id:'lbl', afterDatasetsDraw(chart){ chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 13px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v.toFixed(1)+(i===0?'kg':'L'),b.x,b.y-10); }); } }] });
+      window.resourceChartInstance = new Chart(ctx, {
+        type:'bar',
+        data:{ labels:['Feed','Water'], datasets:[{ label:'Daily', data:[avgF,avgW], backgroundColor:['#8a949e','rgba(201,169,75,0.7)'], borderColor:['#7a848e','#c9a94b'], borderWidth:3, borderRadius:12, borderSkipped:false, barPercentage:0.6, categoryPercentage:0.8 }]},
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#0b1a2b',callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(1)} ${ctx.label==='Feed'?'kg':'L'}`}}},
+          scales:{ x:{ticks:{color:'#f0f2f5',font:{size:11,weight:'bold',family:'Georgia'},callback:(_,i)=>i===0?'Feed (kg)':'Water (L)'},grid:{display:false}}, y:{max:25,ticks:{color:'#b9c7dd',font:{size:10},callback:v=>v.toFixed(1)},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true}}},
+        plugins:[{ id:'lbl', afterDatasetsDraw(chart){
+          chart.getDatasetMeta(0).data.forEach((b,i)=>{ const v=chart.data.datasets[0].data[i]; chart.ctx.fillStyle='#fff'; chart.ctx.font='bold 13px Georgia'; chart.ctx.textAlign='center'; chart.ctx.fillText(v.toFixed(1)+(i===0?'kg':'L'),b.x,b.y-10); });
+        }}]
+      });
     }
 
     function renderDataTable(data) {
+      const allSorted = [...allData].sort((a, b) => a.dateObj - b.dateObj);
+      const oldestDate = allSorted.length > 0 ? allSorted[0].dateObj : new Date();
       const h = `<thead><tr>${['Date','Time','Alive','Deaths','Cause','Feed(kg)','Water(L)','Temp(°C)','Weight(g)'].map(x=>`<th>${x}</th>`).join('')}</tr></thead>`;
-      const b = `<tbody>${data.map(r=>`<tr><td style="font-weight:600;color:white;">${r.date}</td><td>${r.time||'—'}</td><td style="color:#c9a94b;font-weight:600;">${fmt(r.birdsAlive)}</td><td style="color:${r.deaths>0?'#c97a3b':'#b9c7dd'}">${r.deaths}</td><td>${r.deathCause&&r.deathCause.trim()?`<span style="color:#c97a3b;font-size:0.75rem;">${r.deathCause.trim()}</span>`:(r.deaths>0?'<span style="color:#e6c468;font-size:0.75rem;">Unrecorded</span>':'—')}</td><td>${fmt(r.feed,1)}</td><td>${fmt(r.water,1)}</td><td><span class="temp-indicator ${getTempClass(r.temp)}" style="padding:0.15rem 0.5rem;font-size:0.7rem;">${r.temp}°C</span></td><td>${(r.avgWeight!=null&&r.avgWeight>0)?`${fmt(r.avgWeight)}g`:'—'}</td></tr>`).join('')}</tbody>`;
+      const b = `<tbody>${data.map(r=>{
+        let targetTemp = null;
+        if (TARGET_DATA && r.dateObj) {
+          const dayDiff = Math.floor((Date.UTC(r.dateObj.getFullYear(),r.dateObj.getMonth(),r.dateObj.getDate()) - Date.UTC(oldestDate.getFullYear(),oldestDate.getMonth(),oldestDate.getDate())) / 86400000) + 1;
+          if (TARGET_DATA[dayDiff]) targetTemp = TARGET_DATA[dayDiff].temp;
+        }
+        return `<tr><td style="font-weight:600;color:white;">${r.date}</td><td>${r.time||'—'}</td><td style="color:#c9a94b;font-weight:600;">${fmt(r.birdsAlive)}</td><td style="color:${r.deaths>0?'#c97a3b':'#b9c7dd'}">${r.deaths}</td><td>${r.deathCause&&r.deathCause.trim()?`<span style="color:#c97a3b;font-size:0.75rem;">${r.deathCause.trim()}</span>`:(r.deaths>0?'<span style="color:#e6c468;font-size:0.75rem;">Unrecorded</span>':'—')}</td><td>${fmt(r.feed,1)}</td><td>${fmt(r.water,1)}</td><td><span class="temp-indicator ${getTempClass(r.temp,targetTemp)}" style="padding:0.15rem 0.5rem;font-size:0.7rem;">${r.temp}°C</span></td><td>${(r.avgWeight!=null&&r.avgWeight>0)?`${fmt(r.avgWeight)}g`:'—'}</td></tr>`;
+      }).join('')}</tbody>`;
       document.getElementById('dataTable').innerHTML = h + b;
     }
 
-    // 🔧 PWA INSTALL BUTTON LOGIC (WITH 5-SECOND DELAY)
-    let deferredPrompt;
-    let installButtonTimeout;
+    /* ========== PWA INSTALL ========== */
+    let deferredPrompt, installButtonTimeout;
     const installButton = document.getElementById('installButton');
-
     function isAppInstalled() {
-      return window.matchMedia('(display-mode: standalone)').matches || 
-             window.navigator.standalone === true ||
-             document.referrer.includes('android-app://');
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || document.referrer.includes('android-app://');
     }
-
-    if (isAppInstalled()) {
-      installButton.style.display = 'none';
-    }
-
+    if (isAppInstalled()) installButton.style.display = 'none';
     function showInstallButtonWithDelay() {
       if (installButtonTimeout) clearTimeout(installButtonTimeout);
-      
       if (!isAppInstalled() && deferredPrompt) {
-        installButtonTimeout = setTimeout(() => {
-          if (!isAppInstalled() && deferredPrompt) {
-            installButton.style.display = 'flex';
-          }
-        }, 5000);
+        installButtonTimeout = setTimeout(() => { if (!isAppInstalled() && deferredPrompt) installButton.style.display = 'flex'; }, 5000);
       }
     }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      showInstallButtonWithDelay();
-    });
-
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showInstallButtonWithDelay(); });
     installButton.addEventListener('click', async () => {
       if (!deferredPrompt) return;
-      
       if (installButtonTimeout) clearTimeout(installButtonTimeout);
-      
       installButton.style.display = 'none';
       deferredPrompt.prompt();
-      
       const { outcome } = await deferredPrompt.userChoice;
       deferredPrompt = null;
     });
+    window.addEventListener('appinstalled', () => { if (installButtonTimeout) clearTimeout(installButtonTimeout); installButton.style.display = 'none'; deferredPrompt = null; });
+    window.addEventListener('beforeunload', () => { if (installButtonTimeout) clearTimeout(installButtonTimeout); });
 
-    window.addEventListener('appinstalled', () => {
-      if (installButtonTimeout) clearTimeout(installButtonTimeout);
-      installButton.style.display = 'none';
-      deferredPrompt = null;
-    });
-
-    window.addEventListener('beforeunload', () => {
-      if (installButtonTimeout) clearTimeout(installButtonTimeout);
-    });
-
+    /* ========== INIT ========== */
     window.addEventListener('DOMContentLoaded', async () => {
-      const m = document.getElementById('topMetrics'); if(m) m.innerHTML='<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
-      try { 
-        const { data, success } = await fetchData(); 
-        if(data.length===0) throw new Error('No data records'); 
+      const m = document.getElementById('topMetrics');
+      if (m) m.innerHTML = '<div class="metric-card" style="grid-column:span 6;text-align:center;">⏳ Loading flock data...</div>';
+      try {
+        const { data, success } = await fetchData();
+        if (data.length === 0) throw new Error('No data records');
         allData = data;
+        TARGET_DATA = await fetchTargetData();
+        VACCINATION_DATA = await fetchVaccinationData();
+        renderVaccinationTimeline();
         buildWeekFilterButtons(allData);
-        render(allData); 
-        if(success) setInterval(async()=>{ 
+        render(allData);
+        if (success) setInterval(async () => {
           const { data: freshData } = await fetchData();
           allData = freshData;
-          const filteredData = filterDataByWeek(allData, currentFilter);
-          render(filteredData); 
-        }, 300000); 
-      }
-      catch(e) { 
+          TARGET_DATA = await fetchTargetData();
+          VACCINATION_DATA = await fetchVaccinationData();
+          renderVaccinationTimeline();
+          render(filterDataByWeek(allData, currentFilter));
+        }, 300000);
+      } catch(e) {
         allData = FALLBACK_DATA;
+        TARGET_DATA = await fetchTargetData();
+        VACCINATION_DATA = await fetchVaccinationData();
+        renderVaccinationTimeline();
         buildWeekFilterButtons(allData);
-        render(allData); 
+        render(allData);
       }
     });
   })();
-  
-  // Register Service Worker
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
