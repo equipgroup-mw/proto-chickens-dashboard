@@ -1471,7 +1471,7 @@
             { label:'Target Weight', data:targetValues, borderColor:'#8a949e', backgroundColor:'transparent', borderWidth:2, borderDash:[6,4], pointRadius:0, pointHoverRadius:5, pointBackgroundColor:'#8a949e', pointBorderColor:'#ffffff', fill:false, tension:0.2 }
           ]},
         options:{ responsive:true, maintainAspectRatio:false,
-          plugins:{ legend:{ display:true, position:'top', align:'end', labels:{ color:'#b9c7dd', font:{size:10}, boxWidth:15, padding:10, filter:(item)=>item.text!=='Target Weight' }},
+          plugins:{ legend:{ display:true, position:'top', align:'end', labels:{ color:'#b9c7dd', font:{size:10}, boxWidth:15, padding:10, filter:(item)=>item.text==='Target Weight' }},
             tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}g`}}},
           scales:{ x:{ticks:{color:'#b9c7dd',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'#b9c7dd',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:false}}},
         plugins:[{ id:'lbl', afterDatasetsDraw(chart){
@@ -1534,7 +1534,7 @@
         type:'line',
         data:{ labels:sampledData.map(r=>`${r.dateObj.getDate()}/${r.dateObj.getMonth()+1}`), datasets },
         options:{ responsive:true, maintainAspectRatio:false,
-          plugins:{ legend:{ display:true, position:'top', align:'end', labels:{ color:'#b9c7dd', font:{size:10}, boxWidth:15, padding:10, filter:(item)=>item.text==='Temp (°C)' }},
+          plugins:{ legend:{ display:true, position:'top', align:'end', labels:{ color:'#b9c7dd', font:{size:10}, boxWidth:15, padding:10, filter:(item)=>item.text==='Target Temp' }},
             tooltip:{ backgroundColor:'#0b1a2b', titleColor:'#fff', bodyColor:'#f0f2f5', borderColor:'#c9a94b', borderWidth:1, callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}°C`}}},
           scales:{ x:{ticks:{color:'#b9c7dd',font:{size:9}},grid:{display:false}}, y:{ticks:{color:'#b9c7dd',font:{size:9}},grid:{color:'rgba(255,255,255,0.05)'},min:15,max:40}}},
         plugins:[{ id:'lbl', afterDatasetsDraw(chart){
